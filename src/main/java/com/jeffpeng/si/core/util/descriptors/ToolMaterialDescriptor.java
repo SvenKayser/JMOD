@@ -1,0 +1,72 @@
+package com.jeffpeng.si.core.util.descriptors;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import net.minecraft.item.Item.ToolMaterial;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.oredict.OreDictionary;
+
+import com.jeffpeng.si.core.interfaces.ISIExecutableObject;
+import com.jeffpeng.si.core.util.Reflector;
+
+import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+
+public class ToolMaterialDescriptor implements ISIExecutableObject{
+	
+	private static Map<String,ToolMaterialDescriptor> list = new HashMap<>();
+	
+	public static ToolMaterialDescriptor get(String name){
+		return list.get(name);
+	}
+	
+	public String name;
+	public int harvestLevel;
+	public int durability;
+	public float efficiency;
+	public float damage;
+	public int enchantability;
+	public String repairmaterial;
+	public ToolMaterial toolmat;
+	
+	
+	
+	public ToolMaterialDescriptor(String name, int harvestLevel, int durability, float efficiency, float damage, int enchantability, String repairmaterial){
+		list.put(name,this);
+		registerAsStaged();
+		this.name = name;
+		this.harvestLevel = harvestLevel;
+		this.durability = durability;
+		this.efficiency = efficiency;
+		this.damage = damage;
+		this.enchantability = enchantability;
+		this.repairmaterial = repairmaterial;
+	}
+
+	@Override
+	public boolean isValid() {
+		return true;
+	}
+	
+	@Override
+	public boolean on(FMLPreInitializationEvent event){
+		this.toolmat = EnumHelper.addToolMaterial(name, harvestLevel, durability, efficiency, damage, enchantability);
+		return true;
+	}
+
+	@Override
+	public void execute() {
+		FMLLog.info("[tool material patcher] Patching ToolMaterial " + toolmat.name());
+
+		new Reflector(toolmat).set(5, harvestLevel).set(6, durability).set(7, efficiency)
+				.set(8, damage).set(9, enchantability);
+		
+		ArrayList<ItemStack> entryoredictstacks = OreDictionary.getOres(repairmaterial);
+		if(entryoredictstacks.size() > 0) 
+			toolmat.setRepairItem(entryoredictstacks.get(0));
+		else FMLLog.warning("[tool material patcher] the repairmaterial " + repairmaterial + " is unknown. " + toolmat.name() + " will not be repairable.");
+	}
+}

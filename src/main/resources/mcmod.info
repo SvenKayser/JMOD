@@ -1,0 +1,16 @@
+[
+{
+  "modid": "si.core",
+  "name": "Survival Industry",
+  "description": "The core mod of Survival Industry that adds relevant progression changes to the game",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "https://github.com/jeffpengMC/SI-Mods/tree/master/si.core",
+  "authorList": ["jeffpengMC"],
+  "credits": "reteo and gerb82 for the pack, and Reika for his awesome mods (and sources!)",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

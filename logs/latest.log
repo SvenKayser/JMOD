@@ -1,0 +1,4 @@
+[19:03:27] [main/INFO]: Logging in with username & password
+[19:03:30] [main/INFO]: Setting user: jeffpeng
+[19:03:31] [Client thread/INFO]: LWJGL Version: 2.9.1
+[19:03:32] [Client thread/ERROR]: Couldn't initialize twitch stream

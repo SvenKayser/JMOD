@@ -1,0 +1,136 @@
+[16:56:34] [main/INFO] [GradleStart]: username: jeffpeng
+[16:56:35] [main/INFO] [GradleStart]: Extra: []
+[16:56:35] [main/INFO] [GradleStart]: Password found, attempting login
+[16:56:35] [main/ERROR] [GradleStart]: -- Login failed!  Invalid credentials. Invalid username or password.
+[17:40:04] [main/INFO] [GradleStart]: username: jeffpeng
+[17:40:04] [main/INFO] [GradleStart]: Extra: []
+[17:40:04] [main/INFO] [GradleStart]: Password found, attempting login
+[17:40:05] [main/ERROR] [GradleStart]: -- Login failed!  Invalid credentials. Invalid username or password.
+[17:40:20] [main/INFO] [GradleStart]: username: jeffpeng
+[17:40:20] [main/INFO] [GradleStart]: Extra: []
+[17:40:20] [main/INFO] [GradleStart]: Password found, attempting login
+[17:40:21] [main/INFO] [GradleStart]: Login Succesful!
+[17:40:21] [main/INFO] [GradleStart]: Found and added coremod: Reika.DragonAPI.Auxiliary.DragonAPIASMHandler
+[17:40:21] [main/INFO] [GradleStart]: Found and added coremod: Reika.RotaryCraft.Auxiliary.RotaryASMHandler
+[17:40:21] [main/INFO] [GradleStart]: Running with arguments: [--userProperties, {}, --assetsDir, /home/sven/.gradle/caches/minecraft/assets, --assetIndex, 1.7.10, --userType, mojang, --accessToken, {REDACTED}, --version, 1.7.10, --uuid, 69cbdfc41da7443ca0cfbc4c7f0e6729, --username, jeffpeng, --tweakClass, cpw.mods.fml.common.launcher.FMLTweaker, --tweakClass, net.minecraftforge.gradle.tweakers.CoremodTweaker]
+[17:40:21] [main/INFO] [LaunchWrapper]: Loading tweak class name cpw.mods.fml.common.launcher.FMLTweaker
+[17:40:21] [main/INFO] [LaunchWrapper]: Using primary tweak class name cpw.mods.fml.common.launcher.FMLTweaker
+[17:40:21] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.gradle.tweakers.CoremodTweaker
+[17:40:21] [main/INFO] [LaunchWrapper]: Calling tweak class cpw.mods.fml.common.launcher.FMLTweaker
+[17:43:55] [main/INFO] [GradleStart]: username: jeffpeng
+[17:43:55] [main/INFO] [GradleStart]: Extra: []
+[17:43:55] [main/INFO] [GradleStart]: Password found, attempting login
+[17:43:56] [main/INFO] [GradleStart]: Login Succesful!
+[17:43:56] [main/INFO] [GradleStart]: Found and added coremod: Reika.DragonAPI.Auxiliary.DragonAPIASMHandler
+[17:43:56] [main/INFO] [GradleStart]: Found and added coremod: Reika.RotaryCraft.Auxiliary.RotaryASMHandler
+[17:43:56] [main/INFO] [GradleStart]: Running with arguments: [--userProperties, {}, --assetsDir, /home/sven/.gradle/caches/minecraft/assets, --assetIndex, 1.7.10, --userType, mojang, --accessToken, {REDACTED}, --version, 1.7.10, --uuid, 69cbdfc41da7443ca0cfbc4c7f0e6729, --username, jeffpeng, --tweakClass, cpw.mods.fml.common.launcher.FMLTweaker, --tweakClass, net.minecraftforge.gradle.tweakers.CoremodTweaker]
+[17:43:56] [main/INFO] [LaunchWrapper]: Loading tweak class name cpw.mods.fml.common.launcher.FMLTweaker
+[17:43:56] [main/INFO] [LaunchWrapper]: Using primary tweak class name cpw.mods.fml.common.launcher.FMLTweaker
+[17:43:56] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.gradle.tweakers.CoremodTweaker
+[17:43:56] [main/INFO] [LaunchWrapper]: Calling tweak class cpw.mods.fml.common.launcher.FMLTweaker
+[17:44:37] [main/INFO] [GradleStart]: username: jeffpeng
+[17:44:37] [main/INFO] [GradleStart]: Extra: []
+[17:44:37] [main/INFO] [GradleStart]: Password found, attempting login
+[17:44:38] [main/INFO] [GradleStart]: Login Succesful!
+[17:44:38] [main/INFO] [GradleStart]: Found and added coremod: Reika.DragonAPI.Auxiliary.DragonAPIASMHandler
+[17:44:38] [main/INFO] [GradleStart]: Found and added coremod: Reika.RotaryCraft.Auxiliary.RotaryASMHandler
+[17:44:38] [main/INFO] [GradleStart]: Found and added coremod: com.enderio.core.common.transform.EnderCorePlugin
+[17:44:38] [main/INFO] [GradleStart]: Running with arguments: [--userProperties, {}, --assetsDir, /home/sven/.gradle/caches/minecraft/assets, --assetIndex, 1.7.10, --userType, mojang, --accessToken, {REDACTED}, --version, 1.7.10, --uuid, 69cbdfc41da7443ca0cfbc4c7f0e6729, --username, jeffpeng, --tweakClass, cpw.mods.fml.common.launcher.FMLTweaker, --tweakClass, net.minecraftforge.gradle.tweakers.CoremodTweaker]
+[17:44:38] [main/INFO] [LaunchWrapper]: Loading tweak class name cpw.mods.fml.common.launcher.FMLTweaker
+[17:44:38] [main/INFO] [LaunchWrapper]: Using primary tweak class name cpw.mods.fml.common.launcher.FMLTweaker
+[17:44:38] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.gradle.tweakers.CoremodTweaker
+[17:44:38] [main/INFO] [LaunchWrapper]: Calling tweak class cpw.mods.fml.common.launcher.FMLTweaker
+[17:47:09] [main/INFO] [GradleStart]: username: jeffpeng
+[17:47:09] [main/INFO] [GradleStart]: Extra: []
+[17:47:09] [main/INFO] [GradleStart]: Password found, attempting login
+[17:47:10] [main/INFO] [GradleStart]: Login Succesful!
+[17:47:10] [main/INFO] [GradleStart]: Found and added coremod: Reika.DragonAPI.Auxiliary.DragonAPIASMHandler
+[17:47:10] [main/INFO] [GradleStart]: Found and added coremod: Reika.RotaryCraft.Auxiliary.RotaryASMHandler
+[17:47:10] [main/INFO] [GradleStart]: Found and added coremod: com.enderio.core.common.transform.EnderCorePlugin
+[17:47:10] [main/INFO] [GradleStart]: Running with arguments: [--userProperties, {}, --assetsDir, /home/sven/.gradle/caches/minecraft/assets, --assetIndex, 1.7.10, --userType, mojang, --accessToken, {REDACTED}, --version, 1.7.10, --uuid, 69cbdfc41da7443ca0cfbc4c7f0e6729, --username, jeffpeng, --tweakClass, cpw.mods.fml.common.launcher.FMLTweaker, --tweakClass, net.minecraftforge.gradle.tweakers.CoremodTweaker]
+[17:47:10] [main/INFO] [LaunchWrapper]: Loading tweak class name cpw.mods.fml.common.launcher.FMLTweaker
+[17:47:10] [main/INFO] [LaunchWrapper]: Using primary tweak class name cpw.mods.fml.common.launcher.FMLTweaker
+[17:47:10] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.gradle.tweakers.CoremodTweaker
+[17:47:10] [main/INFO] [LaunchWrapper]: Calling tweak class cpw.mods.fml.common.launcher.FMLTweaker
+[18:01:00] [main/INFO] [GradleStart]: username: jeffpeng
+[18:01:00] [main/INFO] [GradleStart]: Extra: []
+[18:01:00] [main/INFO] [GradleStart]: Password found, attempting login
+[18:01:01] [main/INFO] [GradleStart]: Login Succesful!
+[18:01:01] [main/INFO] [GradleStart]: Found and added coremod: Reika.DragonAPI.Auxiliary.DragonAPIASMHandler
+[18:01:01] [main/INFO] [GradleStart]: Found and added coremod: Reika.RotaryCraft.Auxiliary.RotaryASMHandler
+[18:01:01] [main/INFO] [GradleStart]: Running with arguments: [--userProperties, {}, --assetsDir, /home/sven/.gradle/caches/minecraft/assets, --assetIndex, 1.7.10, --userType, mojang, --accessToken, {REDACTED}, --version, 1.7.10, --uuid, 69cbdfc41da7443ca0cfbc4c7f0e6729, --username, jeffpeng, --tweakClass, cpw.mods.fml.common.launcher.FMLTweaker, --tweakClass, net.minecraftforge.gradle.tweakers.CoremodTweaker]
+[18:01:01] [main/INFO] [LaunchWrapper]: Loading tweak class name cpw.mods.fml.common.launcher.FMLTweaker
+[18:01:01] [main/INFO] [LaunchWrapper]: Using primary tweak class name cpw.mods.fml.common.launcher.FMLTweaker
+[18:01:01] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.gradle.tweakers.CoremodTweaker
+[18:01:01] [main/INFO] [LaunchWrapper]: Calling tweak class cpw.mods.fml.common.launcher.FMLTweaker
+[18:09:14] [main/INFO] [GradleStart]: username: jeffpeng
+[18:09:14] [main/INFO] [GradleStart]: Extra: []
+[18:09:14] [main/INFO] [GradleStart]: Password found, attempting login
+[18:09:14] [main/INFO] [GradleStart]: Login Succesful!
+[18:09:14] [main/INFO] [GradleStart]: Found and added coremod: Reika.DragonAPI.Auxiliary.DragonAPIASMHandler
+[18:09:14] [main/INFO] [GradleStart]: Found and added coremod: Reika.RotaryCraft.Auxiliary.RotaryASMHandler
+[18:09:14] [main/INFO] [GradleStart]: Running with arguments: [--userProperties, {}, --assetsDir, /home/sven/.gradle/caches/minecraft/assets, --assetIndex, 1.7.10, --userType, mojang, --accessToken, {REDACTED}, --version, 1.7.10, --uuid, 69cbdfc41da7443ca0cfbc4c7f0e6729, --username, jeffpeng, --tweakClass, cpw.mods.fml.common.launcher.FMLTweaker, --tweakClass, net.minecraftforge.gradle.tweakers.CoremodTweaker]
+[18:09:15] [main/INFO] [LaunchWrapper]: Loading tweak class name cpw.mods.fml.common.launcher.FMLTweaker
+[18:09:15] [main/INFO] [LaunchWrapper]: Using primary tweak class name cpw.mods.fml.common.launcher.FMLTweaker
+[18:09:15] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.gradle.tweakers.CoremodTweaker
+[18:09:15] [main/INFO] [LaunchWrapper]: Calling tweak class cpw.mods.fml.common.launcher.FMLTweaker
+[18:22:05] [main/INFO] [GradleStart]: username: jeffpeng
+[18:22:05] [main/INFO] [GradleStart]: Extra: []
+[18:22:05] [main/INFO] [GradleStart]: Password found, attempting login
+[18:22:06] [main/INFO] [GradleStart]: Login Succesful!
+[18:22:06] [main/INFO] [GradleStart]: Found and added coremod: Reika.DragonAPI.Auxiliary.DragonAPIASMHandler
+[18:22:06] [main/INFO] [GradleStart]: Found and added coremod: Reika.RotaryCraft.Auxiliary.RotaryASMHandler
+[18:22:06] [main/INFO] [GradleStart]: Found and added coremod: squeek.applecore.AppleCore
+[18:22:06] [main/INFO] [GradleStart]: Running with arguments: [--userProperties, {}, --assetsDir, /home/sven/.gradle/caches/minecraft/assets, --assetIndex, 1.7.10, --userType, mojang, --accessToken, {REDACTED}, --version, 1.7.10, --uuid, 69cbdfc41da7443ca0cfbc4c7f0e6729, --username, jeffpeng, --tweakClass, cpw.mods.fml.common.launcher.FMLTweaker, --tweakClass, net.minecraftforge.gradle.tweakers.CoremodTweaker]
+[18:22:06] [main/INFO] [LaunchWrapper]: Loading tweak class name cpw.mods.fml.common.launcher.FMLTweaker
+[18:22:06] [main/INFO] [LaunchWrapper]: Using primary tweak class name cpw.mods.fml.common.launcher.FMLTweaker
+[18:22:06] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.gradle.tweakers.CoremodTweaker
+[18:22:06] [main/INFO] [LaunchWrapper]: Calling tweak class cpw.mods.fml.common.launcher.FMLTweaker
+[18:31:28] [main/INFO] [GradleStart]: username: jeffpeng
+[18:31:28] [main/INFO] [GradleStart]: Extra: []
+[18:31:28] [main/INFO] [GradleStart]: Password found, attempting login
+[18:31:29] [main/INFO] [GradleStart]: Login Succesful!
+[18:31:29] [main/INFO] [GradleStart]: Found and added coremod: Reika.DragonAPI.Auxiliary.DragonAPIASMHandler
+[18:31:29] [main/INFO] [GradleStart]: Found and added coremod: Reika.RotaryCraft.Auxiliary.RotaryASMHandler
+[18:31:29] [main/INFO] [GradleStart]: Found and added coremod: squeek.applecore.AppleCore
+[18:31:29] [main/INFO] [GradleStart]: Running with arguments: [--userProperties, {}, --assetsDir, /home/sven/.gradle/caches/minecraft/assets, --assetIndex, 1.7.10, --userType, mojang, --accessToken, {REDACTED}, --version, 1.7.10, --uuid, 69cbdfc41da7443ca0cfbc4c7f0e6729, --username, jeffpeng, --tweakClass, cpw.mods.fml.common.launcher.FMLTweaker, --tweakClass, net.minecraftforge.gradle.tweakers.CoremodTweaker]
+[18:31:29] [main/INFO] [LaunchWrapper]: Loading tweak class name cpw.mods.fml.common.launcher.FMLTweaker
+[18:31:29] [main/INFO] [LaunchWrapper]: Using primary tweak class name cpw.mods.fml.common.launcher.FMLTweaker
+[18:31:29] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.gradle.tweakers.CoremodTweaker
+[18:31:29] [main/INFO] [LaunchWrapper]: Calling tweak class cpw.mods.fml.common.launcher.FMLTweaker
+[18:32:16] [main/INFO] [GradleStart]: username: jeffpeng
+[18:32:16] [main/INFO] [GradleStart]: Extra: []
+[18:32:16] [main/INFO] [GradleStart]: Password found, attempting login
+[18:32:17] [main/INFO] [GradleStart]: Login Succesful!
+[18:32:17] [main/INFO] [GradleStart]: Found and added coremod: Reika.DragonAPI.Auxiliary.DragonAPIASMHandler
+[18:32:17] [main/INFO] [GradleStart]: Found and added coremod: Reika.RotaryCraft.Auxiliary.RotaryASMHandler
+[18:32:17] [main/INFO] [GradleStart]: Found and added coremod: squeek.applecore.AppleCore
+[18:32:17] [main/INFO] [GradleStart]: Running with arguments: [--userProperties, {}, --assetsDir, /home/sven/.gradle/caches/minecraft/assets, --assetIndex, 1.7.10, --userType, mojang, --accessToken, {REDACTED}, --version, 1.7.10, --uuid, 69cbdfc41da7443ca0cfbc4c7f0e6729, --username, jeffpeng, --tweakClass, cpw.mods.fml.common.launcher.FMLTweaker, --tweakClass, net.minecraftforge.gradle.tweakers.CoremodTweaker]
+[18:32:17] [main/INFO] [LaunchWrapper]: Loading tweak class name cpw.mods.fml.common.launcher.FMLTweaker
+[18:32:17] [main/INFO] [LaunchWrapper]: Using primary tweak class name cpw.mods.fml.common.launcher.FMLTweaker
+[18:32:17] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.gradle.tweakers.CoremodTweaker
+[18:32:17] [main/INFO] [LaunchWrapper]: Calling tweak class cpw.mods.fml.common.launcher.FMLTweaker
+[18:50:09] [main/INFO] [GradleStart]: username: jeffpeng
+[18:50:09] [main/INFO] [GradleStart]: Extra: []
+[18:50:09] [main/INFO] [GradleStart]: Password found, attempting login
+[18:50:09] [main/INFO] [GradleStart]: Login Succesful!
+[18:50:10] [main/INFO] [GradleStart]: Found and added coremod: Reika.DragonAPI.Auxiliary.DragonAPIASMHandler
+[18:50:10] [main/INFO] [GradleStart]: Found and added coremod: Reika.RotaryCraft.Auxiliary.RotaryASMHandler
+[18:50:10] [main/INFO] [GradleStart]: Found and added coremod: squeek.applecore.AppleCore
+[18:50:10] [main/INFO] [GradleStart]: Running with arguments: [--userProperties, {}, --assetsDir, /home/sven/.gradle/caches/minecraft/assets, --assetIndex, 1.7.10, --userType, mojang, --accessToken, {REDACTED}, --version, 1.7.10, --uuid, 69cbdfc41da7443ca0cfbc4c7f0e6729, --username, jeffpeng, --tweakClass, cpw.mods.fml.common.launcher.FMLTweaker, --tweakClass, net.minecraftforge.gradle.tweakers.CoremodTweaker]
+[18:50:10] [main/INFO] [LaunchWrapper]: Loading tweak class name cpw.mods.fml.common.launcher.FMLTweaker
+[18:50:10] [main/INFO] [LaunchWrapper]: Using primary tweak class name cpw.mods.fml.common.launcher.FMLTweaker
+[18:50:10] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.gradle.tweakers.CoremodTweaker
+[18:50:10] [main/INFO] [LaunchWrapper]: Calling tweak class cpw.mods.fml.common.launcher.FMLTweaker
+[19:03:27] [main/INFO] [GradleStart]: username: jeffpeng
+[19:03:27] [main/INFO] [GradleStart]: Extra: []
+[19:03:27] [main/INFO] [GradleStart]: Password found, attempting login
+[19:03:28] [main/INFO] [GradleStart]: Login Succesful!
+[19:03:28] [main/INFO] [GradleStart]: Found and added coremod: Reika.DragonAPI.Auxiliary.DragonAPIASMHandler
+[19:03:28] [main/INFO] [GradleStart]: Found and added coremod: Reika.RotaryCraft.Auxiliary.RotaryASMHandler
+[19:03:28] [main/INFO] [GradleStart]: Found and added coremod: squeek.applecore.AppleCore
+[19:03:28] [main/INFO] [GradleStart]: Running with arguments: [--userProperties, {}, --assetsDir, /home/sven/.gradle/caches/minecraft/assets, --assetIndex, 1.7.10, --userType, mojang, --accessToken, {REDACTED}, --version, 1.7.10, --uuid, 69cbdfc41da7443ca0cfbc4c7f0e6729, --username, jeffpeng, --tweakClass, cpw.mods.fml.common.launcher.FMLTweaker, --tweakClass, net.minecraftforge.gradle.tweakers.CoremodTweaker]
+[19:03:28] [main/INFO] [LaunchWrapper]: Loading tweak class name cpw.mods.fml.common.launcher.FMLTweaker
+[19:03:28] [main/INFO] [LaunchWrapper]: Using primary tweak class name cpw.mods.fml.common.launcher.FMLTweaker
+[19:03:28] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.gradle.tweakers.CoremodTweaker
+[19:03:28] [main/INFO] [LaunchWrapper]: Calling tweak class cpw.mods.fml.common.launcher.FMLTweaker
