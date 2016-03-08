@@ -8,6 +8,7 @@
 .gradle
 .settings
 .metadata
+.classpath
 **/.project
 /buildlibs
 
