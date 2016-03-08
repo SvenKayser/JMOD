@@ -1,14 +1,14 @@
 [
 {
-  "modid": "si.core",
-  "name": "Survival Industry",
-  "description": "The core mod of Survival Industry that adds relevant progression changes to the game",
-  "version": "${version}",
+  "modid": "JMOD",
+  "name": "JMOD",
+  "description": "The Javascript MOD builder.",
+  "version": "@VERSION@",
   "mcversion": "${mcversion}",
-  "url": "",
-  "updateUrl": "https://github.com/jeffpengMC/SI-Mods/tree/master/si.core",
+  "url": "https://github.com/jeffpengMC/JMOD",
+  "updateUrl": "https://github.com/jeffpengMC/JMOD/releases",
   "authorList": ["jeffpengMC"],
-  "credits": "reteo and gerb82 for the pack, and Reika for his awesome mods (and sources!)",
+  "credits": "reteo and the Survival Industry crew who brought this mod into life, and Reika and many others for their sources on modding",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []

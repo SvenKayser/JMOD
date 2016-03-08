@@ -5,8 +5,17 @@
  R4wk, ZeuX, IngisKahn, bspkrs
  MCP Data version : unknown
 ****************************
-Found AccessTransformer in main resources: si_at.cfg
-:sitestreplace
+Found AccessTransformer in main resources: jmod_at.cfg
+:downloadClient SKIPPED
+:downloadServer SKIPPED
+:getVersionJson
+:extractUserDev UP-TO-DATE
+:mergeJars SKIPPED
+:applyBinPatches SKIPPED
+:downloadMcpTools SKIPPED
+:extractMcpData UP-TO-DATE
+:genSrgs SKIPPED
+:deobfBinJar UP-TO-DATE
 :compileApiJava UP-TO-DATE
 :processApiResources UP-TO-DATE
 :apiClasses UP-TO-DATE
@@ -19,15 +28,11 @@ Found AccessTransformer in main resources: si_at.cfg
 :processTestResources UP-TO-DATE
 :testClasses UP-TO-DATE
 :test UP-TO-DATE
-:extractMcpData UP-TO-DATE
-:getVersionJson
-:extractUserDev UP-TO-DATE
-:genSrgs SKIPPED
 :reobf
 :assemble
-:sitestrestore
-:buildtypetest
+:check UP-TO-DATE
+:build
 
 BUILD SUCCESSFUL
 
-Total time: 8.162 secs
+Total time: 9.989 secs

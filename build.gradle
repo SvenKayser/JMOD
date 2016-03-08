@@ -17,9 +17,9 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1.5.1"
-group= "com.jeffpeng.si.core" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "si.core"
+version = "1.0alpha1"
+group= "com.jeffpeng.jmod" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "jmod"
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -31,9 +31,9 @@ minecraft {
 
 jar {
 		manifest {
-			attributes 'FMLAT': 'si_at.cfg'
-			attributes 'FMLCorePlugin': 'com.jeffpeng.si.core.asm.SIFMLLoadingPlugin','FMLCorePluginContainsFMLMod': 'true'
-			attributes 'FMLCorePlugin': 'com.jeffpeng.MAL1_7_10.Core','FMLCorePluginContainsFMLMod': 'true'
+			attributes 'FMLAT': 'jmod_at.cfg'
+			attributes 'FMLCorePlugin': 'com.jeffpeng.jmod.asm.JMODFMLLoadingPlugin','FMLCorePluginContainsFMLMod': 'true'
+			
             
 		}
 }
@@ -98,7 +98,7 @@ task libJar(type: Jar){
 
 task silibreplace << {
 	ant.replaceregexp(
-		file: "src/main/java/com/jeffpeng/si/core/util/SIConfigRepresentation.java",
+		file: "src/main/java/com/jeffpeng/jmod/util/SIConfigRepresentation.java",
 		match: "\\/\\*\\#MARK1\\*\\/if\\(false\\)",
 		replace:'/*#MARK1*/if(true)'
 	)
@@ -109,7 +109,7 @@ jar.mustRunAfter silibreplace
 
 task silibrestore << {
 	ant.replaceregexp(
-		file: "src/main/java/com/jeffpeng/si/core/util/SIConfigRepresentation.java",
+		file: "src/main/java/com/jeffpeng/jmod/util/SIConfigRepresentation.java",
 		replace: "/*#MARK1*/if(false)",
 		match:'\\/\\*\\#MARK1\\*\\/if\\(true\\)'
 	)
@@ -123,7 +123,7 @@ task sitestreplace << {
 
 	version = "untyped-devtest"
 	ant.replaceregexp(
-		file: "src/main/java/com/jeffpeng/si/core/SI.java",
+		file: "src/main/java/com/jeffpeng/jmod/JMOD.java",
 		match: "\\/\\*\\#MARK1\\*\\/if\\(false\\)",
 		replace:'/*#MARK1*/if(true)'
 	)
@@ -131,7 +131,7 @@ task sitestreplace << {
 
 task sitestrestore << {
 	ant.replaceregexp(
-		file: "src/main/java/com/jeffpeng/si/core/SI.java",
+		file: "src/main/java/com/jeffpeng/jmod/JMOD.java",
 		replace: "/*#MARK1*/if(false)",
 		match:'\\/\\*\\#MARK1\\*\\/if\\(true\\)'
 	)
