@@ -1,1 +1,13 @@
 /bin
+**/eclipse
+**/libs
+#**/gradle
+**/bin
+**/build
+.project
+.gradle
+.settings
+.metadata
+**/.project
+/buildlibs
+

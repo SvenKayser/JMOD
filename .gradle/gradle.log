@@ -6,6 +6,7 @@
  MCP Data version : unknown
 ****************************
 Found AccessTransformer in main resources: jmod_at.cfg
+:sitestreplace
 :downloadClient SKIPPED
 :downloadServer SKIPPED
 :getVersionJson
@@ -16,13 +17,15 @@ Found AccessTransformer in main resources: jmod_at.cfg
 :extractMcpData UP-TO-DATE
 :genSrgs SKIPPED
 :deobfBinJar UP-TO-DATE
-:compileApiJava UP-TO-DATE
+:compileApiJava
 :processApiResources UP-TO-DATE
-:apiClasses UP-TO-DATE
+:apiClasses
 :sourceMainJava UP-TO-DATE
-:compileJava UP-TO-DATE
+:compileJavaNote: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
 :processResources UP-TO-DATE
-:classes UP-TO-DATE
+:classes
 :jar
 :compileTestJava UP-TO-DATE
 :processTestResources UP-TO-DATE
@@ -30,9 +33,9 @@ Found AccessTransformer in main resources: jmod_at.cfg
 :test UP-TO-DATE
 :reobf
 :assemble
-:check UP-TO-DATE
-:build
+:sitestrestore
+:buildtypetest
 
 BUILD SUCCESSFUL
 
-Total time: 9.989 secs
+Total time: 11.23 secs
