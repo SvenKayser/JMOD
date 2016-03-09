@@ -47,8 +47,8 @@ public class ConfigurableOreGenerator extends OwnedObject implements IWorldGener
 
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
-		Long nano = System.nanoTime();
-		if (world.provider.dimensionId == action.dimension) new Runnable(){
+//		Long nano = System.nanoTime();
+		if (world.provider.dimensionId == action.dimension) new Thread(new Runnable(){
 			public void run(){
 				WorldGenerator iWorldGen = worldGen;
 				int ispread = action.spread;
@@ -56,15 +56,18 @@ public class ConfigurableOreGenerator extends OwnedObject implements IWorldGener
 				int istarty = action.starty;
 				Long internalSeed = random.nextLong() ^ action.seedoffset;
 		        Random internalRandom = new Random(internalSeed);
+		        int mulX = chunkX * ispread;
+		        int mulZ = chunkZ * ispread;
 				for (int r = 0; r < action.chancesperchunk; r++) {
-					int spawnX = chunkX * ispread + internalRandom.nextInt(ispread);
-					int spawnZ = chunkZ * ispread + internalRandom.nextInt(ispread);
+					int spawnX = mulX + internalRandom.nextInt(ispread);
+					int spawnZ = mulZ + internalRandom.nextInt(ispread);
 					int spawnY = internalRandom.nextInt(iendy - istarty) + istarty;
 					iWorldGen.generate(world, internalRandom, spawnX, spawnY, spawnZ);
 				}
+//				log.info("gen");
 			}
-		};
-		nano = System.nanoTime() - nano;
-		log.info(action.blocktogenerate + " " + nano);
+		}).start();
+//		nano = System.nanoTime() - nano;
+//		log.info(action.blocktogenerate + " " + nano);
 	}
 }

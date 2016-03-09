@@ -20,7 +20,10 @@ public class AddOreDictionaryEntry extends BasicAction {
 		this.valid = true;
 	}
 	
+	@Override
 	public boolean on(FMLLoadCompleteEvent event){
+		log.info("ordict for "+itemstack);
+		
 		Object is = lib.stringToItemStack(itemstack);
 		if(is instanceof ItemStack){
 			OreDictionary.registerOre(entry, (ItemStack)is);

@@ -22,6 +22,7 @@ public class StringListRecipe extends OwnedObject implements IRecipe {
 	private boolean valid;
 	//private String resultString;
 	private ItemStack result;
+	private String resultname;
 	private int width = 0;
 	private int height = 0;
 	private int size = 0;
@@ -31,6 +32,7 @@ public class StringListRecipe extends OwnedObject implements IRecipe {
 	public boolean isValid(){return this.valid;}
 	
 	private void processResult(String result){
+		resultname = result;
 		Object is = lib.stringToItemStack(result);
 		if(is instanceof ItemStack){
 			this.result = (ItemStack)is;
@@ -88,6 +90,26 @@ public class StringListRecipe extends OwnedObject implements IRecipe {
 		}
 	}
 	
+	private boolean sanityCheck(){
+		for(String[] line : lines){
+			for(String element : line){
+				if(element != null){
+					Object is = lib.stringToItemStack(element);
+					if(is instanceof String){
+						if( (!OreDictionary.doesOreNameExist((String)is)) || OreDictionary.getOres((String)is, false).size() < 1){
+								log.warn("StringListRecipe for " + resultname + " failed sanity check because " + (String)is + " is neither a valid ItemStack, nor is it an OreDictionary entry that contains something.");
+								return false;
+						}
+					}
+				}
+			}
+		}
+		
+		
+		return true;
+	}
+	
+	
 	public void setMirrorHorizontally(boolean set){
 		this.mirroredYAxis = set;
 	}
@@ -105,8 +127,14 @@ public class StringListRecipe extends OwnedObject implements IRecipe {
 		processResult(result);
 		if(valid){
 			cropAndTransport(rawShape);
-			StringListRecipe.recipeList.add(this);
 		}
+		
+		valid = sanityCheck();
+
+		if(valid)
+		{
+			StringListRecipe.recipeList.add(this);
+		} 
 	}
 	
 	private boolean matchAgainstOffset(int w, int h,InventoryCrafting inv,boolean mirrorx, boolean mirrory){

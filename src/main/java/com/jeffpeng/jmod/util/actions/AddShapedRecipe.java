@@ -6,6 +6,7 @@ import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.crafting.StringListRecipe;
 import com.jeffpeng.jmod.primitives.BasicAction;
 
+import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -24,7 +25,7 @@ public class AddShapedRecipe extends BasicAction{
 	}
 	
 	@Override
-	public boolean on(FMLPostInitializationEvent event){
+	public boolean on(FMLLoadCompleteEvent event){
 		this.recipe = new StringListRecipe(owner,result,shape);
 		this.valid = recipe.isValid();
 		if(!this.valid) log.info(result + " is invalid");

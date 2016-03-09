@@ -40,6 +40,10 @@ public class IngotGeneric extends CoreItem {
 
 	@Override
 	public IIcon getIconFromDamage(int meta) {
+		if(meta >= config.metalingots.size())
+		{
+			return this.icons[0];
+		}
 		return this.icons[meta];
 	}
 
@@ -51,7 +55,10 @@ public class IngotGeneric extends CoreItem {
 
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
-		return "item." + owner.getModId() + "." + Lib.ingotyfy(config.metalingots.get(stack.getItemDamage()));
+		int meta = stack.getItemDamage();
+		if(meta >= config.metalingots.size()) return "!invalid!";
+		
+		return "item." + owner.getModId() + "." + Lib.ingotyfy(config.metalingots.get(meta));
 	}
 
 	@Override

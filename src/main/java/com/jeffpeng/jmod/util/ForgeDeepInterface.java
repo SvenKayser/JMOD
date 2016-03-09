@@ -125,6 +125,10 @@ public class ForgeDeepInterface {
 		
 	}
 	
+	public boolean isLocked(){
+		return lockdown;
+	}
+	
 	public void lockDown()
 	{
 		Builder<String, EventBus> eventBus = ImmutableMap.builder();

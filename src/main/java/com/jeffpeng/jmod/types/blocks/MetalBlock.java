@@ -43,6 +43,10 @@ public class MetalBlock extends CoreBlock {
 
 	@Override
 	public IIcon getIcon(int side, int meta) {
+		if(meta >= config.metalblocks.size())
+		{
+			return this.icons[0];
+		}
 		return this.icons[meta];
 	}
 

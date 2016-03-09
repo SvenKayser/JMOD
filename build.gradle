@@ -17,9 +17,9 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1.0alpha1"
+version = "alpha1.0.2"
 group= "com.jeffpeng.jmod" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "jmod"
+archivesBaseName = "jmod-1.7.10"
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -27,15 +27,16 @@ targetCompatibility = 1.8
 minecraft {
     version = "1.7.10-10.13.4.1558-1.7.10"
     runDir = "eclipse"
+    replace '@VERSION@', project.version
 }
 
 jar {
 		manifest {
 			attributes 'FMLAT': 'jmod_at.cfg'
-			attributes 'FMLCorePlugin': 'com.jeffpeng.jmod.asm.JMODFMLLoadingPlugin','FMLCorePluginContainsFMLMod': 'true'
-			
-            
+			attributes 'FMLCorePlugin': 'com.jeffpeng.jmod.JMOD','FMLCorePluginContainsFMLMod': 'false'
 		}
+		
+		classifier = 'complete'
 }
 
 dependencies {
@@ -61,12 +62,23 @@ sourceSets {
             srcDirs += 'src/api/java'
             srcDirs += 'src/main/java/'
         }
-
+        
         resources {
             srcDir "src/main/resources/"
         }
     }
+    
+    pluginIgniter {
+    	java {
+    		srcDirs += 'src/main/java/jmodplugins/igniter'
+    	}
+    }
+    
+    
 }
+
+ext.jarFile = zipTree(jar.archivePath)
+
 
 processResources
 {
@@ -88,57 +100,59 @@ processResources
     }
 }
 
-task libJar(type: Jar){
-	from sourceSets.main.output
-	exclude "assets/si.core/textures/**";
-	classifier = 'libonly'
+task pluginIgniterJar(type: Jar, dependsOn: reobf){
+	archiveName = 'igniter.jmodplugin'
+    doFirst {
+		from(project.ext.jarFile){
+			includes.addAll(["jmodplugins/igniter/**"])
+		}
+	}
+}
+
+task coreJar(type: Jar, dependsOn: reobf){
+
+	classifier = ''
+	manifest {
+			attributes 'FMLAT': 'jmod_at.cfg'
+			attributes 'FMLCorePlugin': 'com.jeffpeng.jmod.JMOD','FMLCorePluginContainsFMLMod': 'false'
+		}
+	doFirst {
+		from(project.ext.jarFile){
+			includes.addAll(["assets/**","com/jeffpeng/jmod/**","com/cricketcraft/**","META-INF/**"])
+		}
+	}
+}
+
+task devTestJar(type: Jar, dependsOn: reobf){
+	archiveName = 'jmod-untyped-devtest.jar'
+	classifier = ''
+	manifest {
+			attributes 'FMLAT': 'jmod_at.cfg'
+			attributes 'FMLCorePlugin': 'com.jeffpeng.jmod.JMOD','FMLCorePluginContainsFMLMod': 'false'
+		}
+	doFirst {
+		from(project.ext.jarFile){
+			includes.addAll(["assets/**","com/jeffpeng/jmod/**","com/cricketcraft/**","META-INF/**"])
+		}
+	}
 	
 }
 
 
-task silibreplace << {
-	ant.replaceregexp(
-		file: "src/main/java/com/jeffpeng/jmod/util/SIConfigRepresentation.java",
-		match: "\\/\\*\\#MARK1\\*\\/if\\(false\\)",
-		replace:'/*#MARK1*/if(true)'
-	)
+
+
+
+
+task devtestreplace{
+	minecraft {
+		replace '@devversion@', 'true'
+	}
+	
 }
 
-jar.mustRunAfter silibreplace
 
 
-task silibrestore << {
-	ant.replaceregexp(
-		file: "src/main/java/com/jeffpeng/jmod/util/SIConfigRepresentation.java",
-		replace: "/*#MARK1*/if(false)",
-		match:'\\/\\*\\#MARK1\\*\\/if\\(true\\)'
-	)
-}
+task buildtypetest(dependsOn: ['devtestreplace','devTestJar'])
+task buildAll(dependsOn:['coreJar','pluginIgniterJar']);
 
-task buildtypelib(dependsOn: ['silibreplace','silibrestore','libJar','reobf']) << {
-
-}
-
-task sitestreplace << {
-
-	version = "untyped-devtest"
-	ant.replaceregexp(
-		file: "src/main/java/com/jeffpeng/jmod/JMOD.java",
-		match: "\\/\\*\\#MARK1\\*\\/if\\(false\\)",
-		replace:'/*#MARK1*/if(true)'
-	)
-}
-
-task sitestrestore << {
-	ant.replaceregexp(
-		file: "src/main/java/com/jeffpeng/jmod/JMOD.java",
-		replace: "/*#MARK1*/if(false)",
-		match:'\\/\\*\\#MARK1\\*\\/if\\(true\\)'
-	)
-}
-
-task buildtypetest(dependsOn: ['sitestreplace','sitestrestore','jar','test','reobf','assemble'])
-
-libJar.mustRunAfter classes
-libJar.mustRunAfter silibreplace
-classes.mustRunAfter sitestreplace
+classes.mustRunAfter devtestreplace

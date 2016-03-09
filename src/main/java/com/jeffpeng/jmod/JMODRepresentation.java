@@ -31,6 +31,7 @@ public class JMODRepresentation {
 	private JMODInfo modinfo;
 	
 	private boolean zipMod = false;
+	private JMODRepresentation instance = this;
 	
 	public JMODRepresentation(JMODInfo modinfo){
 		this(modinfo,false);
@@ -49,11 +50,10 @@ public class JMODRepresentation {
 	
 
 	public void on(FMLConstructionEvent event) {
-		script = new JScript(this);
+		script = new JScript(instance);
 		for(String entry : modinfo.scripts){
 			script.evalScript(entry);
 		}
-		
 	}	
 
 	public void on(FMLPreInitializationEvent event) {
@@ -116,4 +116,6 @@ public class JMODRepresentation {
 		}
 		return true;
 	}
+	
+
 }

@@ -1,5 +1,5 @@
 #!/bin/sh
 rm build/libs/*
-./gradlew buildtypetest
-cp build/libs/jmod-untyped-devtest.jar ~/.minecraftdevtest/mods
+./gradlew buildAll
+#cp build/libs/jmod-untyped-devtest.jar ~/.minecraftdevtest/mods
 #cp ~/mcdev/Survival-Industry-dev/Documents\ and\ Notes/Resource\ Packs/Survival\ Industry ~/.minecraftdevtest/resourcepacks -R

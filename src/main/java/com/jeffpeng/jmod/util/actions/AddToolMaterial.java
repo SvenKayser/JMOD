@@ -60,13 +60,19 @@ public class AddToolMaterial extends BasicAction{
 	
 	@Override
 	public boolean on(FMLPostInitializationEvent event){
-		log.info("[tool material patcher] Patching ToolMaterial " + toolmat.name());
-		new Reflector(toolmat).set(5, harvestLevel).set(6, durability).set(7, efficiency)
-				.set(8, damage).set(9, enchantability);
-		ArrayList<ItemStack> entryoredictstacks = OreDictionary.getOres(repairmaterial);
-		if(entryoredictstacks.size() > 0) 
-			toolmat.setRepairItem(entryoredictstacks.get(0));
-		else log.warn("[tool material patcher] the repairmaterial " + repairmaterial + " is unknown. " + toolmat.name() + " will not be repairable.");
+		new Thread(new Runnable(){
+
+			@Override
+			public void run() {
+				log.info("[tool material patcher] Patching ToolMaterial " + toolmat.name());
+				new Reflector(toolmat).set(5, harvestLevel).set(6, durability).set(7, efficiency)
+						.set(8, damage).set(9, enchantability);
+				ArrayList<ItemStack> entryoredictstacks = OreDictionary.getOres(repairmaterial);
+				if(entryoredictstacks.size() > 0) 
+					toolmat.setRepairItem(entryoredictstacks.get(0));
+				else log.warn("[tool material patcher] the repairmaterial " + repairmaterial + " is unknown. " + toolmat.name() + " will not be repairable.");
+			}
+		}).start();
 		return true;
 	}
 

@@ -4,6 +4,7 @@ import com.jeffpeng.jmod.CreativeTab;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.primitives.BasicAction;
 
+import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 
 public class AddCreativeTab extends BasicAction {
@@ -20,8 +21,14 @@ public class AddCreativeTab extends BasicAction {
 	}
 	
 	@Override
-	public boolean on(FMLPostInitializationEvent event){
+	public boolean on(FMLInitializationEvent event){
 		new CreativeTab(tabId,tabName,tabItem);
 		return true;
+	}
+	
+	@Override
+	public int priority()
+	{
+		return 60;
 	}
 }
