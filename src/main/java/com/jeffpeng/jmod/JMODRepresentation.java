@@ -26,12 +26,14 @@ public class JMODRepresentation {
 	private JScript script;
 	private Config config = new Config();
 	private Lib lib; 
+	private JMODContainer container;
 	
 	private Logger log;
 	private JMODInfo modinfo;
 	
 	private boolean zipMod = false;
 	private JMODRepresentation instance = this;
+	private boolean scriptingFinished = false;
 	
 	public JMODRepresentation(JMODInfo modinfo){
 		this(modinfo,false);
@@ -42,6 +44,23 @@ public class JMODRepresentation {
 		this.modinfo = modinfo;
 		this.log = LogManager.getLogger(""+modinfo.modid);
 		this.lib = new Lib(this);
+
+	}
+	
+	protected void runScripts(){
+		Thread t = new Thread(new Runnable(){
+			@Override
+			public void run() {
+				script = new JScript(instance);
+				for(String entry : modinfo.scripts){
+					script.evalScript(entry);
+				}
+				scriptingFinished = true;
+			}
+		});
+
+		t.setName(modinfo.modid + "/StartupScript");
+		t.start();
 	}
 	
 	public JMODInfo getModInfo(){
@@ -50,10 +69,7 @@ public class JMODRepresentation {
 	
 
 	public void on(FMLConstructionEvent event) {
-		script = new JScript(instance);
-		for(String entry : modinfo.scripts){
-			script.evalScript(entry);
-		}
+		
 	}	
 
 	public void on(FMLPreInitializationEvent event) {
@@ -77,8 +93,12 @@ public class JMODRepresentation {
 		
 	}
 	
+	protected void setContainer(JMODContainer container){
+		this.container = container;
+	}
+	
 	public JMODContainer getContainer(){
-		return JMOD.LOADER.getModContainer(modinfo.modid);
+		return this.container;
 	}
 	
 	public String getModId(){
@@ -111,10 +131,14 @@ public class JMODRepresentation {
 	
 	public boolean testForMod(String modId){
 		if(!Loader.isModLoaded(modId)){
-			log.warn(this.getModName() + " tries to do something that requires " + modId + " to be loaded - but it isn't.");
+			log.warn(this.getModName() + " tries to do something that requires " + modId + " to be loaded - but it isn't. This is either an error or lazy scripting.)");
 			return false;
 		}
 		return true;
+	}
+	
+	public boolean isScriptingFinished(){
+		return scriptingFinished;
 	}
 	
 

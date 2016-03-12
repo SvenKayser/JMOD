@@ -3,8 +3,6 @@ package com.jeffpeng.jmod;
 
 
 import java.util.Arrays;
-import java.util.Map;
-
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 

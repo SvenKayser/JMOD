@@ -157,11 +157,9 @@ public class ForgeDeepInterface {
 			namedMods.put(mc.getModId(),mc);
 			FMLCommonHandler.instance().addModToResourcePack(mc);
 			this.activeModList.add(mc);
-			
 			EventBus bus = new EventBus(mc.getModId());
 			mc.registerBus(bus, modController);
 			eventChannels.put(mc.getModId(), bus);
-			//FMLCommonHandler.instance().addModToResourcePack(mc);
 		} else {
 			JMOD.LOG.error("It is too late to add any more mods.");
 		}

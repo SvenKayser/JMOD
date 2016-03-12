@@ -14,6 +14,7 @@ import com.jeffpeng.jmod.interfaces.IExecutableObject;
 import com.jeffpeng.jmod.interfaces.IStagedObject;
 import com.jeffpeng.jmod.modintegration.decocraft.DecoCraftDyeFix;
 import com.jeffpeng.jmod.modintegration.nei.NEI_JMODConfig;
+import com.jeffpeng.jmod.registry.BlockMaterialRegistry;
 import com.jeffpeng.jmod.util.ForgeDeepInterface;
 import com.jeffpeng.jmod.util.actions.AddChestLoot;
 import com.jeffpeng.jmod.util.actions.AddShapedRecipe;
@@ -21,6 +22,7 @@ import com.jeffpeng.jmod.util.actions.AddShapelessRecipe;
 import com.jeffpeng.jmod.util.actions.AddSmeltingRecipe;
 import com.jeffpeng.jmod.util.actions.RemoveChestLoot;
 import com.jeffpeng.jmod.util.actions.RemoveRecipe;
+import com.jeffpeng.jmod.util.actions.RemoveSmeltingRecipe;
 import com.jeffpeng.jmod.util.actions.SetBlockProperties;
 import com.jeffpeng.jmod.util.actions.chisel.AddCarvingVariation;
 import com.jeffpeng.jmod.util.actions.rotarycraft.AddGrinderRecipeDescriptor;
@@ -51,7 +53,7 @@ public class JMOD implements IFMLLoadingPlugin {
 	protected JMODModContainer modcontainer;
 
 	public static ForgeDeepInterface DEEPFORGE;
-	public static final JMODLoader LOADER = new JMODLoader();
+	
 	public static final Logger LOG = LogManager.getLogger("JMOD");
 	private static JMODRepresentation runningMod;
 	private static JMOD instance;
@@ -59,32 +61,39 @@ public class JMOD implements IFMLLoadingPlugin {
 	public JMOD() {
 		instance = this;
 		JMODObfuscationHelper.init();
-		LOADER.discoverMods();
+		JMODLoader.discoverMods();
+		
+	}
+	
+	public void forgeLoaderHook(){
+		JMODLoader.constructMods();
 	}
 
-	@SuppressWarnings({ "unused"})
+
 	public void on(FMLConstructionEvent event) {
-		if(event.getSide().isServer()) this.isServer = true;
+		if(event.getSide().isServer()) isServer = true;
 		if("@devversion@".equals("true")){devversion = true;}
 		DEEPFORGE = new ForgeDeepInterface();
-		LOADER.constructMods();
-		DEEPFORGE.lockDown();
 		
-		ProgressBar bar = ProgressManager.push("Initializing JMODs", LOADER.getModList().size());
-		for(Map.Entry<String,JMODContainer> entry : LOADER.getModList().entrySet()){
+		JMODLoader.inject();
+		JMODLoader.waitOnScripts();
+		ProgressBar bar = ProgressManager.push("Initializing JMODs", JMODLoader.getModList().size());
+		for(Map.Entry<String,JMODContainer> entry : JMODLoader.getModList().entrySet()){
 			bar.step(entry.getValue().getName());
 			entry.getValue().getMod().on(event);
 			modcontainer.meta.description += "\n    §f"+entry.getValue().getName()+"   §b"+entry.getValue().getVersion();
 		}
 		ProgressManager.pop(bar);
-		IStagedObject.sort();
-		broadcast(event);
+		
+		
 		
 		
 	}
 
 	
 	public void on(FMLPreInitializationEvent event) {
+		Lib.blockMaterialRegistry = new BlockMaterialRegistry();
+		IStagedObject.sort();
 		broadcast(event);
 		runningMod = null;
 	}
@@ -111,10 +120,10 @@ public class JMOD implements IFMLLoadingPlugin {
 	public void on(FMLLoadCompleteEvent event){
 		
 		broadcast(event);
-		JMOD.LOG.info("##mark");
 		execute(RemoveRecipe.class);
 		execute(AddShapedRecipe.class);
 		execute(AddShapelessRecipe.class);
+		execute(RemoveSmeltingRecipe.class);
 		execute(AddSmeltingRecipe.class);
 		execute(RemoveChestLoot.class);
 		execute(AddChestLoot.class);
@@ -195,5 +204,6 @@ public class JMOD implements IFMLLoadingPlugin {
 		return null;
 	}
 	
+
 	
 }

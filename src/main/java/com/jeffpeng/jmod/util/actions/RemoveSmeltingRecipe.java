@@ -17,6 +17,7 @@ public class RemoveSmeltingRecipe extends BasicAction {
 	public RemoveSmeltingRecipe(JMODRepresentation owner,String istoremove) {
 		super(owner);
 		this.entry = istoremove;
+		this.valid = true;
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -28,7 +29,7 @@ public class RemoveSmeltingRecipe extends BasicAction {
 			Iterator<Entry> it = FurnaceRecipes.smelting().getSmeltingList().entrySet().iterator();
 			while(it.hasNext()){
 				Entry mapentry = it.next();
-				ItemStack output = (ItemStack)mapentry.getKey();
+				ItemStack output = (ItemStack)mapentry.getValue();
 				if(Lib.matchItemStacks(output, (ItemStack)is)) it.remove();
 			}
 		}

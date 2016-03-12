@@ -3,12 +3,12 @@ package com.jeffpeng.jmod.scripting;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jeffpeng.jmod.JMODLoader;
 import com.jeffpeng.jmod.Lib;
 import com.jeffpeng.jmod.primitives.OwnedObject;
 import com.jeffpeng.jmod.scripting.mods.*;
 import com.jeffpeng.jmod.util.actions.*;
 import com.jeffpeng.jmod.util.descriptors.*;
-import cpw.mods.fml.common.Loader;
 
 public class ScriptObject extends OwnedObject {
 	
@@ -35,7 +35,6 @@ public class ScriptObject extends OwnedObject {
 	
 	
 	public void addShapelessRecipe(String result, Object ingredients){
-		owner.getLogger().info("Queueing shapeless recipe for " + result);
 		new AddShapelessRecipe(owner,result, Lib.convertArray(ingredients,String[].class) );
 	}
 	
@@ -91,7 +90,7 @@ public class ScriptObject extends OwnedObject {
 	}
 	
 	public void hideFromNEI(String target){
-		if(Loader.isModLoaded("NotEnoughItems")) new HideNEIItem(owner,target);
+		if(JMODLoader.isModLoaded("NotEnoughItems")) new HideNEIItem(owner,target);
 	}
 	
 	public  TooltipDescriptor addToolTip(String[] target, String[] lines){
@@ -264,6 +263,6 @@ public class ScriptObject extends OwnedObject {
 	
 	
 	public  boolean isModLoaded(String modid){
-		return Loader.isModLoaded(modid);
+		return JMODLoader.isModLoaded(modid);
 	}
 }

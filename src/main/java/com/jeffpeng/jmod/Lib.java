@@ -69,7 +69,7 @@ public class Lib extends OwnedObject {
 		return null;
 	}
 	
-	public static BlockMaterialRegistry blockMaterialRegistry = new BlockMaterialRegistry();
+	public static BlockMaterialRegistry blockMaterialRegistry;
 	
 	public static Material getBlockMaterial(String blockMaterialName) {
 		return blockMaterialRegistry.get(blockMaterialName);

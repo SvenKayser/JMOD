@@ -20,6 +20,7 @@ public class AddSmeltingRecipe extends BasicAction {
 		super(owner);
 		this.result = result;
 		this.ingredient = ingredient;
+		this.valid = true;
 
 	}
 	

@@ -22,6 +22,7 @@ import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.event.FMLEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
+import cpw.mods.fml.common.event.FMLLoadEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.versioning.ArtifactVersion;
@@ -47,6 +48,7 @@ public class JMODContainer implements ModContainer{
 	
 	
 	public JMODContainer(JMODRepresentation mod,File source) throws ModCreationException{
+		mod.setContainer(this);
 		this.modinfo = mod.getModInfo();
 		try{
 			this.name = 		modinfo.name;
@@ -229,6 +231,11 @@ public class JMODContainer implements ModContainer{
 		if(event instanceof FMLPostInitializationEvent) 	modInstance.on((FMLPostInitializationEvent) event); else
 		if(event instanceof FMLLoadCompleteEvent) 			modInstance.on((FMLLoadCompleteEvent) event);
     }
+	
+	@Subscribe
+	public void FMLLoad(FMLLoadEvent event){
+		System.out.println("FMLLoadevent");
+	}
 	
 	@Override
     public String toString()

@@ -7,7 +7,6 @@ import com.jeffpeng.jmod.crafting.StringListRecipe;
 import com.jeffpeng.jmod.primitives.BasicAction;
 
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class AddShapedRecipe extends BasicAction{

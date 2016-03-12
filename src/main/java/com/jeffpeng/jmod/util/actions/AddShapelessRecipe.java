@@ -26,7 +26,6 @@ public class AddShapelessRecipe extends BasicAction {
 	
 	@Override
 	public void execute(){
-		log.info("Exectuing shapeless recipe for " + resultString);
 		List<Object> ingredients = new ArrayList<Object>();
 
 		for (String ingrediententry : ingredientsStrings) {
