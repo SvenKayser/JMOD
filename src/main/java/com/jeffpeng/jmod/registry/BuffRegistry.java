@@ -17,7 +17,7 @@ public class BuffRegistry {
 		return instance;
 	}
 	
-	public BuffRegistry(){
+	private BuffRegistry(){
 		buffMap.put("movespeed", Potion.moveSpeed);
 		buffMap.put("moveslowdown", Potion.moveSlowdown);
 		buffMap.put("digspeed", Potion.digSpeed);
@@ -48,8 +48,10 @@ public class BuffRegistry {
 		
 	}
 	
-	public Potion getBuff(String name){
-		if(buffMap.containsKey(name)) return buffMap.get(name);
+	public static Potion getBuff(String name){
+		if(instance.buffMap.containsKey(name)) return instance.buffMap.get(name);
 		return null;
 	}
+	
+	
 }

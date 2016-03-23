@@ -26,6 +26,7 @@ public class JMODObfuscationHelper {
 		} catch (IOException e) {}
 		
 		list.put("net.minecraft.inventory.ContainerRepair$2", "zw");
+		list.put("net.minecraft.block.BlockSapling", "anj");
 	}
 	
 	public static boolean isDeobf(){

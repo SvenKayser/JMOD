@@ -19,7 +19,7 @@ import codechicken.nei.api.API;
 
 import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.JMODRepresentation;
-import com.jeffpeng.jmod.util.descriptors.AlloyDescriptor;
+import com.jeffpeng.jmod.descriptors.AlloyDescriptor;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -63,9 +63,9 @@ public class ItemCrucible extends CoreItem {
 	@Override
 	public void register(){
 		super.register();
-		JMOD.DEEPFORGE.registerItem(thisFired, "technical.itemCrucible.fired", owner.getModId());
-		JMOD.DEEPFORGE.registerItem(thisFilled, "technical.itemCrucible.filled", owner.getModId());
-		JMOD.DEEPFORGE.registerItem(thisCooked, "technical.itemCrucible.cooked", owner.getModId());
+		JMOD.DEEPFORGE.registerItem(thisFired, "technical.itemCrucible.fired", owner);
+		JMOD.DEEPFORGE.registerItem(thisFilled, "technical.itemCrucible.filled", owner);
+		JMOD.DEEPFORGE.registerItem(thisCooked, "technical.itemCrucible.cooked", owner);
 		if(Loader.isModLoaded("NotEnoughItems")){
 			API.hideItem(new ItemStack(thisFired,1));
 			API.hideItem(new ItemStack(thisFilled,1));

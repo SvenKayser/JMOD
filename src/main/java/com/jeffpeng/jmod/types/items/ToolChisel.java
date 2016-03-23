@@ -15,10 +15,11 @@ import com.cricketcraft.chisel.api.IChiselItem;
 import com.cricketcraft.chisel.api.carving.ICarvingVariation;
 import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.JMODRepresentation;
+import com.jeffpeng.jmod.annotations.StripMissingInterfaces;
+import com.jeffpeng.jmod.descriptors.ToolDataDescriptor;
 import com.jeffpeng.jmod.interfaces.ITool;
-import com.jeffpeng.jmod.util.descriptors.ToolDataDescriptor;
 
-
+@StripMissingInterfaces
 public class ToolChisel extends CoreItem implements IChiselItem, ITool{
 	
 	

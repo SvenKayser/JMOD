@@ -10,7 +10,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 
 import com.jeffpeng.jmod.JMODRepresentation;
-import com.jeffpeng.jmod.Lib;
 import com.jeffpeng.jmod.primitives.OwnedObject;
 
 public class StringListRecipe extends OwnedObject implements IRecipe {
@@ -38,7 +37,7 @@ public class StringListRecipe extends OwnedObject implements IRecipe {
 			this.result = (ItemStack)is;
 			valid = true;
 		} else if(is instanceof String){
-			ItemStack firstEntry = Lib.getFirstOreDictMatch((String) is);
+			ItemStack firstEntry = lib.getFirstOreDictMatch((String) is);
 			if(firstEntry != null){
 				this.result = firstEntry;
 				valid = true;

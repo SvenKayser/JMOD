@@ -1,4 +1,4 @@
-## SI.core mod license (MIT)
+## JMOD license (MIT)
 
 Copyright (c) 2015 Sven Kayser
 

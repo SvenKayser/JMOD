@@ -9,28 +9,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
 import com.jeffpeng.jmod.primitives.JMODInfo;
 import com.jeffpeng.jmod.primitives.ModCreationException;
+import com.jeffpeng.jmod.util.LoaderUtil;
 
 import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ProgressManager;
-import cpw.mods.fml.common.ProgressManager.ProgressBar;
 
-
-
-@SuppressWarnings("deprecation")
 public class JMODLoader {
 
 	private static boolean FMLModsDiscovered = false;
 	private static List<Path> modQueue = new ArrayList<>();
 	private static Map<String,JMODContainer> modList = new HashMap<String,JMODContainer>();
 	private static final String MODSDIRECTORY = "mods";
-	private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 	private static List<String> modids = new ArrayList<>();
 	private static Object fmllock = new Object();
+	
 	
 	public static Map<String,JMODContainer> getModList(){
 		return modList;
@@ -59,47 +52,42 @@ public class JMODLoader {
 			
 		}
 		
-		ProgressBar bar = ProgressManager.push("Constructing JMODs", modQueue.size());
+		//ProgressBar bar = ProgressManager.push("Constructing JMODs", modQueue.size());
 		
 		JMOD.LOG.info("Constructing " + modQueue.size() + " JMODs");
 		
 		for(Path entry : modQueue){
+			JMOD.LOG.info("Constructing " + entry.toString());
+			//bar.step(entry.getFileName().toString());
 			
-			bar.step(entry.getFileName().toString());
-			
-			String rawjson = "";
-			JMODInfo configdata = null;
-			JMODContainer newmod = null;
-			
-			try{
-				rawjson = Lib.readFile(entry, "mod.json");
-			} catch (IOException e){
+			String rawjson = LoaderUtil.loadModJson(entry);
+			if(rawjson == null){
 				JMOD.LOG.warn("[JMODLoader] Failed to load mod declaration from " + entry.toString() + ". This is an error of the mod's author. Skipping.");
 				continue;
 			}
+			JMOD.LOG.info("loaded mod declaration " + entry.toString());
 			
-			
-			
-			try {
-				configdata = gson.fromJson(rawjson, JMODInfo.class);
-				if(!infoDataSanity(configdata,entry.getFileName().toString())) continue;
-					
-			} catch (JsonSyntaxException e){
+			JMODInfo configdata = LoaderUtil.parseModJson(rawjson);
+			if(configdata == null){
 				JMOD.LOG.warn("[JMODLoader] Failed to parse JSON from " + entry.toString() + "   Probably the JSON is malformed. This is an error of the mod's author. Skipping.");
 				continue;
 			}
+			JMODContainer newmod = null;
+			
+			if(!LoaderUtil.infoDataSanity(configdata,entry.getFileName().toString())) continue;
 			
 			if(modids.contains(configdata.modid)){
 				JMOD.LOG.warn("[JMODLoader] The mod " + configdata.modid + " seems to be present more than once. Cannot load the same mod twice. This is either an error of the ModPack creator or you - so fix it! Skipping.");
 				continue;
 			}
 			
+			JMOD.LOG.info("sanity " + entry.toString());
 			modids.add(configdata.modid);
 			
 			try {
 				newmod = new JMODContainer(new JMODRepresentation(configdata,!Files.isDirectory(entry)),entry.toFile());
 			} catch (ModCreationException e){
-				JMOD.LOG.warn(entry.toString() +": " + e.getMessage());
+				JMOD.LOG.warn("modCreationException " + entry.toString() +": " + e.getMessage());
 				continue;
 			}
 			
@@ -108,7 +96,7 @@ public class JMODLoader {
 			modList.put(newmod.getModId(),newmod);
 			
 		}
-		ProgressManager.pop(bar);		
+		//ProgressManager.pop(bar);		
 		
 
 	}
@@ -128,11 +116,20 @@ public class JMODLoader {
 		return false;
 	}
 	
+	
+	
 	protected static void waitOnScripts(){
 		long start = System.currentTimeMillis();
 		boolean finished = false;
 		while(!finished){
 			finished = true;
+			
+			for(Map.Entry<String,JMODContainer> entry : modList.entrySet()){
+				if(entry.getValue().getMod().hasScriptErrored()){
+					throw new RuntimeException(entry.getValue().getModId() + " scripts have errored.");
+				}
+			}
+			
 			for(Map.Entry<String,JMODContainer> entry : modList.entrySet()){
 				finished &= entry.getValue().getMod().isScriptingFinished();
 				if(!finished)	break;
@@ -157,29 +154,7 @@ public class JMODLoader {
 		return modList.get(modid);
 	}
 	
-	private static boolean infoDataSanity(JMODInfo info,String entry){
-		if(info.modid == null){
-			JMOD.LOG.warn("[JMODLoader] The jmod " + entry + " has no modid. That won't work. This is an error of the mod author. Skipping.");
-			return false;
-		}
-		
-		if(info.scripts == null || info.scripts.size() == 0){
-			JMOD.LOG.warn("[JMODLoader] The jmod " + info.modid + " has no scritps. What is it supposed to do? Look good? Loading, but other than load the attached resources, this mod does nothing. This is an error of the mod author.");
-			info.scripts = new ArrayList<>();
-		}
-
-		
-		if(info.name == null){
-			JMOD.LOG.warn("[JMODLoader] The jmod " + info.modid + " has no name. Assuming it's the same as the mod id. It's ugly tho. This is an error of the mod author.");
-			info.name = info.modid;
-		}
-		
-		if(info.version == null){
-			JMOD.LOG.warn("[JMODLoader] The jmod " + info.name + " has no version. Assuming \"v1\". This should be fixed. This is an error of the mod author.");
-		}
-		return true;
-		
-	}
+	
 	
 	public static void markFMLModsDiscovered(){
 		JMOD.LOG.info("markFMLModsDiscovered");

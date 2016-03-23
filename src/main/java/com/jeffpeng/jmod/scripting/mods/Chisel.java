@@ -1,9 +1,9 @@
 package com.jeffpeng.jmod.scripting.mods;
 
 import com.jeffpeng.jmod.JMODRepresentation;
+import com.jeffpeng.jmod.actions.chisel.AddCarvingGroup;
+import com.jeffpeng.jmod.actions.chisel.AddCarvingVariation;
 import com.jeffpeng.jmod.primitives.OwnedObject;
-import com.jeffpeng.jmod.util.actions.chisel.AddCarvingVariation;
-import com.jeffpeng.jmod.util.actions.chisel.AddCarvingGroup;
 
 public class Chisel extends OwnedObject {
 	public Chisel(JMODRepresentation owner) {
@@ -11,7 +11,7 @@ public class Chisel extends OwnedObject {
 	}
 
 	public  void addGroup(String group){
-		if(owner.testForMod("chisel")) new AddCarvingGroup(group);
+		if(owner.testForMod("chisel")) new AddCarvingGroup(owner,group);
 	}
 	
 	public  void addVariation(String group, String variation){

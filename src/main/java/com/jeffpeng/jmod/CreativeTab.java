@@ -11,7 +11,7 @@ public class CreativeTab extends CreativeTabs {
 	private Item iconItem;
 	public CreativeTab(String tabId, String tabName, String itemString) {
 		super(CreativeTabs.getNextID(), tabId);
-		Object is = Lib.stringToItemStackStatic(itemString); 
+		Object is = Lib.stringToItemStackImpl(itemString,null); 
 		if(is instanceof ItemStack){
 			iconItem = ((ItemStack)is).getItem(); 
 		} else {

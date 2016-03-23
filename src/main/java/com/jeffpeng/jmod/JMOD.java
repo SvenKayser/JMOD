@@ -2,30 +2,38 @@ package com.jeffpeng.jmod;
 
 import java.util.Map;
 
-import net.minecraftforge.common.MinecraftForge;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraftforge.common.MinecraftForge;
+
+import com.jeffpeng.jmod.API.Blacklist;
+import com.jeffpeng.jmod.actions.AddChestLoot;
+import com.jeffpeng.jmod.actions.AddShapedRecipe;
+import com.jeffpeng.jmod.actions.AddShapelessRecipe;
+import com.jeffpeng.jmod.actions.AddSmeltingRecipe;
+import com.jeffpeng.jmod.actions.RemoveChestLoot;
+import com.jeffpeng.jmod.actions.RemoveRecipe;
+import com.jeffpeng.jmod.actions.RemoveSmeltingRecipe;
+import com.jeffpeng.jmod.actions.SetBlockProperties;
+import com.jeffpeng.jmod.annotations.InjectInterface;
+import com.jeffpeng.jmod.asm.JMODAnnotationParser;
 import com.jeffpeng.jmod.asm.JMODClassTransformer;
 import com.jeffpeng.jmod.asm.JMODObfuscationHelper;
+import com.jeffpeng.jmod.asm.annotionhandlers.InjectInterfaceHandler;
+import com.jeffpeng.jmod.asm.annotionhandlers.StripMissingInterfacesHandler;
+import com.jeffpeng.jmod.crafting.BlacklistCraftingResults;
 import com.jeffpeng.jmod.crafting.ToolUnbreaker;
+import com.jeffpeng.jmod.interfaces.IAnnotationHandler;
 import com.jeffpeng.jmod.interfaces.IExecutableObject;
 import com.jeffpeng.jmod.interfaces.IStagedObject;
 import com.jeffpeng.jmod.modintegration.decocraft.DecoCraftDyeFix;
 import com.jeffpeng.jmod.modintegration.nei.NEI_JMODConfig;
 import com.jeffpeng.jmod.registry.BlockMaterialRegistry;
 import com.jeffpeng.jmod.util.ForgeDeepInterface;
-import com.jeffpeng.jmod.util.actions.AddChestLoot;
-import com.jeffpeng.jmod.util.actions.AddShapedRecipe;
-import com.jeffpeng.jmod.util.actions.AddShapelessRecipe;
-import com.jeffpeng.jmod.util.actions.AddSmeltingRecipe;
-import com.jeffpeng.jmod.util.actions.RemoveChestLoot;
-import com.jeffpeng.jmod.util.actions.RemoveRecipe;
-import com.jeffpeng.jmod.util.actions.RemoveSmeltingRecipe;
-import com.jeffpeng.jmod.util.actions.SetBlockProperties;
-import com.jeffpeng.jmod.util.actions.chisel.AddCarvingVariation;
-import com.jeffpeng.jmod.util.actions.rotarycraft.AddGrinderRecipeDescriptor;
+
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ProgressManager;
@@ -42,21 +50,30 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
 
 @SuppressWarnings("deprecation")
 @MCVersion(value="1.7.10")
-@TransformerExclusions(value={"com.jeffpeng.jmod.asm"})
+//@TransformerExclusions(value={"com.jeffpeng.jmod.asm"})
 public class JMOD implements IFMLLoadingPlugin {
+	static
+	{
+		IAnnotationHandler.register(new InjectInterfaceHandler());
+		IAnnotationHandler.register(new StripMissingInterfacesHandler());
+	}
+	
+	public static final Logger LOG = LogManager.getLogger("JMOD");
 	public static final String MODID = "jmod";
 	public static final String VERSION = "@VERSION@";
-	public static final String NAME = "Javascript MOD Loader";
+	public static final String NAME = "The JavaScript MOD Loader";
 	private static final GlobalConfig GLOBALCONFIG = new GlobalConfig();
 	private static boolean isServer = false;
-	private static boolean devversion = false;
+	private static boolean devversion = ("@devversion@".equals("true"));
 	protected JMODModContainer modcontainer;
 
 	public static ForgeDeepInterface DEEPFORGE;
 	
-	public static final Logger LOG = LogManager.getLogger("JMOD");
+	
 	private static JMODRepresentation runningMod;
 	private static JMOD instance;
+	
+	
 
 	public JMOD() {
 		instance = this;
@@ -66,17 +83,18 @@ public class JMOD implements IFMLLoadingPlugin {
 	}
 	
 	public void forgeLoaderHook(){
-		JMODLoader.constructMods();
+		
 	}
 
 
 	public void on(FMLConstructionEvent event) {
 		if(event.getSide().isServer()) isServer = true;
-		if("@devversion@".equals("true")){devversion = true;}
+		BlacklistCraftingResults.init();
+		BlacklistCraftingResults.getInstance().blacklistDomain("RotaryCraft");
 		DEEPFORGE = new ForgeDeepInterface();
-		
+		JMODLoader.constructMods();
 		JMODLoader.inject();
-		JMODLoader.waitOnScripts();
+		//JMODLoader.waitOnScripts();
 		ProgressBar bar = ProgressManager.push("Initializing JMODs", JMODLoader.getModList().size());
 		for(Map.Entry<String,JMODContainer> entry : JMODLoader.getModList().entrySet()){
 			bar.step(entry.getValue().getName());
@@ -84,78 +102,32 @@ public class JMOD implements IFMLLoadingPlugin {
 			modcontainer.meta.description += "\n    §f"+entry.getValue().getName()+"   §b"+entry.getValue().getVersion();
 		}
 		ProgressManager.pop(bar);
-		
-		
-		
-		
 	}
 
 	
 	public void on(FMLPreInitializationEvent event) {
 		Lib.blockMaterialRegistry = new BlockMaterialRegistry();
-		IStagedObject.sort();
-		broadcast(event);
 		runningMod = null;
 	}
 
 	
 	public void on(FMLInitializationEvent event) {
-		broadcast(event);
 		if(GLOBALCONFIG.preventToolBreaking) 	MinecraftForge.EVENT_BUS.register(new ToolUnbreaker());
-		if(Loader.isModLoaded("NotEnoughItem"))	new NEI_JMODConfig();
+		if(Loader.isModLoaded("NotEnoughItems"))	new NEI_JMODConfig();
 	}
 
 	
 	public void on(FMLPostInitializationEvent event) {
-		broadcast(event);
-
-		if(Loader.isModLoaded("RotaryCraft"))		execute(AddGrinderRecipeDescriptor.class);
-		if(Loader.isModLoaded("chisel"))			execute(AddCarvingVariation.class);
 		Lib.patchTools();
 		Lib.patchArmor();
-		
 	}
 	
 	
 	public void on(FMLLoadCompleteEvent event){
-		
-		broadcast(event);
-		execute(RemoveRecipe.class);
-		execute(AddShapedRecipe.class);
-		execute(AddShapelessRecipe.class);
-		execute(RemoveSmeltingRecipe.class);
-		execute(AddSmeltingRecipe.class);
-		execute(RemoveChestLoot.class);
-		execute(AddChestLoot.class);
 		if(Loader.isModLoaded("props"))			DecoCraftDyeFix.fix();
-		
 	}
 	
-	public void on(FMLServerStartedEvent event){
-		execute(SetBlockProperties.class);
-	}
-	
-	public static JMODRepresentation getRunningMod(){
-		return runningMod;
-	}
-	
-	public static String getRunningModId(){
-		return runningMod.getModId();
-	}
-	
-	public void execute(@SuppressWarnings("rawtypes") Class clazz){
-		IExecutableObject.execute(clazz);
-		
-	}
-	
-	private void broadcast(Object event){
-		if(event instanceof FMLPreInitializationEvent) 		IStagedObject.broadcast((FMLPreInitializationEvent)event); else
-		if(event instanceof FMLInitializationEvent) 		IStagedObject.broadcast((FMLInitializationEvent)event); else
-		if(event instanceof FMLPostInitializationEvent) 	IStagedObject.broadcast((FMLPostInitializationEvent)event); else
-		if(event instanceof FMLLoadCompleteEvent) 			IStagedObject.broadcast((FMLLoadCompleteEvent)event); else
-		if(event instanceof FMLServerStartedEvent)	 		IStagedObject.broadcast((FMLServerStartedEvent)event);
-		
-	}
+	public void on(FMLServerStartedEvent event){}
 	
 	public static JMOD getInstance(){
 		return instance;
@@ -179,7 +151,10 @@ public class JMOD implements IFMLLoadingPlugin {
 	
 	@Override
 	public String[] getASMTransformerClass() {
-		return new String[] { JMODClassTransformer.class.getName() };
+		return new String[] { 
+			JMODAnnotationParser.class.getName(),
+			JMODClassTransformer.class.getName()
+		};
 	}
 
 	@Override

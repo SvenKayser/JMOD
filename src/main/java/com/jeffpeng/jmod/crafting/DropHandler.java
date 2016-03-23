@@ -9,8 +9,8 @@ import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.Lib;
+import com.jeffpeng.jmod.actions.AddBlockDrop;
 import com.jeffpeng.jmod.primitives.OwnedObject;
-import com.jeffpeng.jmod.util.actions.AddBlockDrop;
 
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;

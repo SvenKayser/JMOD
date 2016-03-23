@@ -6,10 +6,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 import com.jeffpeng.jmod.JMODRepresentation;
-import com.jeffpeng.jmod.interfaces.IItem;
 import com.jeffpeng.jmod.interfaces.IItemColor;
 
-public class CoreDye extends CoreItem implements IItem, IItemColor {
+public class CoreDye extends CoreItem implements IItemColor {
 	
 	public CoreDye(JMODRepresentation owner) {
 		super(owner);

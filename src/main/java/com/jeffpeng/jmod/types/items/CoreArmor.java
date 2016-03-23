@@ -6,10 +6,9 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 
 import com.jeffpeng.jmod.Config;
-import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.JMODRepresentation;
+import com.jeffpeng.jmod.descriptors.ColorDescriptor;
 import com.jeffpeng.jmod.interfaces.IArmor;
-import com.jeffpeng.jmod.util.descriptors.ColorDescriptor;
 
 public class CoreArmor extends ItemArmor implements IArmor {
 	
@@ -47,6 +46,11 @@ public class CoreArmor extends ItemArmor implements IArmor {
 	public void setName(String name){
 		this.internalName = name;
 		this.setUnlocalizedName(getPrefix()+"."+name);
+	}
+	
+	@Override
+	public String getName(){
+		return this.internalName;
 	}
 
 	@Override
@@ -89,9 +93,8 @@ public class CoreArmor extends ItemArmor implements IArmor {
 	}
 
 	@Override
-	public void register() {
-		JMOD.DEEPFORGE.registerItem(this, this.internalName, owner.getModId());
-		
+	public JMODRepresentation getOwner() {
+		return owner;
 	}
 
 }

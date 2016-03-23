@@ -4,7 +4,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
 import com.jeffpeng.jmod.Config;
-import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.interfaces.IItem;
 
@@ -20,11 +19,6 @@ public class CoreItem extends Item implements IItem {
 		this.config = owner.getConfig();
 	}
 	
-	
-	public String getPrefix(){
-		return owner.getModId();
-	}
-	
 	@Override
 	public void setName(String name){
 		this.internalName = name;
@@ -35,13 +29,8 @@ public class CoreItem extends Item implements IItem {
 		return this.internalName;
 	}
 	
-	
-	
-	
-	
-	@Override
-	public void register(){
-		JMOD.DEEPFORGE.registerItem(this, this.internalName, owner.getModId());
+	public JMODRepresentation getOwner(){
+		return owner;
 	}
 	
 	@Override
