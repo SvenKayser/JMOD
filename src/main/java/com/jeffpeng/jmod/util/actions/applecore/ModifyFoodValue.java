@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 
 public class ModifyFoodValue extends BasicAction {
 
-	String foodUnlocalizedName;
+	ItemStack foodStack;
 	String foodName;
 	int hunger;
 	float saturationModifier;
@@ -26,7 +26,7 @@ public class ModifyFoodValue extends BasicAction {
 		
 		ItemStack fs = (ItemStack) lib.stringToItemStack(foodName);
 		if(fs != null && fs instanceof ItemStack) {
-			foodUnlocalizedName = fs.getUnlocalizedName();
+			foodStack = fs;
 			
 			valid = true;
 		}
@@ -41,6 +41,6 @@ public class ModifyFoodValue extends BasicAction {
 	public void execute() {
 		AppleCoreModifyFoodValues store = AppleCoreModifyFoodValues.getInstance();
 		
-		store.addModifedFoodValue(foodUnlocalizedName, hunger, saturationModifier);
+		store.addModifedFoodValue(foodStack, hunger, saturationModifier);
 	}
 }

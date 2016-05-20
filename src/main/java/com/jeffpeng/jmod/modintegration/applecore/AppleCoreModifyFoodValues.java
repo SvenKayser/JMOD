@@ -2,8 +2,11 @@ package com.jeffpeng.jmod.modintegration.applecore;
 
 import java.util.HashMap;
 
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraft.item.ItemStack;
 import squeek.applecore.api.food.FoodEvent;
 import squeek.applecore.api.food.FoodValues;
 
@@ -21,9 +24,15 @@ public class AppleCoreModifyFoodValues {
 	private HashMap<String, FoodValues> foodItems = new HashMap<String, FoodValues>();
 
 	
-	public void addModifedFoodValue(String foodUnlocalizedName, int hunger, float saturationModifier) {
+	public void addModifedFoodValue(ItemStack foodStack, int hunger, float saturationModifier) {
 		FoodValues val = new FoodValues(hunger, saturationModifier);
-		foodItems.put(foodUnlocalizedName, val);
+		foodItems.put(foodStack.getUnlocalizedName(), val);
+		
+		//Send a message, So that HungerOverhaul does not change my values back..
+		if(Loader.isModLoaded("HungerOverhaul")) {
+			FMLInterModComms.sendMessage("HungerOverhaul", "BlacklistFood", foodStack);
+		}
+
 	}
 	
 	
