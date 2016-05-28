@@ -5,11 +5,13 @@ import com.jeffpeng.jmod.modintegration.applecore.AppleCoreModifyFoodValues;
 import com.jeffpeng.jmod.primitives.BasicAction;
 
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.GameRegistry.UniqueIdentifier;
 import net.minecraft.item.ItemStack;
 
 public class ModifyFoodValue extends BasicAction {
 
-	ItemStack foodStack;
+	UniqueIdentifier uid;
 	String foodName;
 	int hunger;
 	float saturationModifier;
@@ -24,11 +26,15 @@ public class ModifyFoodValue extends BasicAction {
 	@Override
 	public boolean on(FMLPostInitializationEvent event){
 		
-		ItemStack fs = (ItemStack) lib.stringToItemStack(foodName);
-		if(fs != null && fs instanceof ItemStack) {
-			foodStack = fs;
+		ItemStack stack = (ItemStack) lib.stringToItemStack(foodName);
+		
+		if(stack != null && stack instanceof ItemStack) {
+			uid = GameRegistry.findUniqueIdentifierFor(stack.getItem());
 			
-			valid = true;
+			if(uid != null) {
+				valid = true;
+			}
+			
 		}
 		else {
 			valid = false;
@@ -41,6 +47,6 @@ public class ModifyFoodValue extends BasicAction {
 	public void execute() {
 		AppleCoreModifyFoodValues store = AppleCoreModifyFoodValues.getInstance();
 		
-		store.addModifedFoodValue(foodStack, hunger, saturationModifier);
+		store.addModifedFoodValue(uid, hunger, saturationModifier);
 	}
 }

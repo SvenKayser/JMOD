@@ -12,7 +12,8 @@ import com.jeffpeng.jmod.asm.JMODObfuscationHelper;
 import com.jeffpeng.jmod.crafting.ToolUnbreaker;
 import com.jeffpeng.jmod.interfaces.IExecutableObject;
 import com.jeffpeng.jmod.interfaces.IStagedObject;
-//import com.jeffpeng.jmod.modintegration.decocraft.DecoCraftDyeFix;
+import com.jeffpeng.jmod.modintegration.applecore.AppleCoreModifyFoodValues;
+import com.jeffpeng.jmod.modintegration.decocraft.DecoCraftDyeFix;
 import com.jeffpeng.jmod.modintegration.nei.NEI_JMODConfig;
 import com.jeffpeng.jmod.registry.BlockMaterialRegistry;
 import com.jeffpeng.jmod.util.ForgeDeepInterface;
@@ -104,6 +105,10 @@ public class JMOD implements IFMLLoadingPlugin {
 		broadcast(event);
 		if(GLOBALCONFIG.preventToolBreaking) 	MinecraftForge.EVENT_BUS.register(new ToolUnbreaker());
 		if(Loader.isModLoaded("NotEnoughItem"))	new NEI_JMODConfig();
+		
+		if(Loader.isModLoaded("AppleCore"))	{
+			MinecraftForge.EVENT_BUS.register(AppleCoreModifyFoodValues.getInstance());
+		}
 	}
 
 	
@@ -112,7 +117,7 @@ public class JMOD implements IFMLLoadingPlugin {
 
 		if(Loader.isModLoaded("RotaryCraft"))		execute(AddGrinderRecipeDescriptor.class);
 		if(Loader.isModLoaded("chisel"))			execute(AddCarvingVariation.class);
-		if(Loader.isModLoaded("applecore"))			execute(ModifyFoodValue.class);
+		if(Loader.isModLoaded("AppleCore"))			execute(ModifyFoodValue.class);
 		Lib.patchTools();
 		Lib.patchArmor();
 		
@@ -129,7 +134,7 @@ public class JMOD implements IFMLLoadingPlugin {
 		execute(AddSmeltingRecipe.class);
 		execute(RemoveChestLoot.class);
 		execute(AddChestLoot.class);
-		//if(Loader.isModLoaded("props"))			DecoCraftDyeFix.fix();
+		if(Loader.isModLoaded("props"))			DecoCraftDyeFix.fix();
 		
 	}
 	
