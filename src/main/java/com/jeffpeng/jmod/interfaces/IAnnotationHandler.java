@@ -11,14 +11,11 @@ public interface IAnnotationHandler {
 	
 	public static void register(IAnnotationHandler handler){
 		for(String ad : handler.getAnnotationDescriptors()){
-			System.out.println("###1 put "+ad);
 			annotationHandlers.put(ad, handler);
 		}
-		
 	}
 	
 	public static IAnnotationHandler getHandler(AnnotationNode aN){
-		System.out.println("###2 get "+aN.desc);
 		return annotationHandlers.get(aN.desc);
 	}
 	
