@@ -1,0 +1,1038 @@
+\documentclass[letterpaper,titlepage,12pt]{article}
+\usepackage[top=1in,bottom=1in,right=1in,left=1in]{geometry}
+\usepackage{multicol}
+
+\usepackage{parskip}
+
+% Are we using Xetex?  If so, use the fancy font.
+\usepackage{ifxetex}
+\usepackage{ifluatex}
+\ifxetex
+	\usepackage{fontspec}
+	\setsansfont[Ligatures=TeX]{Linux Biolinum O}
+	\setmainfont[Ligatures=TeX]{Linux Libertine O}
+	\setmonofont[Ligatures=TeX,Scale=0.85]{Linux Libertine Mono O}
+\else
+	\ifluatex
+		\usepackage{fontspec}
+		\setsansfont[Ligatures=TeX]{Linux Biolinum O}
+		\setmainfont[Ligatures=TeX]{Linux Libertine O}
+		\setmonofont[Ligatures=TeX,Scale=0.85]{Linux Libertine Mono O}
+	\else
+		\usepackage[utf8]{inputenc}
+	\fi
+\fi
+
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+{\normalfont\huge\sffamily\bfseries}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titleformat{\section}
+{\normalfont\Large\sffamily\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}
+{\normalfont\large\sffamily\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+{\normalfont\normalsize\sffamily\bfseries}{\thesubsubsection}{1em}{}
+\titleformat{\paragraph}[runin]
+{\normalfont\normalsize\sffamily\bfseries}{\theparagraph}{1em}{}
+\titleformat{\subparagraph}[runin]
+{\normalfont\normalsize\sffamily\bfseries}{\thesubparagraph}{1em}{}
+
+\titlespacing*{\chapter} {0pt}{50pt}{40pt}
+\titlespacing*{\section} {0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+\titlespacing*{\subsection} {0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+\titlespacing*{\subsubsection}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+\titlespacing*{\paragraph} {0pt}{3.25ex plus 1ex minus .2ex}{1em}
+\titlespacing*{\subparagraph} {\parindent}{3.25ex plus 1ex minus .2ex}{1em}
+
+\usepackage{titling}
+\renewcommand{\maketitlehooka}{\sffamily}
+
+\title{JMOD: The JavaScript Mod Loader\\{\small A Tweaking Tool for Modpack Authors}}
+\author{Designed by JeffPeng\\Documented by Reteo}
+
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+
+\newpage
+
+\section*{Introduction}
+
+Modding Minecraft is a complex task.  There are a lot of steps involved, and requires a significant amount of knowledge in programming, particularly the ability to understand object-oriented programming in Java.  Because of this, mod tweaking programs started appearing on the scene with simpler configurations, such as the ever-popular MineTweaker (and its addon, ModTweaker).  However, because they are creating their own configuration languages, the results are less-than-stellar.  They spend time in adding tweaking features, but they do not put as much effort into the language itself.
+
+Because of this, I, the creator of the Survival Industry, started piling on tweak tool after tweak tool; Minetweaker and Modtweaker, SquidUtils, Block Properties, CustomItems... It was getting to the point that I had more tweak tools than mods.  Then I managed to get JeffPeng on my team, and he started working on this tool.
+
+We decided to create a new mod format (called the jmod file), which is a zipfile containing all the scripts and assets (language files and textures) made for the modpack, which, once compressed, is simply placed in the mods folder.  This means that you can create scripts for your modpack, and distribute them as an actual mod, only requiring JMOD to be included as the modloader.  For your convenience, we'll separate the loader and the mods it loads by case; we'll call the loader ``JMOD,'' and the javascript mod file a ``jmod.''
+
+JMOD includes many important features for tweaking Minecraft, including:
+
+\begin{itemize}
+\item Creation of new items, blocks, and materials.
+\item Customization of block and item properties, including settings for food, armor, and tools.
+\item Adjustment of chest loot, either specific to locations, or globally.
+\item A built-in ore generation engine, to distribute any ores created in the scripts.
+\item Custom recipes, both shaped and shapeless.
+\item New creative tabs for your custom items.
+\item Custom log messages and tooltips, complete with colored text.
+\item Ore Dictionary tweaking.
+\item An alloying feature making use of a crucible and a mold (you'll need to make these, though).
+\item Built-in support for Chisel's chisel (including the creation of additional chisels), as well as RotaryCraft's grinder and blast furnace (more on the way).
+\end{itemize}
+
+To simplify the process, he used the JavaScript language built into Java 8 (called ``Nashorn'') to make the language much more complete.  Loops, conditionals, tests... they're all there, and working without an issue.  And JavaScript is a standard that many programmers know or could easily learn, with documentation everywhere.
+
+However, there are commands specific to JMOD that are not documented anywhere else, which is where this document comes into play.  In the following sections, I will be listing all the major commands for this scripting tool, including their usage, and some examples for good measure.  Hopefully, by the time you're done with this document, you should know enough about JMOD to start making your own jmods.  And no, you are not limited to just one jmod.  If it helps, split them out as you wish.
+
+Note that JMOD is alpha software, and is likely to change in the future, so while I'll try and keep this document up-to-date, I can't guarantee the information is accurate in reference to a version of JMOD newer than the above date.  However, this should give you a good head-start.
+
+\section{The Jmod File}
+Before we begin with the scripts, I want to make sure you understand this.  A jmod is a zipfile with the \texttt{.jmod} extension.  This prevents Forge's modloader from trying to load this file, and ensures that JMOD does.
+
+The jmod zipfile contains the following:
+
+\begin{itemize}
+\item A \texttt{mod.json} file with the mod information for the modloader.
+\item One or more javascript files with the actual mod commands.
+\item An image file with the logo for your jmod, if desired.
+\item An ``assets'' folder containing all the language and texture resources used by the jmod.
+\end{itemize}
+
+\subsection{mod.json}
+This file is a JSON file, and it is the key to getting the jmod working.  It lists several things:
+
+\begin{description}
+\item[modid] The Mod ID of your jmod, which will be used to ID objects created in the jmod.
+\item[name] The actual name of the jmod.
+\item[description] A description of the jmod, which will be visible from the Forge mods list.
+\item[version] The version number of the jmod, provided you are releasing new versions as you go.
+\item[scripts] This lists the scripts that JMOD will need to run in order to make the mod happen.
+\item[authors] More informational data for the Forge mod list.
+\item[url] A website address where the jmod (or modpack) can be acquired.
+\item[logo] This points to the above image file, if you desire a logo.
+\item[credits] It's just polite to credit your sources.
+\end{description}
+
+\subsection{Javascript Files}
+
+These are the meat of the jmod.  You can have one script covering everything, or else, you can set things up so that the first script (identified in the \texttt{mod.json} file) loads other scripts, so you can keep features separated.  It is in these files that you can place the commands listed in the following sections.
+
+\subsection{Logo Image}
+
+As previously mentioned, JMOD will actually add your jmods into the Forge mod list.  This means that it wouldn't hurt to include a logo image to make it look good in the list.  The file should be a PNG file.
+
+\subsection{Assets}
+
+This is the folder containing all the resources for the jmod.  The sub-folder containing the resources for the custom items created in the jmod should be named after the \texttt{modid} field of the \texttt{mod.json} file.
+
+For example, if the jmod's \texttt{modid} is ``Greatmod'', then that is the folder you should make for custom language and texture files in assets, e.g. \texttt{assets/Greatmod}.
+
+\subsection{Making the jmod}
+
+To complete the process of making the JMOD, make all the above files (as needed), then zip them up.  You should then change the suffix of this zipfile from \texttt{.zip} to \texttt{.jmod}.  Once the suffix is changed, copy the newly-minted jmod file to your mods folder, and the jmod should be ready for JMOD to load it.
+
+\section{The JMOD Commands}
+
+The following are the commands used specifically by JMOD to make the tweaks to your game.
+
+\subsection{Basic Script and Mod Commands}
+
+These commands cover the complex task of loading other scripts at the right times, as well as checking for mods, either as a way to test their presence, or a warning for players who remove a mod needed for the specific pack.
+
+\subsubsection{Loading Other Scripts}
+
+Loads another JavaScript file from within the jmod.
+
+\begin{description}
+\item[Command:] \texttt{load(``\emph{filename}'')}
+\begin{description}
+\item [filename:] This is the filename of the script you wish to load.
+\end{description}
+\end{description}
+
+
+\subsubsection{Checking for Other Mods}
+
+Checks to see if a mod is loaded.  This command returns ``true'' if the mod is loaded, and ``false'' otherwise.
+
+\begin{description}
+\item[Command:] \texttt{isModLoaded(``\emph{modid}'')}
+
+\begin{description}
+\item [modid:] This is the Mod ID of the mod you are checking.
+\end{description}
+\end{description}
+
+\subsubsection{Modpack Dependencies}
+
+This command will pop up a message if the specified mod is not loaded.  Useful in modpacks depending on certain mods, just in case players manually remove them.
+
+\begin{description}
+\item[Command:] \texttt{dependency(``emph{modid}'', ``\emph{mod name}'')}
+
+\begin{description}
+\item [modid:] This is the Mod ID of the mod you are checking.  Returns ``true'' if the mod is loaded, ``false'' if not.
+\item [mod name:] This is the actual name of the mod you are checking.
+\end{description}
+\end{description}
+
+\subsection{Logging and Tooltips}
+
+These commands cover the information in the game, either with tooltips that appear when you mouse over an item, or log messages that you can place to help debug problems in your scripts.
+
+\subsubsection{Adding a Log Message}
+
+Displays the message in the minecraft log.
+
+\begin{description}
+\item[Command:] \texttt{log(``\emph{message}'')}
+
+\begin{description}
+\item [message:] This is the the message that gets displayed in the log.
+\end{description}
+\end{description}
+
+\subsubsection{Adding a ToolTip}
+
+Displays a tooltip when the mouse hovers over a specific object.  The tooltip lines should be identifiers; you should actually write the tooltips in the appropriate language file.  This will allow tooltips to be translated to other languages without changing the javascript.  Additionally, tooltip messages do not wrap to the next line, so try to keep the tooltip lines short, and add lines to complete the message.
+
+\begin{description}
+\item[Command:] \texttt{addToolTip(``\emph{target}'',``\emph{tooltip lines}'')}
+
+\begin{description}
+\item [target:] The object the tooltip messages will be applied to.
+\item [tooltip lines:] A comma-separated list of strings (each enclosed by quotes), each is one line of the tooltip being applied.
+\end{description}
+\end{description}
+
+
+\subsection{User Interface Tweaks}
+
+These make changes to the existing user interfaces for Creative Mode and Not Enough Items.
+
+\subsubsection{Making Creative Mode Tabs}
+
+Creates new tabs in the creative mode user interface.
+
+\begin{description}
+\item[Command:] \texttt{addCreativeTab(``\emph{tabid}'', ``\emph{Tab Name}'', ``\emph{target}'')}
+
+\begin{description}
+\item [tabid:] This is the ID name for the tab.
+\item [Tab Name:] This is the name of the tab that will appear on the tab's  tooltip.
+\item [target:] This is the first item to be added to that tab.  You cannot have an empty creative mode tab.
+\end{description}
+\end{description}
+
+\subsubsection{Hiding Something from ``Not Enough Items''}
+
+When assigned an item ID, the item will be removed from the NEI item list (on the right side of tile entities' GUIs).  Useful if trying to hide items not used in a modpack.
+
+\begin{description}
+\item[Command:] \texttt{hideFromNEI(``\emph{target}'')}
+
+\begin{description}
+\item [target:] The object that will be hidden from NEI
+\end{description}
+\end{description}
+
+
+\subsection{Creating Things}
+
+You can create items, blocks, and materials without limit.  Note, however, this does not include tile entities (blocks that have special functions); those need to be coded in Java, and cannot be made using JMOD.
+
+\subsubsection{Adding Tool Materials}
+
+This creates the material that defines the ability of tools made from that material.  This command can also be used to change existing tool materials, such as STONE, WOOD, and IRON.  If you use the tool repair features of JMOD, it is recommended to do this with all known materials, even if only to add the repair material to them (for example, plankWood to WOOD, or ingotGold to GOLD).
+
+\begin{description}
+\item[Command:] \texttt{addToolMaterial(``\emph{material id}'', \emph{harvest level}, \emph{durability}, \emph{efficiency}, \emph{damage}, \emph{enchantability}, ``\emph{repair material}'')}
+
+\begin{description}
+\item [material id:] The ID of the tool material.  Usually, the ID is the name of the material, all in uppercase (such as ``IRON'')
+\item [harvest level:] The tool can harvest blocks of this harvest level and lower.
+\item [durability:] This is the number of uses a tool has before it's broken.
+\item [efficiency:] This is how fast the tool can harvest blocks.
+\item [damage:] This is how much damage is done by a weapon.
+\item [enchantability:] This is how enchantable a tool is.  The higher the number, the greater the enchantability.
+\item [repair material:] This is the item ID of the object needed to repair tools using the advanced repair features of JMOD.
+\end{description}
+\end{description}
+
+\subsubsection{Adding Armor Materials}
+
+This creates the material that defines the ability of armor made from that material.
+
+\begin{description}
+\item[Command:] \texttt{addArmorMaterial(``\emph{material id}'', \emph{base damage reduction}, \emph{helmet modifier}, \emph{chestplate modifier}, \emph{leggings modifier}, \emph{boots modifier}, \emph{enchantability}, ``\emph{repair material}'')}
+
+
+\begin{description}
+\item [material id:] The ID name of the armor material.
+\item [base damage reduction:] The base amount of damage reduction, doubles as durability.
+\item [helmet modifier:] The amount of extra damage reduction applied to a helmet.
+\item [chestplate modifier:] The amount of extra damage reduction applied to a chestplate.
+\item [leggings modifier:] The amount of extra damage reduction applied to leggings.
+\item [boots modifier:] The amount of extra damage reduction applied to boots.
+\item [enchantability:] This is how enchantable armor made from this material is.
+\item [repair material:] This is the item ID of the object needed to repair the armor using the advanced anvil repair features of JMOD.
+\end{description}
+\end{description}
+
+\subsubsection{Adding Alloys}
+
+Defines an alloy based on two input ingots.  This is applied by JMOD to the crucible/mold alloying process (see 3.1.2).
+
+\begin{description}
+\item[Command:] \texttt{addAlloy(``\emph{result}'', ``\emph{first ingot}'', ``\emph{second ingot}'', \emph{resulting amount})}
+
+\begin{description}
+\item [result:] This is the item ID of the object formed by the alloying process.
+\item [first ingot:] This is the item ID of one of the items used in the alloying process.
+\item [second ingot:] This is the item ID of another of the items used in the alloying process.
+\item [resulting amount:] This is how many of the resulting material is created by alloying.
+\end{description}
+\end{description}
+
+\subsubsection{Ore Multiplying}
+
+This uses the alloying command above, but only takes in one material, and is useful in making a general-purpose ore multiplying mechanic without the need for special tile entities.
+
+\begin{description}
+\item[Command:] \texttt{addAlloy(``\emph{output}'', ``\emph{input}'', \emph{output amount})}
+\begin{description}
+\item [output:] This is the item ID of the ingot formed by the process.
+\item [input:] This is the item ID of the ore used in the process.
+\item [resulting amount:] This is how many of the resulting material is created by the process.
+\end{description}
+\end{description}
+
+\subsubsection{Adding Items}
+
+The item addition command is a complex one, because it includes not just the basic item, but also three special types of item (armor, tools, food) that each have their own special options.  
+
+\begin{description}
+\item[Command:] \texttt{addItem(``item id name'', ``class'', stack size, ``creative tab id'')}
+\begin{description}
+\item [item id name:] This is the item ID of the item being created, without the mod name prefix (the name before the first colon).
+\item [class:] This is the item class, and can use classes from both vanilla Minecraft, as well as mods.
+\item [stack size:] This is the maximum stack size of the item.
+\item [creative tab id:] This is the ID name of the creative mode tab this item will be placed in.
+\end{description}
+\end{description}
+
+There are three important types of item that can be added with special properties assigned to them in the script: food, tools, and armor.  
+
+Note: if you wish to create metal ingots, there is another command below you can use instead of this one that will simplify the process.
+
+\vspace{2em}
+\textbf{Food}
+\vspace{1em}
+
+Food is a special item that can be eaten in order to add ``shanks'' to your hunger bar.  Each ``shank'' is worth two hunger.  To add hunger satisfaction and other properties to food items, simply add:
+
+\begin{description}
+\item[Method:] \texttt{.FoodData(hunger, saturation, wolf food, always edible)}
+\begin{description}
+\item [hunger:] This determines how much hunger food satisfies.
+\item [saturation:] This determines how much saturation food provides.
+\item [wolf food:] Can this be fed to wolves to befriend them?  Answer is boolean, meaning true or false.
+\item [always edible:] Is this food always edible (even when full)?  Answer is boolean, meaning true or false.
+\end{description}
+\end{description}
+
+the .FoodData method also has a separate method that allows food to supply enchantments to the player eating it.
+
+\begin{description}
+\item[Method:] \texttt{.buffdata(``enchantment id'', duration, level, chance)}
+\begin{description}
+\item [enchantment id:] The ID name of the enchantment that buffs (or debuffs) the player.
+\item [duration:] This determines how long (in seconds) the enchantment lasts.
+\item [level:] This is the level of the enchantment provided by the food.
+\item [chance:] The chance (in \%) that the enchantment will be applied by the food.
+\end{description}
+\end{description}
+
+\vspace{2em}
+\textbf{Tools}
+\vspace{1em}
+
+A tool applies the properties assigned by the tool material it is made of.  However, for this to happen, you need to assign the material to the tool item.
+
+\begin{description}
+\item[Method:] \texttt{.ToolData(``material'')}
+\begin{description}
+\item [material:] The name of the tool material applied to the tool item.
+\end{description}
+\end{description}
+
+Additional properties can be applied to the tool using additional ToolData methods.
+
+First, there's the tool's durability:
+
+\begin{description}
+\item[Method:] \texttt{.durability(durability)}
+\begin{description}
+\item [durability:] The tool's individual durability value.
+\end{description}
+\end{description}
+
+Then, its tool class:
+
+\begin{description}
+\item[Method:] \texttt{.toolclass(``tool class'')}
+\begin{description}
+\item [tool class:] The class name of the tool.
+\end{description}
+\end{description}
+
+Next, we can decide if we want the tool to be breakable or not:
+
+\begin{description}
+\item[Method:] \texttt{.unbreakable(value)}
+\begin{description}
+\item [value:] Does the tool ignore endurance?  Answer is boolean, meaning true or false.
+\end{description}
+\end{description}
+
+Finally, we can determine if the tool has modes (only applies for tool classes that have available modes):
+
+\begin{description}
+\item[Method:] \texttt{.hasModes(value)}
+\begin{description}
+\item [value:] Does the tool have modes?  Answer is boolean, meaning true or false.
+\end{description}
+\end{description}
+
+\vspace{2em}
+\textbf{Armor}
+\vspace{1em}
+
+Finally, armor has its own properties, based on what it's made of, and what part is being defined.
+
+\begin{description}
+\item[Method:] \texttt{.ArmorData(``material'', ``type'')}
+\begin{description}
+\item [material:] The material ID used by the armor piece.
+\item [type:] The type of armor this is; options are ``Helmet'', ``Chestplate'', ``Leggings'', and ``Boots''.
+\end{description}
+\end{description}
+
+
+\subsubsection{Adding Metal Ingots}
+
+You can add ingots of a specific type of metal.  This is mostly a convenience; ingots created with this will automatically be given appropriate classes, item IDs, and ore dictionary names.
+
+\begin{description}
+\item[Command:] \texttt{addMetalIngot(``name'')}
+\begin{description}
+\item [name:] This is the material name of the ingot being created.
+\end{description}
+\end{description}
+
+\subsubsection{Adding Blocks}
+
+Items are things that can have a function while being held.  Blocks, on the other hand, are things that can be placed into the world.  Note, this does not include tile entities, which are blocks that have actual functions while placed in the world.  This is just for blocks.  Due to the nature of tile entities, it is not currently feasible to make them using JavaScript, as they would perform horribly.
+
+\begin{description}
+\item[Command:] \texttt{addBlock(``block id name'', ``class'', hardness, blast resistance, ``tool'', harvest level, ``material'', ``tab'')
+}
+\begin{description}
+\item [block id name:] This is the block ID of the item being created, without the mod name prefix.
+\item [class:] This is the block class, and can use classes from vanilla Minecraft, as well as mods. 
+\item [hardness:] This is the hardness value of the block; a higher value means it takes longer to mine. 
+\item [blast resistance:] This is the blast resistance value of the block; the higher the value, the more power an explosion will need to break it.
+\item [harvest level:] This is the harvest level a tool will need to be in order to harvest this block.
+\item [material:] This is the material of the block.
+\item [tab:] This  is the name of the creative mode tab the block will be placed in.
+\end{description}
+\end{description}
+
+\subsubsection{Adding Metal Blocks}
+
+You can add blocks of a specific type of metal.  This is mostly a convenience; blocks created with this will automatically be given appropriate classes, item IDs, and ore dictionary names.
+
+\begin{description}
+\item[Command:] \texttt{addMetalBlock(``name'')}
+\begin{description}
+\item [name:] This is the material name of the block being created.
+\end{description}
+\end{description}
+
+\subsection{The Ore Dictionary}
+
+These allow you to add, remove, change, or consolidate ore dictionary entries.
+
+\subsubsection{Adding to the Ore Dictionary}
+
+You can add items to the ore dictionary, add new entries to the ore dictionary, or both.
+
+\begin{description}
+\item[Command:] \texttt{addOreDict(``block id name'', ``ore dictionary entry'')}
+\begin{description}
+\item [block id name:] This is the ID of the item being added to the ore dictionary.  You can use another ore dictionary name in place of the block ID, and it will merge it into the desired ore dictionary entry.
+\item [ore dictionary entry:] This is the ore dictionary name you want to add to.
+\end{description}
+\end{description}
+
+\subsubsection{Removing from the Ore Dictionary}
+
+You can also remove items from the ore dictionary.
+
+\begin{description}
+\item[Command:] \texttt{removeOreDict(``block id name'', ``ore dictionary entry'')}
+\begin{description}
+\item [block id name:] This is the ID of the item being removed from the ore dictionary.
+\item [ore dictionary entry:] This is the ore dictionary name you want to pull from.
+\end{description}
+\end{description}
+
+\subsection{Recipes}
+
+One of the mostly-used tweaks is the ability to alter recipes.
+
+\subsubsection{Removing Recipes}
+
+Deletes an exsiting crafting table recipe for an item.
+
+\begin{description}
+\item[Command:] \texttt{removeRecipes(``block id name'')}
+\begin{description}
+\item [block id name:] This is the ID of the item whose recipe needs to be removed.
+\end{description}
+\end{description}
+
+There is also a command for removing furnace recipes.
+
+\begin{description}
+\item[Command:] \texttt{removeSmeltingRecipes(``block id name'')}
+\begin{description}
+\item [block id name:] This is the ID of the item whose recipe needs to be removed.
+\end{description}
+\end{description}
+
+There are other machines to whom recipes can be added, but they will be addressed later covering mod-specific tweaks.
+
+\subsubsection{Adding Recipes}
+
+Adds a new recipe for an item.  For the crafting table, there are commands for shaped and shapeless recipes.
+
+\begin{description}
+\item[Command:] \texttt{addShapelessRecipe(``block id name'', [``ingredient'', ``ingredient'', ... ``last ingredient''])}
+\begin{description}
+\item [block id name:] This is the ID of the item to which the recipe is to be added.
+\item [ingredient list:] A comma-separated list of item IDs or ore dictionary entries that go into making the object.  Since the recipe is shapeless, order doesn't matter, but you cannot have more than 9 ingredients (for obvious reasons).
+\end{description}
+\end{description}
+
+\begin{description}
+\item[Command:] \texttt{addShapedRecipe(``block id name'', [ \newline [``ingredient'', ``ingredient'', ``ingredient''], \newline [``ingredient'', ``ingredient'', ``ingredient''], \newline [``ingredient'', ``ingredient'', ``ingredient'']])}
+\begin{description}
+\item [block id name:] This is the ID of the item to which the recipe is to be added.
+\item [ingredient list:] A comma-separated list of 3 lists, each containing three Item IDs, also comma-separated.  These correspond to the first, second, and third slots of the top, middle, and bottom rows of the crafting grid (in that exact order).  Empty slots are simply represented by a ``null'' (without the quotes).  To make it easier to understand, it is displayed here with ``ingredient'' in place of whatever is placed in that slot, and the whole line split into lines to show the rows.
+\end{description}
+\end{description}
+
+\newpage
+
+For the furnace, you can add smelting recipes.
+
+\begin{description}
+\item[Command:] \texttt{addSmeltingRecipe(``block id name'', ``ingredient'')}
+\begin{description}
+\item [block id name:] This is the ID of the item to which the recipe is to be added.
+\item [ingredient list:] This is the ID of the item that is smelted into the above item.
+\end{description}
+\end{description}
+
+\subsection{Changing Things}
+
+Making your own blocks is well and good, but it's important to be able to adjust them or other blocks as well.  This is especially important if you expect a block to drop something other than the block itself when broken.
+
+\subsubsection{Setting Block Properties}
+
+Before you can set block properties, you need to tell JMOD what block you will be setting the properties on.
+
+\begin{description}
+\item[Command:] \texttt{setBlockProperties(``block id name'')}
+\begin{description}
+\item [block id name:] This is the ID of the block to be edited.
+\end{description}
+\end{description}
+
+This command simply identifies the block to be changed.  The actual changes are methods added to the command that can affect block properties.
+
+Hardness determines how long it takes to mine a block.  For example, your typical ore has a hardness of 3, while obsidian has a hardness of 50.
+
+\begin{description}
+\item[Method:] \texttt{.hardness(value)}
+\begin{description}
+\item [value:] The specific hardness value.
+\end{description}
+\end{description}
+
+Slipperiness defines how far a player or items slide on a block.  It can also speed up water flow on top of it.  Slipperiness values above 1.02 can increase the movement of objects sliding on it.
+
+\begin{description}
+\item[Method:] \texttt{.slipperiness(value)}
+\begin{description}
+\item [value:] The specific slipperiness value.  Ranges from 0 (not slippery at all) to 1.0 (has no friction at all) and above (increases object's speed).
+\end{description}
+\end{description}
+
+Harvest Level of a block is tied to the harvest level of a tool.  If the tool's harvest level is above the block's harvest level, the block can be harvested by that tool.  If the block's harvest level is higher, then it takes longer to break, and drops nothing.
+
+\begin{description}
+\item[Method:] \texttt{.harvestlevel(<meta,> harvestlevel)}
+\begin{description}
+\item [meta:] The block's meta the harvest level is applied to.  This is optional, but useful for mods that topload all their ores into a single block ID using meta values.
+\item [harvestlevel:] The specific harvest level.  It must match the lowest-leveled tool that is needed to harvest this material.  For example, redstone ore has a harvest level equal to the iron pickaxe.
+\end{description}
+\end{description}
+
+The tool type identifies which tool type is effective for collecting the material. 
+
+\begin{description}
+\item[Method:] \texttt{.tool(``tooltype'')}
+\begin{description}
+\item [tooltype:] This should be the specific tool required to harvest the block.  Tools include ``shovel'', ``axe'', ``pickaxe'', and ``sword''.
+\end{description}
+\end{description}
+
+The sound type determines the sounds assigned to a block when being walked on, harvested, etc.  
+
+\begin{description}
+\item[Method:] \texttt{.sound(``soundtype'')}
+\begin{description}
+\item [soundtype:] This is based on vanilla's sound types, and include:
+\begin{multicols}{3}
+\begin{itemize}
+\item ``stone''
+\item ``wood''
+\item ``gravel''
+\item ``grass''
+\item ``cloth''
+\item ``sand''
+\item ``snow''
+\item ``ladder''
+\item ``anvil''
+\end{itemize}
+\end{multicols}
+\end{description}
+\end{description}
+
+The opacity of a block determines how much light gets through the block.
+
+\begin{description}
+\item[Method:] \texttt{.opacity(value)}
+\begin{description}
+\item [value:] The specific opacity value.  Ranges from 0 (completely transparent) to 255 (doesn't block any light).  Note, this value affects the block's ability to allow light through.  It does not affect the appearance of the block, which is determined by the texture.
+\end{description}
+\end{description}
+
+The blast resistance of a block determines how likely the block will survive an explosion, and whether it will drop blocks.
+
+\begin{description}
+\item[Method:] \texttt{.blastresistance(value)}
+\begin{description}
+\item [value:] The specific blast resistance value.  Ranges from 0 (steve could sneeze and break it) to 30 (most solid blocks) to 500 (most liquids) to 6000 (obsidian) to 18000000 (18 million; indestructable blocks like bedrock).
+\end{description}
+\end{description}
+
+\subsubsection{Adding Block Drops}
+
+You can add drops to existing blocks, in case you want to add a specific type of item that drops from a block (such as redstone or diamonds).
+
+\begin{description}
+\item[Command:] \texttt{addSmeltingRecipe(``block id name'', ``item id name'', chance, exclusive, playeronly)}
+\begin{description}
+\item [block id name:] This is the ID of the block to break.
+\item [item id name:] This is the ID of the item that you want to drop from the block.
+\item [chance:] This is the percentage chance of the drop happening, in case you want the drop to happen only occasionally.  An example would be how gravel only sometimes drops flint.
+\item [exclusive:] Determines if the block drops with the item.  An example would be how gravel will not drop both gravel and flint. Boolean (true or false)
+\item [playeronly:] Does the block only drop its items for players?  An example would be how coal ore drops coal when mined, but coal ore blocks in a creeper explosion.  Boolean (true or false).
+\end{description}
+\end{description}
+
+\subsubsection{Setting Armor Material Color}
+
+Unlike items and blocks, there's currently no way to set armor textures in JMOD (yet).  However, you can assign color to armor materials in order to ensure the armor you make will be uniquely colored.
+
+\begin{description}
+\item[Command:] \texttt{defineColor(``material id'', red, green, blue)}
+\begin{description}
+\item [material id:] This is the all-capital ID of the armor material; for example, "IRON".
+\item [red:] This is the red value of the color, ranging from 0-255
+\item [green:] This is the green value of the color, ranging from 0-255
+\item [blue:] This is the blue value of the color, ranging from 0-255
+\end{description}
+\end{description}
+
+\subsection{Chest Loot}
+
+Sometimes you want your custom items to appear in chests.  Other times, you want specific objects to be kept from chests.  Either way, we've got you covered!
+
+\subsubsection{Adding Chest Loot}
+
+This allows you to add things to chests in the world.
+
+\begin{description}
+\item[Command:] \texttt{AddChestLoot(``item id name'', minimum, maximum, weight, ``target chest'')}
+\begin{description}
+\item [item id name:] Defines what you want to add to the chest.
+\item [minimum:] This is the minimum stack size added to the chest
+\item [maximum:] This is the maximum stack size added to the chest
+\item [weight:] This is the weight value, or the chance that the object will be added to the chest over something else.
+\item [target chest:] (Optional) This is the type of chest you want this loot to go into.  The arguments are based on Forge's "ChestGenHooks" class, and the options include:
+\begin{multicols}{2}
+\begin{itemize}
+\item ``bonusChest''
+\item ``villageBlacksmith''
+\item ``mineshaftCorridor''
+\item ``dungeonChest''
+\item ``strongholdCorridor''
+\item ``strongholdLibrary''
+\item ``strongholdCrossing''
+\item ``pyramidDesertyChest''
+\item ``pyramidJungleChest''
+\item ``pyramidJungleDispenser''
+\end{itemize}
+\end{multicols}
+
+Chests added by other mods are also accessible if you know their ChestGenHooks names.  If you don't include this option, then all chests are affected.
+\end{description}
+\end{description}
+
+\subsubsection{Removing Chest Loot}
+
+Sometimes, you don't want something in specific chests.  Other times, you just don't want something in \emph{any} chests.  Can be used to enforce some kind of game progression.
+
+\begin{description}
+\item[Command:] \texttt{removeChestLoot(``item id name'', ``target chest'')}
+\begin{description}
+\item [item id name:] Defines what you want to add to the chest.
+\item [target chest:] (Optional) This is the type of chest you want this loot to be excluded from.  Arguments are much the same as the "AddChestLoot" command. If you don't include this option, then all chests are affected.
+\end{description}
+\end{description}
+
+\subsection{Chisel Tweaks}
+
+The Chisel mod includes a special GUI that allows you to make variations on a specific block.  In some cases, however, you might want to add support for your own blocks, complete with your own custom variations.  All Chisel commands are prepended with "Chisel."  For the sake of simplicity, this has been included in the explanations below.
+
+\subsubsection{Adding a Chisel Group}
+
+A chisel group is a group of blocks that are related to a specific type.  This can be a collection of differently-patterned stone, different types of light source, perhaps even different colors of the same block.  A group is what you see when you plug a block into the chisel's base slot.
+
+\begin{description}
+\item[Command:] \texttt{Chisel.addGroup(``group name'')}
+\begin{description}
+\item [group name:] Name of the group that you want to add specific blocks to.  The name does not affect the blocks in any way; it just gives the group a name, similar to how the Ore Dictionary works.  It must be created, however, in order to assign blocks to the group.
+\end{description}
+\end{description}
+
+\subsubsection{Adding Specific Blocks to a Chisel Group}
+
+Once you've named your chisel group, it's just a matter of adding the desired blocks to it.
+
+\begin{description}
+\item[Command:] \texttt{Chisel.addVariation(``group name'', ``block id name'')}
+\begin{description}
+\item [group name:] Name of the group that you want to add specific blocks to.  Must be created using Chisel.addGroup.
+\item [block id name:] The block ID of the block you wish to add to your new Chisel group.
+\end{description}
+\end{description}
+
+\subsection{RotaryCraft Tweaks}
+
+JMOD was written to support Survival Industry, which needed quite a few tweaks to integrate RotaryCraft with other mods more deeply than Reika's already significant investment allows.  As such, JMOD is one of the few tweaking tools that can handle adding complex recipes for the Blast Furnace, as well as custom grinder recipes.
+
+As with the Chisel tweaks, these commands need to be started with "RotaryCraft."
+
+\subsubsection{Blast Furnace Recipes}
+
+RotaryCraft uses its blast furnace to create high-strength, low-alloy steel, which is used in all its machines.  This being a useful form of alloying, it seems silly not to include a way to add other alloying recipes to this setup.  And since the input area is a 3x3 grid, this opens up all kinds of options for items that require crafting, but need to be ``baked'' into their forms.
+
+\begin{description}
+\item[Command:] \texttt{RotaryCraft.addBlastFurnaceRecipe(``item id name'', temperature, speed, xp, [[``ingredient'',``ingredient'',``ingredient''],\newline [``ingredient'',``ingredient'',``ingredient''],\newline[``ingredient'',``ingredient'',``ingredient'']])}
+\begin{description}
+\item [block id name:] The item ID of the item you wish to craft in the blast furnace.
+\item [temperature:] The temperature (in Celsius) the blast furnace needs to be at for the smelting to begin.
+\item [speed:] The time (in seconds) that the smelting process takes.
+\item [xp:] The experience gained from crafting/smelting.
+\item [ingredients:]  This is the shaped crafting recipe, in the same fashion as addShapedRecipe above.  If a slot should be empty, the ingredient field should be ``null'' (without the quotes).
+\end{description}
+\end{description}
+
+\subsubsection{Blast Furnace Alloying}
+
+The blast furnace is an advanced alloying system.  The idea is that the materials in the slots on the left are used to help convert the main materials (in the 3x3 grid) into the desired material.
+
+\begin{description}
+\item[Command:] \texttt{RotaryCraft.addBlastFurnaceAlloying(``item id name'', ``main ingredient'', temperature)}
+\begin{description}
+\item [item id name:] The item ID of the item you wish to craft in the blast furnace.
+\item [main ingredient:]  This is the main ingredient (as an item id name or ore dictionary entry) needed in the 3x3 grid to make the desired material.  You can only have one material in that grid.
+\item [temperature:] The temperature (in Celsius) the blast furnace needs to be at for the smelting to begin.
+\end{description}
+\end{description}
+
+This command does not do much useful by itself; there are several methods that you use to complete the recipe in question.
+
+First, is the other main component of the recipe; the items you place on the right-hand slots.  You can apply this method three times, in order to configure all three slots.  However, the number of items produced is equal to the largest of the matching materials; for example, if gunpowder can produce 2 steel, whereas the other ingredients are guaranteed only 1, then the blast furnace will produce 2 steel. 
+
+\begin{description}
+\item[Method:] \texttt{.input(number, ``item id name'', chance, decrease)}
+\begin{description}
+\item [number:] Side slot used for this material (options are 1, 2, or 3)
+\item [item id name:] The item ID of the side ingredient for the alloy.
+\item [chance:] The chance that this item will be consumed upon alloying.
+\item [decrease:] The amount of this ingredient consumed if the chance roll is successful.
+\end{description}
+\end{description}
+
+Sometimes, you need a minimum amount of a material in the main grid in order to make something (an example would be 4 quartz to make a block of EnderIO fused quartz).
+
+\begin{description}
+\item[Method:] \texttt{.required(number)}
+\begin{description}
+\item [number:] Required number of materials in the main grid to make resulting output.
+\end{description}
+\end{description}
+
+You can configure a specific alloying recipe to provide bonus output.  The chance of the bonus is hardcoded into RotaryCraft, so there is no way to affect it from here.  As such, this method has no arguments.
+
+\begin{description}
+\item[Method:] \texttt{.bonus()}
+\end{description}
+
+You can also have the blast furnace provide XP for successfully smelting an alloy.
+
+\begin{description}
+\item[Method:] \texttt{.setXP(number)}
+\begin{description}
+\item [number:] Amount of XP provided by the process.
+\end{description}
+\end{description}
+
+\subsubsection{Grinder Recipes}
+
+RotaryCraft's grinder can also have recipes applied, similar to how the vanilla furnace recipes work.
+
+\begin{description}
+\item[Command:] \texttt{RotaryCraft.addGrinderRecipe(``ingredient'', ``result'')}
+\begin{description}
+\item [ingredient:] The item ID of the ingredient that goes into the grinder.
+\item [result:] The item ID of the output of the grinder.
+\end{description}
+\end{description}
+
+The grinder's output numbers seem to be hardcoded into RotaryCraft; there does not seem to be a way to alter them from here.
+
+\section{Additional Features}
+
+Some additional features have been added to JMOD as a way to expand gameplay.
+
+\subsection{Basic Ore and Smelting Support}
+
+Among the things included in this system is the ability to add worldgen for any custom ores you make, as well as a way to create alloys without needing special machines to do so.
+
+\subsubsection{Adding Ore Generation for Custom Ores}
+
+If you create ore blocks, you can use this command (and its attendent methods) to configure Minecraft to spawn the ore as desired.  That way, you don't need any external ore generation mods to handle the process.
+
+\begin{description}
+\item[Command:] \texttt{addOreGeneration()}
+\end{description}
+
+By itself, this command doesn't do much; you need to add methods to it to assign the values to the ore generation engine.
+
+First, you need to assign a block ID to be placed.
+
+\begin{description}
+\item[Method:] \texttt{.blockToGenerate(``block id name'')}
+\begin{description}
+\item [number:] Block ID of the ore block you wish to be generated.
+\end{description}
+\end{description}
+
+Next, you need to assign a block ID that it will replace.  You can use this method multiple times.
+
+\begin{description}
+\item[Method:] \texttt{.blockToReplace(``block id name'')}
+\begin{description}
+\item [number:] Block ID that you wish to replace with the ore block.
+\end{description}
+\end{description}
+
+Then, you need to tell the generator the maximum number of times (per chunk) ore veins will generate.  This only provides the maximum number of chances; Minecraft uses a random number generator for each chance to determine if ores will spawn that time.
+
+\begin{description}
+\item[Method:] \texttt{.chancesPerChunk(value)}
+\begin{description}
+\item [value:] Number of chances that ore veins will spawn in a single chunk.
+\end{description}
+\end{description}
+
+Now that we know how many chances Minecraft will have to spawn veins per chunk, let's define exactly how big said veins should be.  Once again, this is a maximum number, and veins have the chance to spawn smaller.
+
+\begin{description}
+\item[Method:] \texttt{.veinSize(value)}
+\begin{description}
+\item [value:] Size of vein in number of ore blocks.
+\end{description}
+\end{description}
+
+Next, you need to let the generator know in which dimensions it needs to spawn the ore in.  The generator uses dimension IDs, including 0 for the Overworld, 1 for the End, and -1 for Nether.
+
+\begin{description}
+\item[Method:] \texttt{.dimension(value)}
+\begin{description}
+\item [value:] Dimension number that hosts the ore.
+\end{description}
+\end{description}
+
+Now that we know what dimensions we want to use, let's determine how deep we want the ore spawning.  There are two methods, one determining the lower limit, and one determining the upper limit.
+
+\begin{description}
+\item[Method:] \texttt{.startY(value)}
+\begin{description}
+\item [value:] Lowest Y level where associated ore spawns.
+\end{description}
+\end{description}
+
+\begin{description}
+\item[Method:] \texttt{.endY(value)}
+\begin{description}
+\item [value:] Highest Y level where associated ore spawns.
+\end{description}
+\end{description}
+
+Sometimes, you want to make sure ores do not spawn close to one another, even randomly.
+
+\begin{description}
+\item[Method:] \texttt{.spread(value)}
+\begin{description}
+\item [value:] Minimum distance from the nearest vein of the same ore.
+\end{description}
+\end{description}
+
+And finally, you sometimes want an averaged distribution, with weight at a specific level, and everything outside of that to be more rare.
+
+\begin{description}
+\item[Method:] \texttt{.weight(value)}
+\begin{description}
+\item [value:] Y level where most of the ore spawns.
+\end{description}
+\end{description}
+
+\subsubsection{Alloying using Crucibles and Molds}
+
+Making alloys is impossible in the vanilla furnace, and not everyone wants to use some complex machinery mods to in order to have them.
+
+To resolve this concern, JMOD has included code to allow a custom form of alloying known as ``green sand casting.''  This is a real-world metalcasting technique where metal is melted down in a clay cup, called a crucible, and then poured into a mold made of a mix of wet sand and clay.  The process provides a cheap way to make crude metal sculptures and machinery.
+
+In the item creation code, we have included two new item classes: ``ItemCrucible'' and ``ItemMold'', which you can create using \texttt{addItem}.  Note, however, that the crucible will always need to be smelted after being made; it is supposed to be a clay cup.  Once you have these items, you will also want to create alloy recipes using the \texttt{addAlloy} command; as that will define what goes into the crucible, and what (and how much) will be made from the process.
+
+Once made, the crucible will accept whatever recipes you defined with \texttt{addAlloy}, which you add by crafting the crucible with the one or two input materials on a crafting table.
+
+Once you have the filled crucible, place it in any standard furnace, and it will smelt into a "hot crucible."  This hot crucible contains the molten liquid of the new alloy material (as defined in \texttt{addAlloy}).
+
+Once you put the hot crucible and the mold together on the crafting table, you are then able to take the output as defined by \texttt{addAlloy}.
+
+While this does add the crucible and mold, note that it does not require any special machinery or power systems to work, nor does it affect how the furnace or crafting table normally work.  As such, this should provide good early-game alloying or ore multiplication, even in a vanilla-themed modpack.
+
+\subsection{Tool Features Inspired by Tinker's Construct}
+
+Tinker's Construct has some useful features that does not exist for vanilla tools.  JMOD attempts to add these features to vanilla tools and armor for gameplay when Tinker's Construct is not an option.
+
+\subsubsection{Non-Breaking Tools}
+
+If enabled, vanilla tools will not break.  Unlike Tinker's Construct, it will not be obvious when a tool is broken (as it won't change its texture).  However, there will be a tooltip notifying you that the tool is broken.
+
+\begin{description}
+\item[Command:] \texttt{Global.preventToolBreaking(value)}
+\begin{description}
+\item [value:] Do you want tools to remain after breaking?  Boolean (true or false).
+\end{description}
+\end{description}
+
+\subsubsection{Crafting Grid Tool Repair}
+
+If enabled, the crafting grid can be used to restore endurance to a tool using its key component, defined in \texttt{addToolMaterial}.  So, if you configured wood to use woodPlank as a repair material, than 1 wood plank would repair a wooden pickaxe by about 30\%.  Note that this operates at a discount; 3 wooden planks will only repair 90\% of an axe or pickaxe.
+
+\begin{description}
+\item[Command:] \texttt{Settings.craftingGridToolRepair(value)}
+\begin{description}
+\item [value:] Do you want to use endurance repair in the crafting grid?  Boolean (true or false).
+\end{description}
+\end{description}
+
+\subsubsection{Enhanced Anvil Repair}
+
+As mentioned, using the crafting grid to repair tools works at a discount, you get less repair value out of your materials than if you were to make a brand new one.  With the anvil, however, the opposite is true; you repair with a bonus.  Each material is worth more than its original value in making the tool, meaning repairs will last longer if you use the endurance repair with an anvil instead of a crafting grid.  Not really useful with stone or wood, but with diamond tools, you can really get your money's worth!
+
+\begin{description}
+\item[Command:] \texttt{Settings.craftingGridToolRepair(value)}
+\begin{description}
+\item [value:] Do you want to use endurance repair in the anvil?  Boolean (true or false).
+\end{description}
+\end{description}
+
+\subsection{Tooltip Features}
+
+These options provide some additional information in certain items' tooltips.
+
+\subsubsection{Tool Harvest Level Display}
+
+This provides a line in your tooltips that identifies a tool's harvest level; useful when dealing with expanded mining progressions using the \texttt{addToolMaterial} command.
+
+\begin{description}
+\item[Command:] \texttt{Settings.showToolHarvestLevels(value)}
+\begin{description}
+\item [value:] Do you want to see harvest levels in your tools' tooltips?  Boolean (true or false).
+\end{description}
+\end{description}
+
+\subsubsection{Block Harvest Level Display}
+
+What \texttt{showToolHarvestLevels} does for tools, this one does for ore blocks.  If you mouse over an ore block, the tooltip will show what harvest level that block is at.
+
+\begin{description}
+\item[Command:] \texttt{Settings.showBlockHarvestLevels(value)}
+\begin{description}
+\item [value:] Do you want to see harvest levels in the ore blocks' tooltips?  Boolean (true or false).
+\end{description}
+\end{description}
+
+\subsubsection{Armor Values Display}
+
+Armor already has a little bar to show endurance, but if you want detailed information about a piece of armor you picked up off of that zombie you killed, this might be helpful.  This option provides a tooltip for the armor to show how much endurance it has left.
+
+\begin{description}
+\item[Command:] \texttt{Settings.showArmorValues(value)}
+\begin{description}
+\item [value:] Do you want to see the endurance levels of your armor in their tooltips?  Boolean (true or false).
+\end{description}
+\end{description}
+
+\subsection{Mod-Specific Workarounds}
+
+JMOD has had to add some custom code in order to work around the behavior of certain mobs that would otherwise prevent tweaks from working.
+
+\subsubsection{Forcing Sync to Behave}
+
+Sync tends to reset recipes for its items after all other mods have loaded.  If you intended to gate Sync using altered recipes, this can work against you.  JMOD includes a custom tweak to disable this behavior, and guarantee that any recipe changes for Sync sticks.
+
+\begin{description}
+\item[Command:] \texttt{Sync.preventRecipeReload(value)}
+\begin{description}
+\item [value:] Do you want to use endurance repair in the crafting grid?  Boolean (true or false).
+\end{description}
+\end{description}
+
+\section*{Conclusion}
+
+At this point, all the options have been listed, explained, and demonstrated.  I hope you have found this documentation complete enough to make your very own jmods, and I look forward to seeing how modpack authors make use of JMOD.
+
+\end{document}
