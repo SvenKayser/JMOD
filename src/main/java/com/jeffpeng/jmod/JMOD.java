@@ -2,23 +2,11 @@ package com.jeffpeng.jmod;
 
 import java.util.Map;
 
+import net.minecraftforge.common.MinecraftForge;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraftforge.common.MinecraftForge;
-
-import com.jeffpeng.jmod.API.Blacklist;
-import com.jeffpeng.jmod.actions.AddChestLoot;
-import com.jeffpeng.jmod.actions.AddShapedRecipe;
-import com.jeffpeng.jmod.actions.AddShapelessRecipe;
-import com.jeffpeng.jmod.actions.AddSmeltingRecipe;
-import com.jeffpeng.jmod.actions.RemoveChestLoot;
-import com.jeffpeng.jmod.actions.RemoveRecipe;
-import com.jeffpeng.jmod.actions.RemoveSmeltingRecipe;
-import com.jeffpeng.jmod.actions.SetBlockProperties;
-import com.jeffpeng.jmod.annotations.InjectInterface;
 import com.jeffpeng.jmod.asm.JMODAnnotationParser;
 import com.jeffpeng.jmod.asm.JMODClassTransformer;
 import com.jeffpeng.jmod.asm.JMODObfuscationHelper;
@@ -27,13 +15,10 @@ import com.jeffpeng.jmod.asm.annotionhandlers.StripMissingInterfacesHandler;
 import com.jeffpeng.jmod.crafting.BlacklistCraftingResults;
 import com.jeffpeng.jmod.crafting.ToolUnbreaker;
 import com.jeffpeng.jmod.interfaces.IAnnotationHandler;
-import com.jeffpeng.jmod.interfaces.IExecutableObject;
-import com.jeffpeng.jmod.interfaces.IStagedObject;
 import com.jeffpeng.jmod.modintegration.decocraft.DecoCraftDyeFix;
 import com.jeffpeng.jmod.modintegration.nei.NEI_JMODConfig;
 import com.jeffpeng.jmod.registry.BlockMaterialRegistry;
 import com.jeffpeng.jmod.util.ForgeDeepInterface;
-
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ProgressManager;
@@ -46,7 +31,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
-import cpw.mods.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
 
 @SuppressWarnings("deprecation")
 @MCVersion(value="1.7.10")
@@ -58,7 +42,11 @@ public class JMOD implements IFMLLoadingPlugin {
 		IAnnotationHandler.register(new StripMissingInterfacesHandler());
 	}
 	
+	
+	
 	public static final Logger LOG = LogManager.getLogger("JMOD");
+
+	
 	public static final String MODID = "jmod";
 	public static final String VERSION = "@VERSION@";
 	public static final String NAME = "The JavaScript MOD Loader";

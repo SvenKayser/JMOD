@@ -44,7 +44,7 @@ public class StringListRecipe extends OwnedObject implements IRecipe {
 			} else valid = false;
 		}
 		
-		if(valid == false) log.warn("Cannot resolve " + result); else log.info("Registered StringListRecipe for " + result);
+		if(valid == false) log.warn("Cannot resolve " + result); else log.info ("Registered StringListRecipe for " + result);
 		
 	}
 	

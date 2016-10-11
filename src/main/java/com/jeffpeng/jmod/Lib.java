@@ -310,8 +310,7 @@ public class Lib extends OwnedObject {
 		if(is1 instanceof ItemStack){
 			if(is2 instanceof ItemStack) return matchItemStacks((ItemStack)is1,(ItemStack)is2);
 			if(is2 instanceof String){
-				log.info("matching IS to string");
-				log.info(is1 + " " + is2);
+				
 				
 				if(((String) is2).contains(":")){
 					Object is2o = stringToItemStack((String)is2);
