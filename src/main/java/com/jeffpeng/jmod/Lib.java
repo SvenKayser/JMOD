@@ -311,7 +311,6 @@ public class Lib extends OwnedObject {
 			if(is2 instanceof ItemStack) return matchItemStacks((ItemStack)is1,(ItemStack)is2);
 			if(is2 instanceof String){
 				
-				
 				if(((String) is2).contains(":")){
 					Object is2o = stringToItemStack((String)is2);
 					if(is2o instanceof ItemStack) return matchItemStacks((ItemStack)is1,(ItemStack)is2o);
