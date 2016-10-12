@@ -2,10 +2,13 @@ package com.jeffpeng.jmod;
 
 
 
+import java.io.File;
 import java.util.Arrays;
+
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
+import cpw.mods.fml.client.FMLFileResourcePack;
 import cpw.mods.fml.common.DummyModContainer;
 import cpw.mods.fml.common.LoadController;
 import cpw.mods.fml.common.ModMetadata;
@@ -32,7 +35,9 @@ public class JMODModContainer extends DummyModContainer {
 		meta.name = JMOD.NAME;
 		meta.authorList = Arrays.asList(new String[]{"jeffpengMC"});
 		meta.url="https://github.com/jeffpengMC/JMOD";
-		meta.description = "The Javascript MOD Loader provides an interface to load mods written in Javascript\n\nLoaded JMODs:";
+		meta.description = "The JavaScript MOD Loader provides an API to write simple mods in JavaScript and takes care of loading them.\n\nFor MineCraft 1.7.10 / Forge 10.13.4.1558+ Loaded JMODs:";
+		meta.credits = "The people at Forge / FML for their amazing ModLoader / API and Reika and many, many others for making their sources publically available for others to learn";
+		meta.logoFile = "/assets/jmod/logo.png";
 	}
 	
 	@Override
@@ -56,4 +61,16 @@ public class JMODModContainer extends DummyModContainer {
 		if(event instanceof FMLLoadCompleteEvent) JMOD.getInstance().on((FMLLoadCompleteEvent) event); else
 		if(event instanceof FMLServerStartedEvent) JMOD.getInstance().on((FMLServerStartedEvent) event); 
 	}
+	
+	@Override
+	public Class<?> getCustomResourcePackClass(){
+		return FMLFileResourcePack.class;
+	}
+	
+    @Override
+    public File getSource()
+    {
+    	if(JMOD.isDevVersion()) return new File("mods/jmod-untyped-devtest.jar");
+        return new File("mods/jmod-" + JMOD.VERSION + ".jar");
+    }
 }

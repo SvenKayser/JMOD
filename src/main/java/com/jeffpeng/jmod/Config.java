@@ -5,12 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.jeffpeng.jmod.util.actions.AddArmorMaterial;
-import com.jeffpeng.jmod.util.actions.AddBlockDrop;
-import com.jeffpeng.jmod.util.descriptors.AlloyDescriptor;
-import com.jeffpeng.jmod.util.descriptors.ColorDescriptor;
-import com.jeffpeng.jmod.util.descriptors.ItemStackSubstituteDescriptor;
-import com.jeffpeng.jmod.util.descriptors.TooltipDescriptor;
+import com.jeffpeng.jmod.actions.AddArmorMaterial;
+import com.jeffpeng.jmod.actions.AddBlockDrop;
+import com.jeffpeng.jmod.descriptors.AlloyDescriptor;
+import com.jeffpeng.jmod.descriptors.ColorDescriptor;
+import com.jeffpeng.jmod.descriptors.ItemStackSubstituteDescriptor;
+import com.jeffpeng.jmod.descriptors.TooltipDescriptor;
 
 public class Config{
 

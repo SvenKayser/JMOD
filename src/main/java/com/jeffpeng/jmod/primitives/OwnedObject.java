@@ -6,6 +6,7 @@ import com.jeffpeng.jmod.Config;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.Lib;
 
+
 public class OwnedObject {
 	protected JMODRepresentation owner;
 	protected Config config;

@@ -19,9 +19,8 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import com.jeffpeng.jmod.Config;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.Lib;
+import com.jeffpeng.jmod.descriptors.TooltipDescriptor;
 import com.jeffpeng.jmod.util.Reflector;
-import com.jeffpeng.jmod.util.descriptors.TooltipDescriptor;
-
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 

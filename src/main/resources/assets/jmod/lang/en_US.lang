@@ -1,2 +1,5 @@
 info.jmod.tooltips.brokentool=§fThis tool is §cbroken§f. It won't work until you fix it.
 info.jmod.tooltips.brokenhoe=§fThis hoe would §cbreak§f if you use it. Fix it.
+info.jmod.neutronabsorption=Chance to absorb Neutrons: %1$d%%%% 
+death.attack.cold=%1$s froze to death
+death.attack.acid=%1$s was dissolved in acid

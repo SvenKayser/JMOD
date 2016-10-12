@@ -5,10 +5,11 @@ import java.util.List;
 
 import com.jeffpeng.jmod.JMODLoader;
 import com.jeffpeng.jmod.Lib;
+import com.jeffpeng.jmod.actions.*;
+import com.jeffpeng.jmod.descriptors.*;
 import com.jeffpeng.jmod.primitives.OwnedObject;
 import com.jeffpeng.jmod.scripting.mods.*;
-import com.jeffpeng.jmod.util.actions.*;
-import com.jeffpeng.jmod.util.descriptors.*;
+import com.jeffpeng.jmod.validator.Validator;
 
 public class ScriptObject extends OwnedObject {
 	
@@ -25,8 +26,9 @@ public class ScriptObject extends OwnedObject {
 	public Chisel Chisel = new Chisel(owner);
 	public Applecore Applecore = new Applecore(owner);
 	public Sync Sync = new Sync(owner);
+	public ExNihilo ExNihilo = new ExNihilo(owner);
 	
-	public void load(String script){
+	public void loadjs(String script){
 		jscriptInstance.evalScript(script);
 	}
 	
@@ -91,7 +93,7 @@ public class ScriptObject extends OwnedObject {
 	}
 	
 	public void hideFromNEI(String target){
-		if(JMODLoader.isModLoaded("NotEnoughItems")) new HideNEIItem(owner,target);
+		if(owner.testForMod("NotEnoughItems")) new HideNEIItem(owner,target);
 	}
 	
 	public  TooltipDescriptor addToolTip(String[] target, String[] lines){
@@ -168,7 +170,7 @@ public class ScriptObject extends OwnedObject {
 	
 	
 	public  FoodDataDescriptor FoodData(int hunger, float saturation,boolean wolffood,boolean alwaysEdible){
-		return new FoodDataDescriptor(hunger,saturation,wolffood,alwaysEdible);
+		return new FoodDataDescriptor(owner,hunger,saturation,wolffood,alwaysEdible);
 	}
 	public  ToolDataDescriptor ToolData(String toolmat){
 		return new ToolDataDescriptor(toolmat);
@@ -185,6 +187,14 @@ public class ScriptObject extends OwnedObject {
 	
 	public AddOreGeneration addOreGeneration(){
 		return new AddOreGeneration(owner);
+	}
+	
+	public AddStartingPlatform addStartingPlatform(int baseY, int playerY){
+		return new AddStartingPlatform(owner,baseY,playerY);
+	}
+	
+	public AddFluid addFluid(String fluidname){
+		return new AddFluid(owner,fluidname);
 	}
 	
 	public  List<String[]> standardShape(String shape, String mat){
@@ -257,13 +267,30 @@ public class ScriptObject extends OwnedObject {
 			pattern.add(new String[]{mat,mat,mat});
 			pattern.add(new String[]{mat,mat,mat});
 			pattern.add(new String[]{mat,mat,mat});
-		} 
+		}
+		
+		if(shape.equals("smallblock")){
+			pattern = new ArrayList<>();
+			pattern.add(new String[]{mat,mat,null});
+			pattern.add(new String[]{mat,mat,null});
+			pattern.add(new String[]{null,null,null});
+		}
+		
 		return pattern;
 	}
 	
 	
 	
 	public  boolean isModLoaded(String modid){
-		return JMODLoader.isModLoaded(modid);
+		return Validator.isValidator || JMODLoader.isModLoaded(modid);
 	}
+	
+	public String getModId(){
+		return owner.getModId();
+	}
+	
+	public int celcius(float c){	return Math.round(c + 273.15F);				}
+	public int fahrenheit(float f){	return Math.round((f + 459.67F) * (5/9));	}
+	
+	
 }

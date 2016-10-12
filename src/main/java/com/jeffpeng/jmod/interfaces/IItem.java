@@ -3,20 +3,26 @@ package com.jeffpeng.jmod.interfaces;
 import net.minecraft.item.Item;
 
 
-public interface IItem {
+public interface IItem extends IOwned{
 	
-
 	
-	public String getPrefix();
+	
+	default public String getPrefix(){
+		return getOwner().getModId();
+	}
 	
 	public void setName(String name);
+	
+	public String getName();
 	
 	public Item setTextureName(String name);
 	
 	public Item setMaxStackSize(int stacksize);
 	
-	public void register();
-	default void setRecipes(){
+	default public void register(){
+		getOwner().registerItem(this);
+	}
+	default public void setRecipes(){
 		
 	}
 

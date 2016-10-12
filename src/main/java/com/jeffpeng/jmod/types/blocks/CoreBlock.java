@@ -7,12 +7,13 @@ import net.minecraft.creativetab.CreativeTabs;
 import com.jeffpeng.jmod.Config;
 import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.JMODRepresentation;
+import com.jeffpeng.jmod.interfaces.IBlock;
 import com.jeffpeng.jmod.types.blocks.placers.CoreBlockPlacer;
 
-public class CoreBlock extends Block {
+public class CoreBlock extends Block implements IBlock {
 
 	private CoreBlockPlacer placer;
-	private String internalName;
+	protected String internalName;
 	protected JMODRepresentation owner;
 	protected Config config; 
 
@@ -33,6 +34,7 @@ public class CoreBlock extends Block {
 	}
 
 	public void setName(String name) {
+		
 		this.internalName = name;
 		this.setBlockName(getPrefix() + "." + name);
 	}
@@ -47,17 +49,26 @@ public class CoreBlock extends Block {
 		}
 		return false;
 	}
-
+	
+    @Override
+    public boolean renderAsNormalBlock()    {        return false;    }
+    
+    
+    @Override
 	public void register() {
 		if(this.placer == null){
-			JMOD.DEEPFORGE.registerBlock(this, this.internalName, owner.getModId());
+			JMOD.DEEPFORGE.registerBlock(this, this.internalName, owner);
 		} else {
-			JMOD.DEEPFORGE.registerBlock(this, placer, this.internalName, owner.getModId());
+			JMOD.DEEPFORGE.registerBlock(this, placer, this.internalName, owner);
 		}
-		
-		
-		
-			
 	}
+
+	@Override
+	public JMODRepresentation getOwner() {
+		return owner;
+	}
+	
+	
+	
 
 }

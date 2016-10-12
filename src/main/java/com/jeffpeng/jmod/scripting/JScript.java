@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.script.Invocable;
 import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -14,11 +14,11 @@ import com.jeffpeng.jmod.Config;
 import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.JMODContainer;
 import com.jeffpeng.jmod.JMODRepresentation;
-import com.jeffpeng.jmod.Lib;
+import com.jeffpeng.jmod.util.LoaderUtil;
 
 public class JScript {
 	private ScriptEngine jsEngine;
-	private static final ScriptEngineManager jsManager = new ScriptEngineManager(null);
+	
 	private JMODRepresentation jmod;
 	private Config config;
 	
@@ -27,9 +27,7 @@ public class JScript {
 		
 		if(JMOD.isServer()){
 			try {
-				jsEngine.eval("//#sourceURL=" + script + "\nwith(Object.bindProperties({},SI)){"+readScript(script)+"}");
-				
-				
+				jsEngine.eval(readScript(script));
 			} catch (ScriptException e) {
 				
 				String stackTraceString = "";
@@ -41,7 +39,7 @@ public class JScript {
 					stackTraceString += ste.toString()+"\n";
 				}
 				
-				Pattern pattern = Pattern.compile("\\([a-z,\\/,\\.]*\\:[0-9]{1,3}\\)");
+				Pattern pattern = Pattern.compile("\\(<eval>:[0-9]{1,3}\\)");
 				Matcher matcher = pattern.matcher(stackTraceString);
 				if(matcher.find()){
 					jslinestr = matcher.group(0);
@@ -55,8 +53,7 @@ public class JScript {
 		while(retry){
 			retry = false;
 			try {
-				//jsEngine.eval("with(Object.bindProperties({},SI)){load('"+CONFIGPATH+"');}");
-				jsEngine.eval("//#sourceURL=" + script + "\nwith(Object.bindProperties({},SI)){"+readScript(script)+"}");
+				jsEngine.eval(readScript(script));
 			} catch (ScriptException e) {
 				
 				Object[] options = {"Retry now","I give up","I really don't care"};
@@ -72,17 +69,15 @@ public class JScript {
 					stackTraceString += ste.toString()+"\n";
 				}
 				
-				Pattern pattern = Pattern.compile("\\([a-z,\\/,\\.]*\\:[0-9]{1,3}\\)");
+				Pattern pattern = Pattern.compile("\\(<eval>:[0-9]{1,3}\\)");
 				Matcher matcher = pattern.matcher(stackTraceString);
 				if(matcher.find()){
 					jslinestr = matcher.group(0);
 				}
 				
-				String message = e.getMessage() + "\n in " +script+" on line " +  e.getLineNumber()+"\n\nYou can try and fix the script, and then\nreturn to this dialog to retry.";
+				String message = e.getMessage() + "\n in " +script+" on line " +  jslinestr+"\n\nYou can try and fix the script, and then\nreturn to this dialog to retry.";
 				
-				JMOD.LOG.info(message);
-				
-				opt = JOptionPane.showOptionDialog(frame,message,e.getFileName(),
+				opt = JOptionPane.showOptionDialog(frame,message,jmod.getModName()+": "+script,
 						JOptionPane.YES_NO_OPTION,JOptionPane.ERROR_MESSAGE,null, options,options[0]);
 				
 				
@@ -91,7 +86,7 @@ public class JScript {
 					e.printStackTrace();
 					e.getCause().printStackTrace();
 					System.out.println(e.getCause().getClass().getName());
-					throw new RuntimeException(e.getFileName() + ": " + e.getMessage() + " in " + e.getLineNumber()+"\n"+jslinestr);
+					jmod.markScriptsAsErrored();
 				}
 				
 				if(opt == 2){
@@ -105,9 +100,20 @@ public class JScript {
 	public JScript(JMODRepresentation jmod){
 		
 		this.jmod = jmod;
-		jsEngine = jsManager.getEngineByName("nashorn");
+		jsEngine = LoaderUtil.jsManager.getEngineByName("nashorn");
 		jsEngine.put("config", config);
-		jsEngine.put("SI",new ScriptObject(this));
+		Object globalScope;
+		try {
+			globalScope = jsEngine.eval("this");
+			Object jsObject = jsEngine.eval("Object");
+			Invocable inv = (Invocable)jsEngine;
+			inv.invokeMethod(jsObject, "bindProperties", globalScope,new ScriptObject(this));
+		} catch (ScriptException | NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+		
+
+		
 	}
 	
 	
@@ -117,9 +123,9 @@ public class JScript {
 		JMODContainer container = jmod.getContainer();
 		
 		if(container == null) throw new RuntimeException(jmod.getModId() + " is null container");
-				
+		
 		try {
-			return Lib.readFile(container.getSource().toPath(), script);
+			return LoaderUtil.readFile(container.getSource().toPath(), script);
 			
 		} catch (IOException e) {
 			JMOD.LOG.warn("[Scripting] Could not read " + script + " from " + container.getSource());

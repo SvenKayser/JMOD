@@ -174,9 +174,9 @@ public class ItemWoodenBucket extends CoreItem implements IItem {
 
 	@Override
 	public void register() {
-		JMOD.DEEPFORGE.registerItem(emptyBucket, this.internalName, owner.getModId());
-		JMOD.DEEPFORGE.registerItem(waterBucket, this.internalName+"_water", owner.getModId());
-		JMOD.DEEPFORGE.registerItem(milkBucket, this.internalName+"_milk", owner.getModId());
+		JMOD.DEEPFORGE.registerItem(emptyBucket, this.internalName, owner);
+		JMOD.DEEPFORGE.registerItem(waterBucket, this.internalName+"_water", owner);
+		JMOD.DEEPFORGE.registerItem(milkBucket, this.internalName+"_milk", owner);
 		OreDictionary.registerOre("listAllmilk", milkBucket);
 		OreDictionary.registerOre("listAllwater", waterBucket);
 		FluidContainerRegistry.registerFluidContainer(FluidRegistry.WATER, new ItemStack(waterBucket), new ItemStack (emptyBucket));

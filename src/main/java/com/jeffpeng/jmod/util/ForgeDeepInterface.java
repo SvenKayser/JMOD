@@ -15,6 +15,9 @@ import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.eventbus.EventBus;
 import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.JMODContainer;
+import com.jeffpeng.jmod.JMODRepresentation;
+import com.jeffpeng.jmod.interfaces.IBlock;
+import com.jeffpeng.jmod.interfaces.IItem;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -25,6 +28,7 @@ import cpw.mods.fml.common.LoadController;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.registry.GameData;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ForgeDeepInterface {
 	
@@ -166,40 +170,51 @@ public class ForgeDeepInterface {
 		
 	}
 	
-	public void registerItem(Item item, String name, String modId){
+	public void registerItem(IItem item){
+		registerItem((Item)item,item.getName(),item.getOwner());
+	}
+	
+	public void registerBlock(IBlock block){
+		registerBlock((Block)block,block.getName(),block.getOwner());
+	}
+	
+	public void registerBlock(IBlock block,ItemBlock placer){
+		registerBlock((Block)block,placer,block.getName(),block.getOwner());
+	}
+	
+	public void registerItem(Item item, String name, JMODRepresentation owner){
 		if(JMOD.isDevVersion()) JMOD.LOG.info("DeepForgeRegisterItem of " + name);
 		try {
 			Object retint;
-			retint = gameDataTrueRegisterItem.invoke(gameDataInstance, item, modId + ":" + name, -1);
+			retint = gameDataTrueRegisterItem.invoke(gameDataInstance, item, owner.getModId() + ":" + name, -1);
 			if(JMOD.isDevVersion()) JMOD.LOG.info("With ID " + retint);
-			customItemStacks.put(modId, name, new ItemStack(item,0,0));
+			customItemStacks.put(owner.getModId(), name, new ItemStack(item,0,0));
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			// TODO Auto-generat ed catch block
 			e.printStackTrace();
 		}
 	}
 	
-	public void registerBlock(Block block, ItemBlock placer, String name, String modId){
+	public void registerBlock(Block block, ItemBlock placer, String name, JMODRepresentation owner){
 		if(JMOD.isDevVersion()) JMOD.LOG.info("DeepForgeRegisterBlock of " + name);
 		try {
 			if(block == null) throw new RuntimeException("no block");
 			if(name == null) throw new RuntimeException("no name");
-			if(modId == null) throw new RuntimeException("no modid");
+			if(owner.getModId() == null) throw new RuntimeException("no modid");
 			
 			Object retint;
-			retint = gameDataTrueRegisterItem.invoke(gameDataInstance, placer ,modId + ":" + name, -1);
+			retint = gameDataTrueRegisterItem.invoke(gameDataInstance, placer ,owner.getModId() + ":" + name, -1);
 			if(JMOD.isDevVersion()) JMOD.LOG.info("With ID " + retint);
-			gameDataTrueRegisterBlock.invoke(gameDataInstance, block, modId + ":" + name, -1);
-			customItemStacks.put(modId, name, new ItemStack(block,0,0));
+			gameDataTrueRegisterBlock.invoke(gameDataInstance, block, owner.getModId() + ":" + name, -1);
+			customItemStacks.put(owner.getModId(), name, new ItemStack(block,0,0));
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			// TODO Auto-generat ed catch blocke
 			e.printStackTrace();
 		}
 	
 	}
 	
-	public void registerBlock(Block block, String name, String modId){
-		registerBlock(block,new ItemBlock(block),name,modId);
+	public void registerBlock(Block block, String name, JMODRepresentation owner){
+		registerBlock(block,new ItemBlock(block),name,owner);
 	}
 	
 

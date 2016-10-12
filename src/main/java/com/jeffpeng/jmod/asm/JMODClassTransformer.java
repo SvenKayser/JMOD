@@ -12,19 +12,96 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
+import org.objectweb.asm.tree.IntInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
+import com.jeffpeng.jmod.JMOD;
+
 public class JMODClassTransformer implements IClassTransformer{
 
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] basicClass) {
-		if(name.equalsIgnoreCase("cpw.mods.fml.common.Loader")) return patchFMLLoader(basicClass);
-		if(name.equalsIgnoreCase(JMODObfuscationHelper.get("net.minecraft.inventory.ContainerRepair$2"))) return patchContainerRepair2(basicClass);
-		if(name.equalsIgnoreCase("sync.common.Sync")) return patchSync(basicClass);
+		if (name.equalsIgnoreCase("cpw.mods.fml.common.discovery.ModDiscoverer"))
+			return patchModDiscoverer(basicClass);
+		if (name.equalsIgnoreCase("cpw.mods.fml.common.Loader"))
+			return patchFMLLoader(basicClass);
+		if (name.equalsIgnoreCase(JMODObfuscationHelper.get("net.minecraft.inventory.ContainerRepair$2")))
+			return patchContainerRepair2(basicClass);
+		if (name.equalsIgnoreCase(JMODObfuscationHelper.get("net.minecraft.block.BlockSapling")))
+			return patchBlockSapling(basicClass);
+		if (name.equalsIgnoreCase("sync.common.Sync"))
+			return patchSync(basicClass);
+		if (name.equalsIgnoreCase("sync.common.Sync"))
+			return patchSync(basicClass);
 		return basicClass;
+	}
+	
+	private byte[] patchBlockSapling(byte[] basicClass){
+		JMOD.LOG.info("PatchBlockSapling");
+		AbstractInsnNode iNode;
+		String method = "updateTick";
+		ClassNode cN = new ClassNode();
+		ClassReader cR = new ClassReader(basicClass);
+		cR.accept(cN, 0);
+		MethodNode mN = cN.methods.get(1);
+		JMOD.LOG.info("pbs method "+mN.name+" "+mN.desc);
+
+		Iterator<AbstractInsnNode> iIterator = mN.instructions.iterator();
+		while (iIterator.hasNext()) {
+			iNode = iIterator.next();
+			if (iNode.getOpcode() == Opcodes.BIPUSH) {
+				IntInsnNode iiNode = (IntInsnNode) iNode;
+				if(iiNode.operand == 7){
+					iNode = iiNode.getNext();
+					iIterator.remove();
+					InsnList inject = new InsnList();
+					inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC,"com/jeffpeng/jmod/JMOD","getGlobalConfig","()Lcom/jeffpeng/jmod/GlobalConfig;",false));
+					inject.add(new FieldInsnNode(Opcodes.GETFIELD,"com/jeffpeng/jmod/GlobalConfig","treeGrowthChanceModifier","I"));
+					mN.instructions.insertBefore(iNode, inject);
+				}
+			}
+
+		}
+		
+		ClassWriter cW = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+		cN.accept(cW);
+		return cW.toByteArray();
+	}
+	
+	private byte[] patchModDiscoverer(byte[] basicClass) {
+		JMOD.LOG.info("PatchModDiscoverer");
+		AbstractInsnNode iNode;
+		String method = "findClasspathMods";
+		ClassNode cN = new ClassNode();
+		ClassReader cR = new ClassReader(basicClass);
+		cR.accept(cN, 0);
+		Iterator<MethodNode> methods = cN.methods.iterator();
+		while (methods.hasNext()) {
+			MethodNode mN = methods.next();
+			if (mN.name.equals(method)) {
+				Iterator<AbstractInsnNode> iIterator = mN.instructions.iterator();
+				while (iIterator.hasNext()) {
+					iNode = iIterator.next();
+					if (iNode.getOpcode() == Opcodes.INVOKEVIRTUAL) {
+						MethodInsnNode mNode = (MethodInsnNode) iNode;
+						if (mNode.name.equals("getParentSources")) {
+							mNode.setOpcode(Opcodes.INVOKESTATIC);
+							mNode.owner = "com/jeffpeng/jmod/asm/Misc";
+							mNode.name = "getJarsHook";
+						}
+					}
+
+				}
+				JMOD.LOG.info("Patched the FML ModDiscoverer so it only takes mods into account that reside in your mods directory. This saves a lot of time when you have many JARs in your classpath.");
+			}
+		}
+		ClassWriter cW = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+		cN.accept(cW);
+		return cW.toByteArray();
+
 	}
 	
 	private byte[] patchFMLLoader(byte[] basicClass){

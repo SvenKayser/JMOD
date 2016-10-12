@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+FMLAT: jmod_at.cfg
+FMLCorePlugin: com.jeffpeng.jmod.JMOD
+FMLCorePluginContainsFMLMod: false
+Main-Class: com.jeffpeng.jmod.validator.Validator
+

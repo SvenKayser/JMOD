@@ -13,8 +13,8 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.Lib;
+import com.jeffpeng.jmod.descriptors.ItemStackSubstituteDescriptor;
 import com.jeffpeng.jmod.types.blocks.placers.MetalBlockPlacer;
-import com.jeffpeng.jmod.util.descriptors.ItemStackSubstituteDescriptor;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 

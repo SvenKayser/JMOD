@@ -1,10 +1,6 @@
 package com.jeffpeng.jmod;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -12,14 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-
+import org.apache.logging.log4j.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import org.apache.commons.io.IOUtils;
-
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
@@ -35,6 +28,8 @@ import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.ItemTool;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import team.chisel.init.ChiselItems;
@@ -77,7 +72,7 @@ public class Lib extends OwnedObject {
 	
 	public static boolean chance(int percentage){
 		int rand = ThreadLocalRandom.current().nextInt(0,100);
-		return rand < percentage;
+		return rand <= percentage;
 	}
 	
 	public void checkDependencies(){
@@ -101,6 +96,27 @@ public class Lib extends OwnedObject {
 			return Integer.parseInt(splits[1]);
 		} else return 1;
 	}
+	
+	public static boolean itemStackIsBlockImpl(ItemStack input){
+		if(input == null || input.getItem() == null || Block.getBlockFromItem(input.getItem()) == Blocks.air) return false;
+		return true;
+	}
+	
+	public boolean itemStackIsBlock(ItemStack input){
+		return itemStackIsBlockImpl(input);
+	}
+	
+	public static Block getBlockFromItemStackImpl(ItemStack input){
+		if(input == null || input.getItem() == null) return null;
+		Block ret = Block.getBlockFromItem(input.getItem());
+		if(ret == Blocks.air) return null;
+		return ret;
+	}
+	
+	public Block getBlockFromItemStack(ItemStack input){
+		return getBlockFromItemStackImpl(input);
+	}
+	
 	
 	public ItemStack[] stringToItemStackArray(String inputstring){
 		Object is = stringToItemStack(inputstring);
@@ -128,9 +144,9 @@ public class Lib extends OwnedObject {
 		return retstack;
 	}
 	
-	public ItemStack stringToItemStackOrFirstOreDict(String inputstring){
+	public static ItemStack stringToItemStackOrFirstOreDictImpl(String inputstring, JMODRepresentation jmod){
 		if(inputstring == null) return null;
-		Object is = stringToItemStack(inputstring);
+		Object is = stringToItemStackImpl(inputstring,jmod);
 		if(is instanceof ItemStack) return (ItemStack)is;
 		else {
 			if(OreDictionary.doesOreNameExist((String)is)){
@@ -143,14 +159,24 @@ public class Lib extends OwnedObject {
 		return null;
 	}
 	
-	public ItemStack stringToItemStackNoOreDict(String inputstring){
+	public ItemStack stringToItemStackOrFirstOreDict(String inputstring){		return stringToItemStackOrFirstOreDictImpl(inputstring,owner);	}
+	
+	public static ItemStack stringToItemStackNoOreDictImpl(String inputstring){	return stringToItemStackNoOreDictImpl(inputstring,null);		}
+	
+	public static ItemStack stringToItemStackNoOreDictImpl(String inputstring, JMODRepresentation jmod){
 		if(inputstring == null) return null;
-		Object is = stringToItemStack(inputstring);
+		Object is = stringToItemStackImpl(inputstring,jmod);
 		if(is instanceof ItemStack) return (ItemStack)is;
 		else return null;
 	}
 	
-	public static Object stringToItemStackStatic(String inputstring) {
+	public ItemStack stringToItemStackNoOreDict(String inputstring){
+		return stringToItemStackNoOreDictImpl(inputstring,owner);
+	}
+	
+	 
+	
+	public static Object stringToItemStackImpl(String inputstring, JMODRepresentation jmod) {
 		if(inputstring == null) return null;
 		int amount = 1;
 		if(inputstring.contains("@")) {
@@ -159,7 +185,14 @@ public class Lib extends OwnedObject {
 			inputstring = splits[0];
 		}
 		
-		String name = inputstring;
+		String name;
+		
+		if(jmod == null){
+			name = inputstring;
+		} else {
+			name = substituteItemStackName(inputstring,jmod);
+		}
+		
 		
 		if (name.contains(":")) {
 			String[] splits = name.split(":");
@@ -178,36 +211,14 @@ public class Lib extends OwnedObject {
 		}
 	}
 	
+
 	public Object stringToItemStack(String inputstring) {
-		if(inputstring == null) return null;
-		int amount = 1;
-		if(inputstring.contains("@")) {
-			String[] splits = inputstring.split("@");
-			amount = Integer.parseInt(splits[1]);
-			inputstring = splits[0];
-		}
-		
-		String name = substituteItemStackName(inputstring);
-		
-		if (name.contains(":")) {
-			String[] splits = name.split(":");
-			ItemStack stack = GameRegistry.findItemStack(splits[0], splits[1], amount);
-			
-			if(stack == null){
-				log.warn("[Missing ItemStack] Could not find " + name + ".");
-				return name;
-			}
-			if (splits.length == 3) {
-				if(splits[2].equals("*")) stack.setItemDamage(32767); else
-				stack.setItemDamage(Integer.parseInt(splits[2]));
-			}
-			return stack;
-		} else {
-			return name;
-		}
+		return stringToItemStackImpl(inputstring,owner);
 	}
 	
-	public String substituteItemStackName(String name) {
+	public static String substituteItemStackName(String name, JMODRepresentation jmod) {
+		Config config = jmod.getConfig();
+		Logger log = jmod.getLogger();
 		boolean changed = true;
 		String toSub = name;
 		int iterations = 0;
@@ -299,8 +310,6 @@ public class Lib extends OwnedObject {
 		if(is1 instanceof ItemStack){
 			if(is2 instanceof ItemStack) return matchItemStacks((ItemStack)is1,(ItemStack)is2);
 			if(is2 instanceof String){
-				//log.info("matching IS to string");
-				//log.info(is1 + " " + is2);
 				
 				if(((String) is2).contains(":")){
 					Object is2o = stringToItemStack((String)is2);
@@ -322,7 +331,23 @@ public class Lib extends OwnedObject {
 		return false;
 	}
 	
-	public static ItemStack getFirstOreDictMatch(String oredictentry){
+	public ItemStack getFirstOreDictMatch(String oredictentry){
+		return getFirstOreDictMatchImpl(oredictentry);
+	}
+	
+	public FluidStack stringToFluidStack(String input){
+		if(input == null) return null;
+		FluidStack fs = null;
+		if(input.contains("@")){
+			String[] splits = input.split("@");
+			if(FluidRegistry.isFluidRegistered(splits[0])){
+				fs = FluidRegistry.getFluidStack(splits[0], Integer.parseInt(splits[1]));
+			}
+		}
+		return fs;
+	}
+	
+	public static ItemStack getFirstOreDictMatchImpl(String oredictentry){
 		ItemStack is = null;
 		if(OreDictionary.doesOreNameExist(oredictentry) && OreDictionary.getOres(oredictentry).size() > 0){
 			is = OreDictionary.getOres(oredictentry).get(0);
@@ -348,7 +373,7 @@ public class Lib extends OwnedObject {
 		}
 	}
 	
-	public static ShapedOreRecipe convertPatterToShapedOreRecipe(ItemStack result, Object o){
+	public ShapedOreRecipe convertPatterToShapedOreRecipe(ItemStack result, Object o){
 		List<String[]> pattern = convertPattern(o);
 		
 		Character[] letters = new Character[]{'a','b','c','d','e','f','g','h','i'};
@@ -377,7 +402,10 @@ public class Lib extends OwnedObject {
 		for(int x = 0; x < 9; x++){
 			if(olist.get(x) != null){
 				rlist.add(slist[x]);
-				rlist.add(olist.get(x));
+				if(olist.get(x) instanceof String)
+					rlist.add(Lib.stringToItemStackImpl((String)olist.get(x),owner));
+				else 
+					rlist.add(olist.get(x));
 			} 
 		}
 		
@@ -546,23 +574,7 @@ public class Lib extends OwnedObject {
 		}
 	}
 	
-	public static String readFile(Path from, String file) throws IOException{
-		String retstr = "";
-		if(Files.isDirectory(from))
-			for(String line : Files.readAllLines(from.resolve(file)))retstr += line + "\n";
-		else {
-			ZipFile zipfile = new ZipFile(from.toString());
-			ZipEntry zipentry =  zipfile.getEntry(file);
-			if(zipentry == null){
-				zipfile.close();
-				throw new IOException();
-			}
-			InputStream istream = zipfile.getInputStream(zipentry);
-			retstr = IOUtils.toString(istream);
-			zipfile.close();
-		}
-		return retstr;
-	}
+	
 
 	// TODO: There must be a more elegant solution to this.
 

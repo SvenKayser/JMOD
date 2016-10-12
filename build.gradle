@@ -17,9 +17,10 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "alpha1.0.3"
+
+version = "1.7.10-alpha1.0.5"
 group= "com.jeffpeng.jmod" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "jmod-1.7.10"
+archivesBaseName = "jmod"
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -34,6 +35,7 @@ jar {
 		manifest {
 			attributes 'FMLAT': 'jmod_at.cfg'
 			attributes 'FMLCorePlugin': 'com.jeffpeng.jmod.JMOD','FMLCorePluginContainsFMLMod': 'false'
+			attributes 'Main-Class': 'com.jeffpeng.jmod.validator.Validator'
 		}
 		
 		classifier = 'complete'
@@ -66,6 +68,7 @@ dependencies {
 }
 
 sourceSets {
+
     main {
         java {
             srcDirs += 'src/api/java'
@@ -74,6 +77,8 @@ sourceSets {
         
         resources {
             srcDir "src/main/resources/"
+            
+            
         }
     }
     
@@ -118,16 +123,27 @@ task pluginIgniterJar(type: Jar, dependsOn: reobf){
 	}
 }
 
+task apiJar(type: Jar, dependsOn: reobf){
+	classifier = 'api'
+    doFirst {
+		from(project.ext.jarFile){
+			includes.addAll(["jmod/API/**"])
+		}
+	}
+}
+
+
 task coreJar(type: Jar, dependsOn: reobf){
 
 	classifier = ''
 	manifest {
 			attributes 'FMLAT': 'jmod_at.cfg'
 			attributes 'FMLCorePlugin': 'com.jeffpeng.jmod.JMOD','FMLCorePluginContainsFMLMod': 'false'
+			attributes 'Main-Class': 'com.jeffpeng.jmod.validator.Validator'
 		}
 	doFirst {
 		from(project.ext.jarFile){
-			includes.addAll(["assets/**","com/jeffpeng/jmod/**","com/cricketcraft/**","META-INF/**"])
+			includes.addAll(["assets/**","com/jeffpeng/jmod/**","com/cricketcraft/**","jmod/API/**","META-INF/**","LICENSE**"])
 		}
 	}
 }
@@ -138,10 +154,11 @@ task devTestJar(type: Jar, dependsOn: reobf){
 	manifest {
 			attributes 'FMLAT': 'jmod_at.cfg'
 			attributes 'FMLCorePlugin': 'com.jeffpeng.jmod.JMOD','FMLCorePluginContainsFMLMod': 'false'
+			attributes 'Main-Class': 'com.jeffpeng.jmod.validator.Validator'
 		}
 	doFirst {
 		from(project.ext.jarFile){
-			includes.addAll(["assets/**","com/jeffpeng/jmod/**","com/cricketcraft/**","META-INF/**"])
+			includes.addAll(["assets/**","com/jeffpeng/jmod/**","com/cricketcraft/**","jmod/API/**","META-INF/**","LICENSE**"])
 		}
 	}
 	
@@ -162,6 +179,6 @@ task devtestreplace{
 
 
 task buildtypetest(dependsOn: ['devtestreplace','devTestJar'])
-task buildAll(dependsOn:['coreJar','pluginIgniterJar']);
+task buildAll(dependsOn:['coreJar','pluginIgniterJar','apiJar']);
 
 classes.mustRunAfter devtestreplace

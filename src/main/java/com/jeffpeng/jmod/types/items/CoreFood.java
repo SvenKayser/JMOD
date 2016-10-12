@@ -11,12 +11,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
 
-import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.Lib;
+import com.jeffpeng.jmod.descriptors.BuffDescriptor;
+import com.jeffpeng.jmod.descriptors.FoodDataDescriptor;
 import com.jeffpeng.jmod.interfaces.IItem;
-import com.jeffpeng.jmod.util.descriptors.BuffDescriptor;
-import com.jeffpeng.jmod.util.descriptors.FoodDataDescriptor;
 
 public class CoreFood extends ItemFood implements IItem {
 	
@@ -47,11 +46,6 @@ public class CoreFood extends ItemFood implements IItem {
     }
 	
 	@Override
-	public void register(){
-		JMOD.DEEPFORGE.registerItem(this, this.internalName, owner.getModId());
-	}
-	
-	@Override
 	public Item setTextureName(String texname){
 		super.setTextureName(texname);
 		return this;
@@ -63,10 +57,9 @@ public class CoreFood extends ItemFood implements IItem {
 		this.setUnlocalizedName(getPrefix()+"."+name);
 	}
 
-
 	@Override
-	public String getPrefix() {
-		return owner.getModId();
+	public JMODRepresentation getOwner() {
+		return owner;
 	}
 
 }

@@ -12,7 +12,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.Lib;
-import com.jeffpeng.jmod.util.descriptors.ItemStackSubstituteDescriptor;
+import com.jeffpeng.jmod.descriptors.ItemStackSubstituteDescriptor;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 

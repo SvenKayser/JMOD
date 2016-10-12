@@ -8,8 +8,8 @@ import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.feature.WorldGenMinable;
 import net.minecraft.world.gen.feature.WorldGenerator;
 
+import com.jeffpeng.jmod.actions.AddOreGeneration;
 import com.jeffpeng.jmod.primitives.OwnedObject;
-import com.jeffpeng.jmod.util.actions.AddOreGeneration;
 
 import cpw.mods.fml.common.IWorldGenerator;
 import cpw.mods.fml.common.registry.GameRegistry;
