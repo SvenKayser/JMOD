@@ -2,7 +2,7 @@ package com.jeffpeng.jmod.scripting.mods;
 
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.primitives.OwnedObject;
-import com.jeffpeng.jmod.util.actions.applecore.ModifyFoodValue;
+import com.jeffpeng.jmod.actions.applecore.ModifyFoodValue;
 
 public class Applecore extends OwnedObject {
 
