@@ -1,15 +1,21 @@
 Changelog
 
-alpha1.0.4
-- implemented Fluids + Fluid API (https://github.com/SvenKayser/JMOD/issues/16)
-- implemented interface for sifting results (ExNihilo) (https://github.com/SvenKayser/JMOD/issues/12)
+alpha1.0.5 (indev)
+- fixed crafting spam and resulting performance bumps [Issue #17](https://github.com/SvenKayser/JMOD/issues/17)
+- fixed fluids
+- merged and up-ported AppleCore support, credit to nmarshall23 [PR#10](https://github.com/SvenKayser/JMOD/pull/10)
+- cleaned up startup ordering, fixing [Issue #8](https://github.com/SvenKayser/JMOD/issues/8)
+- fixes I forgot about
+
+alpha1.0.4 (no release)
+- implemented Fluids + Fluid API [Issue #16](https://github.com/SvenKayser/JMOD/issues/16)
+- implemented interface for sifting results (ExNihilo) [Issue #12](https://github.com/SvenKayser/JMOD/issues/12)
 - implemented Centrifuge API (RotaryCraft)
-
-- fixed crafting spam (https://github.com/SvenKayser/JMOD/issues/17)
-
+- much re-organization
+- streamlined loading stage distribution to the actions
 - tons of changes under the hood
 
-alpha1.0.3
+alpha1.0.3 (released)
 - the JMOD jar is now executable and provides a simple .jmod validator
 - Improved Nashorn's binding of the ScriptingObject
 - Hooked scripts earlier into FML's loading process
@@ -19,7 +25,7 @@ alpha1.0.3
 - Fixed not executing RemoveSmeltingRecipes
 - Fixed eval error line numbers not working (again...)
 
-alpha1.0.2
+alpha1.0.2 (no release)
 - JMOD is now a core mod only
 - Improved loading performance
 - Added sanity check for StringListRecipes
@@ -29,7 +35,7 @@ alpha1.0.2
 - Fixed OreGen not running concurrently
 
 
-alpha1.0.1
+alpha1.0.1 (no release)
 
 - First Version, rewrite from the base of the si.core mod
 

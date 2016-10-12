@@ -89,7 +89,10 @@ public class JMOD implements IFMLLoadingPlugin {
 		DEEPFORGE = new ForgeDeepInterface();
 		JMODLoader.constructMods();
 		JMODLoader.inject();
-		//JMODLoader.waitOnScripts();
+		JMODLoader.runScripts();
+		
+		
+
 		ProgressBar bar = ProgressManager.push("Initializing JMODs", JMODLoader.getModList().size());
 		for(Map.Entry<String,JMODContainer> entry : JMODLoader.getModList().entrySet()){
 			bar.step(entry.getValue().getName());

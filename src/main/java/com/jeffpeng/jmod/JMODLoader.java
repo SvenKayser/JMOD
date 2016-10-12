@@ -91,7 +91,7 @@ public class JMODLoader {
 				continue;
 			}
 			
-			newmod.getMod().runScripts();
+			//newmod.getMod().runScripts();
 			
 			modList.put(newmod.getModId(),newmod);
 			
@@ -109,6 +109,12 @@ public class JMODLoader {
 		JMOD.DEEPFORGE.lockDown();
 	}
 	
+	protected static void runScripts(){
+		for(Map.Entry<String,JMODContainer> entry : modList.entrySet()){
+			entry.getValue().getMod().runScripts();
+		}
+	}
+	
 	private static boolean isJmod(Path path){
 		if(path.toString().endsWith(".jmod")){
 			return true;
@@ -118,33 +124,33 @@ public class JMODLoader {
 	
 	
 	
-	protected static void waitOnScripts(){
-		long start = System.currentTimeMillis();
-		boolean finished = false;
-		while(!finished){
-			finished = true;
-			
-			for(Map.Entry<String,JMODContainer> entry : modList.entrySet()){
-				if(entry.getValue().getMod().hasScriptErrored()){
-					throw new RuntimeException(entry.getValue().getModId() + " scripts have errored.");
-				}
-			}
-			
-			for(Map.Entry<String,JMODContainer> entry : modList.entrySet()){
-				finished &= entry.getValue().getMod().isScriptingFinished();
-				if(!finished)	break;
-			}
-			if(!finished)
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			if(finished) JMOD.LOG.info("Waited on scripts to complete for " + (System.currentTimeMillis() - start) + "ms");
-		}
-	}
+//	protected static void waitOnScripts(){
+//		long start = System.currentTimeMillis();
+//		boolean finished = false;
+//		while(!finished){
+//			finished = true;
+//			
+//			for(Map.Entry<String,JMODContainer> entry : modList.entrySet()){
+//				if(entry.getValue().getMod().hasScriptErrored()){
+//					throw new RuntimeException(entry.getValue().getModId() + " scripts have errored.");
+//				}
+//			}
+//			
+//			for(Map.Entry<String,JMODContainer> entry : modList.entrySet()){
+//				finished &= entry.getValue().getMod().isScriptingFinished();
+//				if(!finished)	break;
+//			}
+//			if(!finished)
+//			try {
+//				Thread.sleep(100);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			
+//			if(finished) JMOD.LOG.info("Waited on scripts to complete for " + (System.currentTimeMillis() - start) + "ms");
+//		}
+//	}
 	
 	public static JMODRepresentation getMod(String modid){
 		return modList.get(modid).getMod();
