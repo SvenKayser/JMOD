@@ -19,6 +19,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.BlockFluidClassic;
 
+import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.Lib;
 import com.jeffpeng.jmod.interfaces.IBlock;
@@ -59,28 +60,27 @@ public class CoreFluidBlock extends BlockFluidClassic implements IBlock {
 
 	public CoreFluidBlock(JMODRepresentation owner, Material mat, CoreFluid attachedFluid) {
 		super(attachedFluid, mat);
-		if(attachedFluid.getDensity()<=1) this.densityDir = 1;
+		if(attachedFluid.getDensity()<0) this.densityDir = 1;
 		this.owner = owner;
 		this.attachedFluid = attachedFluid;
 		this.internalName = "fluid." + attachedFluid.getName();
 		this.setBlockName(owner.getModId() + "." + internalName);
 		this.setBlockTextureName(owner.getModId() + ":" + internalName);
-		
-			if(attachedFluid.getTemperature() > CoreFluid.SEARING+1000) setFireChance = 100;
-			else setFireChance = (CoreFluid.SEARING+1000 - attachedFluid.getTemperature()) / 10;
-			
-			if(attachedFluid.getTemperature() < CoreFluid.FREEZING-100) freezeChance = 100;
-			else freezeChance = (attachedFluid.getTemperature() - CoreFluid.FREEZING-100);
-			
+		JMOD.LOG.info("cfb tex "+this.textureName);
 		searing = attachedFluid.isSearing();
 		boiling = attachedFluid.isBoiling();
 		freezing = attachedFluid.isFreezing();
-
 		cold = attachedFluid.getTemperature() <= (10+273);
 		hypothermic = attachedFluid.getTemperature() <= (-50+273);
 		supercold = attachedFluid.getTemperature() <= (-100+273);
-		
 		temperature = attachedFluid.getTemperature();
+		if(searing)
+			if(attachedFluid.getTemperature() > CoreFluid.SEARING+1000) setFireChance = 100;
+			else setFireChance = (CoreFluid.SEARING+1000 - attachedFluid.getTemperature()) / 10;
+		
+		if(freezing)
+			if(attachedFluid.getTemperature() < CoreFluid.FREEZING-100) freezeChance = 100;
+			else freezeChance = (attachedFluid.getTemperature() - CoreFluid.FREEZING-100);
 		
 		poisonous = attachedFluid.isPoisonous();
 		
@@ -108,7 +108,6 @@ public class CoreFluidBlock extends BlockFluidClassic implements IBlock {
 	public void registerBlockIcons(IIconRegister iconregister) {
 		this.icons[0] = iconregister.registerIcon(textureName + "-still");
 		this.icons[1] = iconregister.registerIcon(textureName + "-flowing");
-
 		attachedFluid.setIcons(this.icons[0], this.icons[1]);
 
 	}
@@ -133,7 +132,6 @@ public class CoreFluidBlock extends BlockFluidClassic implements IBlock {
 	public void updateTick(World world, int x, int y, int z, Random rand) {
 
 		super.updateTick(world, x, y, z, rand);
-		
 		if (!world.isRemote) {
 			if (setFireChance > 0) {
 				int face = 0;

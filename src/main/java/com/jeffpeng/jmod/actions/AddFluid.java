@@ -24,7 +24,6 @@ public class AddFluid extends BasicAction{
 	public AddFluid setColor(int r, int g, int b){		fluid.setColor(r, g, b);					return this;	}
 	public AddFluid hasBucket(){						hasBucket = true;							return this;	}
 	public AddFluid isGaseous(){						fluid.setGaseous(true); 					return this;	}
-	public AddFluid tickRate(int t){					fluid.setTickRate(t);						return this;	}
 	public AddFluid isPoisonous(){						fluid.setPoisonous(true);					return this;	}
 	
 	@Override

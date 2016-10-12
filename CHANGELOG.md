@@ -1,9 +1,12 @@
 Changelog
 
 alpha1.0.4
-- implemented Fluids + Fluid API
-- implemented interface for sifting results (ExNihilo)
+- implemented Fluids + Fluid API (https://github.com/SvenKayser/JMOD/issues/16)
+- implemented interface for sifting results (ExNihilo) (https://github.com/SvenKayser/JMOD/issues/12)
 - implemented Centrifuge API (RotaryCraft)
+
+- fixed crafting spam (https://github.com/SvenKayser/JMOD/issues/17)
+
 - tons of changes under the hood
 
 alpha1.0.3

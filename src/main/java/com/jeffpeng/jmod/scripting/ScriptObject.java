@@ -288,7 +288,7 @@ public class ScriptObject extends OwnedObject {
 		return owner.getModId();
 	}
 	
-	public int celcius(float c){	return Math.round(c - 273.15F);				}
+	public int celcius(float c){	return Math.round(c + 273.15F);				}
 	public int fahrenheit(float f){	return Math.round((f + 459.67F) * (5/9));	}
 	
 	

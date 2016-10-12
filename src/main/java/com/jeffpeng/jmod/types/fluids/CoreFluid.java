@@ -34,7 +34,6 @@ public class CoreFluid extends Fluid {
 	private int color;
 	private CoreFluidBlock fluidBlock;
 	private ItemBucket bucket = null; 
-	private int tickrate = 20;
 	private boolean poisonous;
 	
 	public CoreFluid(JMODRepresentation owner, String fluidname) {
@@ -78,24 +77,23 @@ public class CoreFluid extends Fluid {
 		if(this.isGaseous) fluidBlock = new CoreFluidBlock(owner, new MaterialLiquid(MapColor.airColor), this); else
 		if(this.temperature>SEARING) fluidBlock = new CoreFluidBlock(owner, Material.lava, this); else 
 		fluidBlock = new CoreFluidBlock(owner, Material.water, this);
-		fluidBlock.setTickRate(tickrate);
+		
 	}
 	
 	public void bucketize(){
 		bucket = new ItemBucket(fluidBlock);
-		bucket.setUnlocalizedName("bucket."+this.getUnlocalizedName()).setContainerItem(Items.bucket);
-		JMOD.DEEPFORGE.registerItem(bucket, "bucket."+this.getUnlocalizedName(), owner);
+		bucket.setUnlocalizedName("bucket."+fluidname.toLowerCase()).setContainerItem(Items.bucket);
+		bucket.setTextureName(owner.getModId()+":bucket."+fluidname.toLowerCase());
+		
+		JMOD.DEEPFORGE.registerItem(bucket, "bucket."+fluidname.toLowerCase(), owner);
 		FluidContainerRegistry.registerFluidContainer(this, new ItemStack(bucket), new ItemStack(Items.bucket));
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
 	public int getTickRate(){
-		return tickrate;
+		return viscosity/200;
 	}
 	
-	public void setTickRate(int val){
-		this.tickrate = val;
-	}
 	
 	@SubscribeEvent
 	public void onBucketFill(FillBucketEvent event){
