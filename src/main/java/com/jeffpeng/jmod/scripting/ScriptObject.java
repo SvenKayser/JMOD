@@ -24,6 +24,7 @@ public class ScriptObject extends OwnedObject {
 	public Global Global = new Global(owner);
 	public RotaryCraft RotaryCraft = new RotaryCraft(owner);
 	public Chisel Chisel = new Chisel(owner);
+	public Applecore Applecore = new Applecore(owner);
 	public Sync Sync = new Sync(owner);
 	public ExNihilo ExNihilo = new ExNihilo(owner);
 	
