@@ -41,12 +41,12 @@ public interface IStagedObject extends Comparable<IStagedObject> {
 			}
 			
 			
-			try {
+			/*try {
 				Thread.sleep(1);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			}*/
 			bar.step(o.getClass().getSimpleName());
 		}
 		ProgressManager.pop(bar);

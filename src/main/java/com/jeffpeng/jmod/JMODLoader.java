@@ -49,7 +49,6 @@ public class JMODLoader {
 	protected static void constructMods(){
 		if(JMOD.DEEPFORGE != null &&JMOD.DEEPFORGE.isLocked()){
 			throw new RuntimeException("Cannot add any more mods at this point.");
-			
 		}
 		
 		//ProgressBar bar = ProgressManager.push("Constructing JMODs", modQueue.size());
@@ -122,36 +121,6 @@ public class JMODLoader {
 		return false;
 	}
 	
-	
-	
-//	protected static void waitOnScripts(){
-//		long start = System.currentTimeMillis();
-//		boolean finished = false;
-//		while(!finished){
-//			finished = true;
-//			
-//			for(Map.Entry<String,JMODContainer> entry : modList.entrySet()){
-//				if(entry.getValue().getMod().hasScriptErrored()){
-//					throw new RuntimeException(entry.getValue().getModId() + " scripts have errored.");
-//				}
-//			}
-//			
-//			for(Map.Entry<String,JMODContainer> entry : modList.entrySet()){
-//				finished &= entry.getValue().getMod().isScriptingFinished();
-//				if(!finished)	break;
-//			}
-//			if(!finished)
-//			try {
-//				Thread.sleep(100);
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			
-//			if(finished) JMOD.LOG.info("Waited on scripts to complete for " + (System.currentTimeMillis() - start) + "ms");
-//		}
-//	}
-	
 	public static JMODRepresentation getMod(String modid){
 		return modList.get(modid).getMod();
 	}
@@ -159,8 +128,6 @@ public class JMODLoader {
 	public static JMODContainer getModContainer(String modid){
 		return modList.get(modid);
 	}
-	
-	
 	
 	public static void markFMLModsDiscovered(){
 		JMOD.LOG.info("markFMLModsDiscovered");
@@ -185,7 +152,5 @@ public class JMODLoader {
 			JMOD.LOG.info("Waited " + (System.currentTimeMillis() - start) + "ms for FMLMods to be discovered.");
 		}
 		return Loader.isModLoaded(modid);
-		
 	}
-	
 }

@@ -161,6 +161,6 @@ public class AddItem extends BasicAction{
 	
 	@Override
 	public int priority(){
-		return 50;
+		return 200;
 	}
 }

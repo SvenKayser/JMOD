@@ -7,11 +7,13 @@ import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.primitives.BasicAction;
 
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 public class AddOreDictionaryEntry extends BasicAction {
 	public String itemstack;
 	
 	public String entry;
+	boolean done = false;
 	
 	public AddOreDictionaryEntry(JMODRepresentation owner, String itemstack, String entry){
 		super(owner);
@@ -21,8 +23,25 @@ public class AddOreDictionaryEntry extends BasicAction {
 	}
 	
 	@Override
+	public boolean on(FMLPreInitializationEvent event){
+		log.info("oredict for "+itemstack+" -> " +entry+", first pass");
+		
+		Object is = lib.stringToItemStack(itemstack);
+		if(is instanceof ItemStack){
+			OreDictionary.registerOre(entry, (ItemStack)is);
+			log.info("Adding " + itemstack + " to "+ entry);
+			done = true;
+		} else {
+			log.info("Tying to oredict " + itemstack + ", but it is not a currently present itemstack (yet?). Postponing for 2nd pass.");
+		}
+		
+		return done;
+	}
+	
+	@Override
 	public boolean on(FMLLoadCompleteEvent event){
-		log.info("ordict for "+itemstack);
+		if(done) return true;
+		log.info("oredict for "+itemstack+" -> " +entry+", second pass");
 		
 		Object is = lib.stringToItemStack(itemstack);
 		if(is instanceof ItemStack){

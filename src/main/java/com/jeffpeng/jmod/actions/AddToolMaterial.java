@@ -54,6 +54,7 @@ public class AddToolMaterial extends BasicAction{
 	
 	@Override
 	public boolean on(FMLPreInitializationEvent event){
+		log.info("[tool material] injecting new tool material: " + name);
 		this.toolmat = EnumHelper.addToolMaterial(name, harvestLevel, durability, efficiency, damage, enchantability);
 		return true;
 	}
@@ -79,6 +80,6 @@ public class AddToolMaterial extends BasicAction{
 	@Override
 	public int priority()
 	{
-		return 100;
+		return 250;
 	}
 }
