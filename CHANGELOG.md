@@ -3,6 +3,7 @@ Changelog
 alpha1.0.5 (indev)
 - fixed crafting spam and resulting performance bumps [Issue #17](https://github.com/SvenKayser/JMOD/issues/17)
 - fixed fluids
+- RoC Centrifuge cleanup 
 - merged and up-ported AppleCore support, credit to nmarshall23 [PR#10](https://github.com/SvenKayser/JMOD/pull/10)
 - cleaned up startup ordering, fixing [Issue #8](https://github.com/SvenKayser/JMOD/issues/8)
 - fixes I forgot about
