@@ -4,7 +4,9 @@ import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.actions.rotarycraft.AddBlastFurnaceAlloying;
 import com.jeffpeng.jmod.actions.rotarycraft.AddBlastFurnaceRecipe;
 import com.jeffpeng.jmod.actions.rotarycraft.AddCentrifugeRecipe;
+import com.jeffpeng.jmod.actions.rotarycraft.AddCompactorRecipe;
 import com.jeffpeng.jmod.actions.rotarycraft.AddGrinderRecipe;
+import com.jeffpeng.jmod.actions.rotarycraft.AddPulseJetRecipe;
 import com.jeffpeng.jmod.primitives.OwnedObject;
 
 public class RotaryCraft extends OwnedObject {
@@ -14,7 +16,7 @@ public class RotaryCraft extends OwnedObject {
 	}
 	
 	public void addGrinderRecipe(String out, String in){
-		//SI.CONFIG.rotaryCraft.grinderRecipes.add(new GrinderRecipeDescriptor(in,out));
+
 		if(owner.testForMod("RotaryCraft")) new AddGrinderRecipe(owner,out,in);
 	}
 	
@@ -23,15 +25,26 @@ public class RotaryCraft extends OwnedObject {
 	}
 	
 	public AddBlastFurnaceAlloying addBlastFurnaceAlloying(String out, String main, int temp){
-		return new AddBlastFurnaceAlloying(owner,out,main,temp);
+		if(owner.testForMod("RotaryCraft")) return new AddBlastFurnaceAlloying(owner,out,main,temp); 
+		else return null;
 	}
 	
 	public AddCentrifugeRecipe addCentrifugeRecipe(String inputitem){
-		return new AddCentrifugeRecipe(owner, inputitem);
+		if(owner.testForMod("RotaryCraft"))	return new AddCentrifugeRecipe(owner, inputitem); 
+		else return null;
+	}
+	
+	public void addPulseJetRecipe(String out, String in){
+		if(owner.testForMod("RotaryCraft")) new AddPulseJetRecipe(owner,out,in);
+	}
+	
+	public void addCompactorRecipe(String out, String in, int temperature, int pressure){
+		if(owner.testForMod("RotaryCraft")) new AddCompactorRecipe(owner,out,in,temperature, pressure);
 	}
 	
 	public void patchRotarycraftSteelTools(boolean value){
 		config.patchRotarycraftSteelTools = value;
 	}
+	
 	
 }

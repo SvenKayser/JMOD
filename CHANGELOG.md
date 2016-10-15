@@ -1,6 +1,10 @@
 Changelog
 
-alpha1.0.5 (indev)
+alpha1.0.6 (indev)
+- Added support for RotaryCraft PulseJetFurnace and Compactor
+- Fixed some RotaryCraft script bindings cause crashes when used without RotaryCraft present
+
+alpha1.0.5 (release pending)
 - fixed crafting spam and resulting performance bumps [Issue #17](https://github.com/SvenKayser/JMOD/issues/17)
 - fixed fluids
 - RoC Centrifuge cleanup 
