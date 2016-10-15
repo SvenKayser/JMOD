@@ -81,11 +81,11 @@ JMOD includes many important features for tweaking Minecraft, including:
 \item Built-in support for Chisel's chisel (including the creation of additional chisels), as well as RotaryCraft's grinder and blast furnace (more on the way).
 \end{itemize}
 
-To simplify the process, he used the JavaScript language built into Java 8 (called ``Nashorn'') to make the language much more complete.  Loops, conditionals, tests... they're all there, and working without an issue.  And JavaScript is a standard that many programmers know or could easily learn, with documentation everywhere.
+To simplify the process, we use the JavaScript language built into Java 8 (called ``Nashorn'') to make the language much more complete.  Loops, conditionals, classes, functions... they're all there, and working without an issue.  And JavaScript is a standard that many programmers know or could easily learn, with documentation everywhere.
 
 However, there are commands specific to JMOD that are not documented anywhere else, which is where this document comes into play.  In the following sections, I will be listing all the major commands for this scripting tool, including their usage, and some examples for good measure.  Hopefully, by the time you're done with this document, you should know enough about JMOD to start making your own jmods.  And no, you are not limited to just one jmod.  If it helps, split them out as you wish.
 
-Note that JMOD is alpha software, and is likely to change in the future, so while I'll try and keep this document up-to-date, I can't guarantee the information is accurate in reference to a version of JMOD newer than the above date.  However, this should give you a good head-start.
+Note that JMOD is alpha software, and the commands are likely to change in the future to accommodate new features, so while I'll try and keep this document up-to-date, I can't guarantee the information is accurate in reference to a version of JMOD newer than the above date.  However, this should give you a good head-start.  Note that as of this document, the current version of JMOD is Alpha-1.0.5
 
 \section{The Jmod File}
 Before we begin with the scripts, I want to make sure you understand this.  A jmod is a zipfile with the \texttt{.jmod} extension.  This prevents Forge's modloader from trying to load this file, and ensures that JMOD does.
@@ -145,7 +145,7 @@ These commands cover the complex task of loading other scripts at the right time
 Loads another JavaScript file from within the jmod.
 
 \begin{description}
-\item[Command:] \texttt{load(``\emph{filename}'')}
+\item[Command:] \texttt{loadjs(``\emph{filename}'')}
 \begin{description}
 \item [filename:] This is the filename of the script you wish to load.
 \end{description}
@@ -460,6 +460,85 @@ You can add blocks of a specific type of metal.  This is mostly a convenience; b
 \end{description}
 \end{description}
 
+\subsubsection{Adding Fluids}
+
+Fluid blocks are unlike other blocks in that they have a source and flow block, as well as several qualities to pick from.
+
+\begin{description}
+\item[Command:] \texttt{addFluid(``name'')}
+\begin{description}
+\item [name:] This is the name of the fluid being created.
+\end{description}
+\end{description}
+
+Now, fluids have several methods to set various states of the fluid in question.  
+
+The first is viscosity, the speed at which a fluid flows.  
+
+The tickrate of a fluid (how often it updates) is determined by its viscosity value using the following calculation: $$tickrate = \frac{viscosity}{200}$$
+
+1000 is water's viscosity; higher numbers increase the number of ticks between updates, while lower numbers decrease this number.
+
+\begin{description}
+\item[Method:] \texttt{.viscosity(value)}
+\begin{description}
+\item [value:] The viscosity value for the fluid.
+\end{description}
+\end{description}
+
+The next is density.  This is calculated in kilograms per cubic meter.  Fluids with a density of 0 can stay in place, while negative density values will cause the "liquid" to float up.
+
+\begin{description}
+\item[Method:] \texttt{.density(value)}
+\begin{description}
+\item [value:] The density value for the fluid.
+\end{description}
+\end{description}
+
+Onto temperature.  The temperature of a liquid affects a few things.  While fluids created by addFluid can't change to ice, a fluid with a negative temperature can turn adjacent water to ice.  Similarly, a fluid that is over 300 degrees can start setting fires (think ``lava'').
+
+In addition to freezing water and setting fires, there's also the fluid's affect on the player.  At -50, ``cold damage'' will be applied to the player (the effect was added by JMOD).  At -100, the damage becomes much worse, and it can slow a player down (hypothermia).  On the other side, 100 degrees can do damage to a player, and 300 degrees will both damage a player and set them on fire.
+
+\begin{description}
+\item[Method:] \texttt{.temperature(value)}
+\begin{description}
+\item [value:] The fluid's temperature in Celcius.
+\end{description}
+\end{description}
+
+Next up: Color.  The fluid's color in block and bucket forms are pretty much set by the jmod's textures, but this value sets the color used by tanks and other mod interactions with the fluids in order to keep the fluid's appearance consistent.
+
+\begin{description}
+\item[Method:] \texttt{.setColor(red value, green value, blue value)}
+\begin{description}
+\item [red value:] How much red is in the color, from 0-255.
+\item [green value:] How much green is in the color, from 0-255.
+\item [blue value:] How much blue is in the color, from 0-255.
+\end{description}
+\end{description}
+
+Speaking of buckets, there may be cases where you don't want a fluid to have a bucket, such as negative-density fluids that a bucket would not be able to hold.  To accomodate those who want to make the call themselves, the hasBucket() method was added to make whether or not a fluid has a bucket or not explicit.  There are no arguments; only the presence of this method matters.
+
+NOTE: This only affects the vanilla bucket (and those interacting with forge fluids); the wooden bucket is strictly limited to water and milk.
+
+\begin{description}
+\item[Method:] \texttt{.hasBucket()}
+\end{description}
+
+Some fluids can poison a player.  Using this command tells Minecraft that this added fluid is one such fluid.
+
+\begin{description}
+\item[Method:] \texttt{.isPoisonous()}
+\end{description}
+
+When submerged in a fluid, there is a chance that you can drown.  However, forge treats gases as fluid, too, for the sake of simplifying fluid and gaseous dynamics.  So, to separate breathable gases and non-breathable fluids, this command determines a fluid to be gaseous.
+
+NOTE: being gaseous does not affect how a fluid flows; it will still flow like water (think ``dry ice smoke'').  The direction of flow is still controlled by density, and the speed of flow is still controlled by viscosity.
+
+\begin{description}
+\item[Method:] \texttt{.isGaseous()}
+\end{description}
+
 \subsection{The Ore Dictionary}
 
 These allow you to add, remove, change, or consolidate ore dictionary entries.
@@ -745,9 +824,9 @@ Once you've named your chisel group, it's just a matter of adding the desired bl
 
 \subsection{RotaryCraft Tweaks}
 
-JMOD was written to support Survival Industry, which needed quite a few tweaks to integrate RotaryCraft with other mods more deeply than Reika's already significant investment allows.  As such, JMOD is one of the few tweaking tools that can handle adding complex recipes for the Blast Furnace, as well as custom grinder recipes.
+JMOD was written to support Survival Industry, which needed quite a few tweaks to integrate RotaryCraft with other mods more deeply than Reika's already significant investment allows.  As such, JMOD is one of the few tweaking tools that can handle adding complex recipes for the Blast Furnace, as well as recipes for various other RotaryCraft machines.
 
-As with the Chisel tweaks, these commands need to be started with "RotaryCraft."
+As with other mods' tweaks, these commands need to be started with "RotaryCraft."
 
 \subsubsection{Blast Furnace Recipes}
 
@@ -828,6 +907,73 @@ RotaryCraft's grinder can also have recipes applied, similar to how the vanilla 
 \end{description}
 
 The grinder's output numbers seem to be hardcoded into RotaryCraft; there does not seem to be a way to alter them from here.
+
+\subsubsection{Centrifuge Recipes}
+
+RotaryCraft's centrifuge can set outputs for specific inputs, along with the chances of that output occurring.  This can be useful if using RotaryCraft with skyblock maps, as the centrifuge can be used as an advanced sifter.  
+
+\begin{description}
+\item[Command:] \texttt{RotaryCraft.addCentrifugeRecipe(``ingredient'')}
+\begin{description}
+\item [ingredient:] The item ID of the ingredient that goes into the centrifuge.
+\end{description}
+\end{description}
+
+The centrifuge's outputs are controlled by methods, rather than identified in the main command.  There are two output types: item outputs and fluid outputs.
+
+For item output, you have the following method.  Note that the chance is a floating-point number, so you can make use of decimals.
+
+\begin{description}
+\item[Method:] \texttt{.addOutput(``output'', chance)}
+\begin{description}
+\item [output:] The item ID of what we want to output.  If you end the output id with "@" and a number, you can determine a quantity.
+\item [chance:] The chance, in percentage form, that the item will be extracted from the ingredient.
+\end{description}
+\end{description}
+
+For fluids, you have the following method.  
+
+\begin{description}
+\item[Method:] \texttt{.addOutput(``output'', chance)}
+\begin{description}
+\item [output:] The fluid ID of what we want to output.  Like with item, the @ and a number can give an amount, which is measured in millibuckets.
+\item [chance:] The chance, in percentage form, that the item will be extracted from the ingredient.
+\end{description}
+\end{description}
+
+\subsection{AppleCore Tweaks}
+
+JMOD can work with AppleCore to allow tweaks of existing food values.  That way, if bread is too satisfying, or apples are not satisfying enough, or if melons should do more saturation than they do, you can change them from within JMOD.  AppleCore is obviously required for this to work.
+
+\subsubsection{Modifying Food Values}
+
+You can change the hunger and saturation of a food item.
+
+\begin{description}
+\item[Command:] \texttt{Applecore.modifyFoodValue(``food'', hunger, saturation)}
+\begin{description}
+\item [food:] The item id of the food in question.
+\item [hunger:] How much satisfaction (in half-shanks, up to 20) the food can satisfy.  Must be an integer (no decimals).
+\item [saturation:] How long before the hunger bar starts to fall again.  You can use a float (decimals allowed) up to a maximum of 10.0.
+\end{description}
+\end{description}
+
+\subsection{Ex Nihilo Tweaks}
+
+JMOD can work with Ex Nihilo to affect what the mod can do.  This can allow significant customization of a skyblock game.
+
+\subsubsection{Adding Sifting Recipes}
+
+You can add additional recipes to the sifter to allow drops of additional items (such as things made with JMOD).
+
+\begin{description}
+\item[Command:] \texttt{ExNihilo.addSifting(``output'', ``input'', rarity)}
+\begin{description}
+\item [output:] The item ID of what we want to get from the sifter.
+\item [hunger:] The item ID of the item we're sifting in the sifter.
+\item [saturation:] The rarity of an item, as a ratio of 1:rarity.  Must be an integer.
+\end{description}
+\end{description}
 
 \section{Additional Features}
 
