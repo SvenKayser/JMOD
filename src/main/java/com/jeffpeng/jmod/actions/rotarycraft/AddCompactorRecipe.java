@@ -8,18 +8,21 @@ import com.jeffpeng.jmod.primitives.BasicAction;
 
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 
-public class AddGrinderRecipe extends BasicAction {
-	
+public class AddCompactorRecipe extends BasicAction {
 	private String inString;
 	private String outString;
+	private int pressure;
+	private int temperature;
 	
 	private ItemStack in;
 	private ItemStack out;
 	
-	public AddGrinderRecipe(JMODRepresentation owner, String out, String in){
+	public AddCompactorRecipe(JMODRepresentation owner, String out, String in, int pressure, int temperature){
 		super(owner);
 		this.inString = in;
 		this.outString = out;
+		this.temperature = temperature;
+		this.pressure = pressure;
 	}
 	
 	@Override
@@ -36,13 +39,14 @@ public class AddGrinderRecipe extends BasicAction {
 				out = (ItemStack)outIs;
 			}
 		}
+		
+		valid &= (pressure > 0);
 		if(valid) execute();
 		return valid;
 	}
 	
 	@Override
 	public void execute(){
-		RecipeInterface.grinder.addAPIRecipe(in, out);
+		RecipeInterface.compactor.addAPIRecipe(in, out, pressure, temperature);
 	}
-
 }

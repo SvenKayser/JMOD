@@ -8,15 +8,15 @@ import com.jeffpeng.jmod.primitives.BasicAction;
 
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 
-public class AddGrinderRecipe extends BasicAction {
+public class AddPulseJetRecipe  extends BasicAction {
 	
 	private String inString;
 	private String outString;
 	
 	private ItemStack in;
 	private ItemStack out;
-	
-	public AddGrinderRecipe(JMODRepresentation owner, String out, String in){
+
+	public AddPulseJetRecipe(JMODRepresentation owner, String out, String in){
 		super(owner);
 		this.inString = in;
 		this.outString = out;
@@ -42,7 +42,7 @@ public class AddGrinderRecipe extends BasicAction {
 	
 	@Override
 	public void execute(){
-		RecipeInterface.grinder.addAPIRecipe(in, out);
+		RecipeInterface.pulsefurn.addAPISmelting(in, out);
 	}
 
 }
