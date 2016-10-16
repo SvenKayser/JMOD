@@ -98,6 +98,14 @@ public class SetBlockProperties extends BasicAction {
 				if (blastresistance != null) {
 					block.setResistance(blastresistance);
 				}
+				
+				if (hardness != null){
+					block.setHardness(hardness);
+				}
+				
+				if (opacity != null){
+					block.setLightOpacity(opacity);
+				}
 
 			} else {
 				log.warn("Cannot patch block properties for " + blockstring + " as it is not in the game. Omitting.");
