@@ -15,6 +15,7 @@ alpha1.0.5 (release pending)
 - cleaned up startup ordering, fixing [Issue #8](https://github.com/SvenKayser/JMOD/issues/8)
 - fixes I forgot about
 - (RC2) Fixed hardness and opacity not being handled by SetBlockProperty
+- (RC3) Fixed inconsistency between servers and clients executing SetBlockProperty
 
 alpha1.0.4 (no release)
 - implemented Fluids + Fluid API [Issue #16](https://github.com/SvenKayser/JMOD/issues/16)

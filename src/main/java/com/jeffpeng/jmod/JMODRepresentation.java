@@ -35,6 +35,7 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.FMLConstructionEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
+import cpw.mods.fml.common.event.FMLModIdMappingEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
@@ -120,6 +121,10 @@ public class JMODRepresentation {
 	}
 	
 	public void on(FMLServerAboutToStartEvent event) {
+		
+	}
+	
+	public void on(FMLModIdMappingEvent event){
 		IExecutableObject.execute(SetBlockProperties.class,		stageables);
 	}
 
