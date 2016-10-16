@@ -25,6 +25,7 @@ import cpw.mods.fml.common.event.FMLEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.event.FMLLoadEvent;
+import cpw.mods.fml.common.event.FMLModIdMappingEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
@@ -211,22 +212,21 @@ public class JMODContainer implements ModContainer {
 	public void handleModStateEvent(FMLEvent event) {
 		Collections.sort(modInstance.stageables);
 		
+		JMOD.LOG.info("modstage " + modInstance.getModId() + " " + event.getClass());
 		
 		IStagedObject.broadcast(event, modInstance.stageables);
 		if (event instanceof FMLPreInitializationEvent)
 			modInstance.on((FMLPreInitializationEvent) event);
 		else if (event instanceof FMLInitializationEvent)
-			
 			modInstance.on((FMLInitializationEvent) event);
 		else if (event instanceof FMLPostInitializationEvent)
-			
 			modInstance.on((FMLPostInitializationEvent) event);
 		else if (event instanceof FMLLoadCompleteEvent)
-			
 			modInstance.on((FMLLoadCompleteEvent) event);
-		if (event instanceof FMLServerAboutToStartEvent)
-			
+		else if (event instanceof FMLServerAboutToStartEvent)
 			modInstance.on((FMLServerAboutToStartEvent) event);
+		else if (event instanceof FMLModIdMappingEvent)
+			modInstance.on((FMLModIdMappingEvent) event);
 	}
 
 	@Override
