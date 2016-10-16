@@ -78,7 +78,7 @@ JMOD includes many important features for tweaking Minecraft, including:
 \item Custom log messages and tooltips, complete with colored text.
 \item Ore Dictionary tweaking.
 \item An alloying feature making use of a crucible and a mold (you'll need to make these, though).
-\item Built-in support for Chisel's chisel (including the creation of additional chisels), as well as RotaryCraft's grinder and blast furnace (more on the way).
+\item Built-in support for Chisel's chisel (including the creation of additional chisels), as well as RotaryCraft machinery.
 \end{itemize}
 
 To simplify the process, we use the JavaScript language built into Java 8 (called ``Nashorn'') to make the language much more complete.  Loops, conditionals, classes, functions... they're all there, and working without an issue.  And JavaScript is a standard that many programmers know or could easily learn, with documentation everywhere.
@@ -939,6 +939,31 @@ For fluids, you have the following method.
 \item [output:] The fluid ID of what we want to output.  Like with item, the @ and a number can give an amount, which is measured in millibuckets.
 \item [chance:] The chance, in percentage form, that the item will be extracted from the ingredient.
 \end{description}
+\end{description}
+
+\subsubsection{Pulse Jet Furnace Recipes} 
+
+The pulse jet furnace is far hotter and faster than a friction-heated furnace or blast furnace can manage.  The main use of the Pulse Jet Furnace is to melt items back into their key metal, but it also is used to make blast-resistant glass.  With this command, you can make your own pulse-jet furnace recipes.
+
+\begin{description}
+\item[Command:] \texttt{RotaryCraft.addPulseJetRecipe(``input'', ``output'')}
+\begin{description}
+\item [input:] The item ID of the item that goes into the pulse jet furnace.
+\item [output:] The item ID of the output of the pulse jet furnace.
+\end{description}
+\end{description}
+
+\subsubsection{Compactor Recipes}
+
+Where the point to the blast furnace and the pulse jet furnace is ``temperature,'' the point to the compactor is ``pressure.''  This machine can be used to make things that are reasonably expected to be formed from heat and pressure (for example, there is a recipe for diamonds by default).  With this command, you can add your own pressurized items.
+
+\begin{description}
+\item[Command:] \texttt{RotaryCraft.addCompactorRecipe(``input'', ``output'', temperature, pressure)}
+\begin{description}
+\item [input:] The item ID of the item that goes into the compactor.
+\item [output:] The item ID of the output of the compactor.
+\item [temperature:] The temperature (in Celcius) needed for the compactor to work.  This number is an integer, do not use decimals.
+\item [pressure:] The pressure level (in kilopascals) required by the compactor (applied through torque).  This number is an integer, do not use decimals.
 \end{description}
 
 \subsection{AppleCore Tweaks}
