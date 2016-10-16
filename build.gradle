@@ -18,8 +18,8 @@ buildscript {
 apply plugin: 'forge'
 
 
-version = "1.7.10-alpha1.0.5"
-group= "com.jeffpeng.jmod" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+version = "1.7.10-alpha1.0.6"
+group= "com.jeffpeng.jmod" 
 archivesBaseName = "jmod"
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -164,19 +164,11 @@ task devTestJar(type: Jar, dependsOn: reobf){
 	
 }
 
-
-
-
-
-
 task devtestreplace{
 	minecraft {
 		replace '@devversion@', 'true'
 	}
-	
 }
-
-
 
 task buildtypetest(dependsOn: ['devtestreplace','devTestJar'])
 task buildAll(dependsOn:['coreJar','pluginIgniterJar','apiJar']);

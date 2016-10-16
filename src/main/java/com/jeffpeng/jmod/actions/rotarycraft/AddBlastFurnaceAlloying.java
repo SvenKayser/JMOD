@@ -58,7 +58,7 @@ public class AddBlastFurnaceAlloying extends BasicAction {
 			return false;
 		}
 		valid = true;
-		execute();
+		//execute();
 		return valid;
 	}
 	

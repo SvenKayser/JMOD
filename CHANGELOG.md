@@ -3,6 +3,9 @@ Changelog
 alpha1.0.6 (indev)
 - Added support for RotaryCraft PulseJetFurnace and Compactor
 - Fixed some RotaryCraft script bindings cause crashes when used without RotaryCraft present
+- Added support for RotaryCraft DryingBed, RockMelter and Liquefaction (Wetter)
+
+
 
 alpha1.0.5 (release pending)
 - fixed crafting spam and resulting performance bumps [Issue #17](https://github.com/SvenKayser/JMOD/issues/17)
@@ -11,6 +14,7 @@ alpha1.0.5 (release pending)
 - merged and up-ported AppleCore support, credit to nmarshall23 [PR#10](https://github.com/SvenKayser/JMOD/pull/10)
 - cleaned up startup ordering, fixing [Issue #8](https://github.com/SvenKayser/JMOD/issues/8)
 - fixes I forgot about
+- (RC2) Fixed hardness and opacity not being handled correctly by SetBlockProperty
 
 alpha1.0.4 (no release)
 - implemented Fluids + Fluid API [Issue #16](https://github.com/SvenKayser/JMOD/issues/16)

@@ -71,19 +71,6 @@ public class JMODRepresentation {
 	}
 
 	public void runScripts() {
-//		Thread t = new Thread(new Runnable() {
-//			@Override
-//			public void run() {
-//				script = new JScript(instance);
-//				for (String entry : modinfo.scripts) {
-//					script.evalScript(entry);
-//				}
-//				scriptingFinished = true;
-//			}
-//		});
-
-//		t.setName(modinfo.modid + "/StartupScript");
-//		t.start();
 		log.info("Scripts for " + this.getModId());
 		script = new JScript(instance);
 		for (String entry : modinfo.scripts) {

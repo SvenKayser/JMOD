@@ -177,7 +177,10 @@ public class Lib extends OwnedObject {
 	 
 	
 	public static Object stringToItemStackImpl(String inputstring, JMODRepresentation jmod) {
-		if(inputstring == null) return null;
+		if(inputstring == null){
+			jmod.getLogger().warn("[ItemStackString parser] Received a null string");
+			return null;
+		}
 		int amount = 1;
 		if(inputstring.contains("@")) {
 			String[] splits = inputstring.split("@");
@@ -198,7 +201,7 @@ public class Lib extends OwnedObject {
 			String[] splits = name.split(":");
 			ItemStack stack = GameRegistry.findItemStack(splits[0], splits[1], amount);
 			if(stack == null){
-				JMOD.LOG.warn("[Missing ItemStack] Could not find " + name + ".");
+				JMOD.LOG.warn("[ItemStackString parser] Could not find " + name + ".");
 				return name;
 			}
 			if (splits.length == 3) {
@@ -336,7 +339,10 @@ public class Lib extends OwnedObject {
 	}
 	
 	public FluidStack stringToFluidStack(String input){
-		if(input == null) return null;
+		if(input == null){
+			owner.getLogger().warn("[FluidString parser] Received a null string");
+			return null;
+		}
 		FluidStack fs = null;
 		if(input.contains("@")){
 			String[] splits = input.split("@");
@@ -344,6 +350,8 @@ public class Lib extends OwnedObject {
 				fs = FluidRegistry.getFluidStack(splits[0], Integer.parseInt(splits[1]));
 			}
 		}
+		
+		if(fs == null) owner.getLogger().warn("[FluidString parser] " + input + " does not translate to a valid fluid"); 
 		return fs;
 	}
 	

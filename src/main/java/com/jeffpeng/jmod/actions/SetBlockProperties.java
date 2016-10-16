@@ -20,13 +20,14 @@ public class SetBlockProperties extends BasicAction {
 		this.valid = true;
 	}
 
-	public Float hardness;
-	public Float blastresistance;
-	public Map<Integer,Integer> harvestlevel = new HashMap<>();
-	public String tool;
-	public Integer opacity;
-	public String sound;
-	public Float slipperiness;
+	private Float hardness;
+	private Float blastresistance;
+	private Map<Integer,Integer> harvestlevel = new HashMap<>();
+	private String tool;
+	private Integer opacity;
+	private String sound;
+	private Float slipperiness;
+	private int lightlevel;
 	
 	
 	public SetBlockProperties hardness(Float hardness){
@@ -98,7 +99,15 @@ public class SetBlockProperties extends BasicAction {
 				if (blastresistance != null) {
 					block.setResistance(blastresistance);
 				}
-
+				
+				if (hardness != null){
+					block.setHardness(hardness);
+				}
+				
+				if (opacity != null){
+					block.setLightOpacity(opacity);
+				}
+				
 			} else {
 				log.warn("Cannot patch block properties for " + blockstring + " as it is not in the game. Omitting.");
 			}
