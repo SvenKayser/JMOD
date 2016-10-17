@@ -965,6 +965,47 @@ Where the point to the blast furnace and the pulse jet furnace is ``temperature,
 \item [temperature:] The temperature (in Celcius) needed for the compactor to work.  This number is an integer, do not use decimals.
 \item [pressure:] The pressure level (in kilopascals) required by the compactor (applied through torque).  This number is an integer, do not use decimals.
 \end{description}
+\end{description}
+
+\subsubsection{Drying Bed Recipes}
+
+The drying bed is simply a machine that takes a liquid, and ``dries it out'' to result in... whatever's not water.  When using this on water, the result is salt.  With this command, you can add your own drying bed recipes.
+
+\begin{description}
+\item[Command:] \texttt{RotaryCraft.addDryingBedRecipe(``input'', ``output'')}
+\begin{description}
+\item [input:] The name of the fluid that goes into the drying bed.
+\item [output:] The item ID of the output of the drying bed.
+\end{description}
+\end{description}
+
+\subsubsection{Rock Melter Recipes}
+
+The rock melter is the opposite of the drying bed.  Where the drying bed dries out a liquid to produce an item, the rock melter uses heat to melt items into liquids.
+
+\begin{description}
+\item[Command:] \texttt{RotaryCraft.addRockMelterRecipe(``input'', ``output'', temperature, power)}
+\begin{description}
+\item [input:] The item ID of the item that goes into the rock melter.
+\item [output:] The fluid name of the output of the rock melter.
+\item [temperature:] The temperature (in Celcius) needed for the rock melter to work.  This number is an integer, do not use decimals.
+\item [power:] The power (in Watts) required by the rock melter.  This number can include decimals.
+\end{description}
+\end{description}
+
+\subsubsection{Liquefaction Machine Recipes}
+
+The liquefaction machine mixes a liquid into a solid, making a different solid.  For example, if you add a mud block, then you can add a recipe for this machine to combine water and a dirt block to make your mud block
+
+\begin{description}
+\item[Command:] \texttt{RotaryCraft.addLiquefactionRecipe(``input'', ``output'', ``liquid input'', time)}
+\begin{description}
+\item [input:] The item ID of the item that goes into the liquifaction machine.
+\item [output:] The item ID of the output of the liquifaction machine.
+\item [liquid input:] The name of the liquid that goes into the liquifaction machine.
+\item [time:] The amount of time required by the liquifaction machine.  This number is an integer, do not use decimals.
+\end{description}
+\end{description}
 
 \subsection{AppleCore Tweaks}
 
