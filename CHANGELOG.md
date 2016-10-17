@@ -1,6 +1,6 @@
 Changelog
 
-beta1.2.0 (release pending, LTS 3 months starting first release)
+beta1.2.0 (release pending, LTS until Mar 31st 2017)
 - Added support for RotaryCraft PulseJetFurnace and Compactor
 - Fixed some RotaryCraft script bindings cause crashes when used without RotaryCraft present
 - Added support for RotaryCraft DryingBed, RockMelter and Liquefaction (Wetter)
