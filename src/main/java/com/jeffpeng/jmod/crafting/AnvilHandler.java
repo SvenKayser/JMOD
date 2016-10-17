@@ -14,8 +14,10 @@ import net.minecraft.item.ItemTool;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.oredict.OreDictionary;
 
+import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.Lib;
+import com.jeffpeng.jmod.actions.AddArmorMaterial;
 import com.jeffpeng.jmod.primitives.OwnedObject;
 
 import cpw.mods.fml.common.Loader;
@@ -61,21 +63,18 @@ public class AnvilHandler extends OwnedObject {
 					armormat = ArmorMaterial.valueOf(((ItemArmor) left).getArmorMaterial().name());
 
 				if (left instanceof ItemArmor) {
-					repairmat = OreDictionary.getOres(config.armormaterials.get(armormat.name()).repairmaterial).get(0);
-					if (repairmat == null) {
-						return;
-					}
+					AddArmorMaterial aarmor = config.armormaterials.get(armormat.name());
+					if(aarmor != null && aarmor.repairstack != null) repairmat = aarmor.repairstack;
+					else repairmat = new ItemStack(armormat.func_151685_b());
+					
+					if (repairmat.getItem() == null) return;
 				} else {
 					repairmat = toolmat.getRepairItemStack();
-					if (repairmat == null) {
-						return;
-					}
+					if (repairmat == null||repairmat.getItem() == null) return;
+					
 				}
-
-				if (repairmat == null || !Lib.belongToSameOreDictEntry(event.right, repairmat)) {
-					return;
-				}
-
+				
+				if (!lib.matchItemStacksOreDict(event.right, repairmat)) return;
 				durability = left.getMaxDamage();
 				damage = event.left.getItemDamage();
 				if (!Loader.isModLoaded("enderutilities") || !((left instanceof ItemEnderTool) || (left instanceof ItemEnderSword))) {

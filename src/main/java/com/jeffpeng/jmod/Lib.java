@@ -247,6 +247,7 @@ public class Lib extends OwnedObject {
 	
 	public static boolean belongToSameOreDictEntry(ItemStack one, ItemStack two){
 		if(one == null || two == null) return false;
+		
 		for(Integer idOne : OreDictionary.getOreIDs(one)){
 			for(Integer idTwo : OreDictionary.getOreIDs(two)){
 				if(idTwo.equals(idOne))	return true;

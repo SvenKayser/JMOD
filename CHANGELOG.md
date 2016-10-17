@@ -1,21 +1,22 @@
 Changelog
 
-alpha1.0.6 (indev)
+beta1.2.0 (release pending, LTS 3 months starting first release)
 - Added support for RotaryCraft PulseJetFurnace and Compactor
 - Fixed some RotaryCraft script bindings cause crashes when used without RotaryCraft present
 - Added support for RotaryCraft DryingBed, RockMelter and Liquefaction (Wetter)
+- fixed hardness and opacity not being handled by SetBlockProperty
+- fixed inconsistency between servers and clients executing SetBlockProperty
+- fixed, streamlined and improved armor repair code (now works with both items and oredict entries)
 
 
-
-alpha1.0.5 (release pending)
+alpha1.0.5 (no release)
 - fixed crafting spam and resulting performance bumps [Issue #17](https://github.com/SvenKayser/JMOD/issues/17)
 - fixed fluids
 - RoC Centrifuge cleanup 
 - merged and up-ported AppleCore support, credit to nmarshall23 [PR#10](https://github.com/SvenKayser/JMOD/pull/10)
 - cleaned up startup ordering, fixing [Issue #8](https://github.com/SvenKayser/JMOD/issues/8)
 - fixes I forgot about
-- (RC2) Fixed hardness and opacity not being handled by SetBlockProperty
-- (RC3) Fixed inconsistency between servers and clients executing SetBlockProperty
+
 
 alpha1.0.4 (no release)
 - implemented Fluids + Fluid API [Issue #16](https://github.com/SvenKayser/JMOD/issues/16)
@@ -24,6 +25,7 @@ alpha1.0.4 (no release)
 - much re-organization
 - streamlined loading stage distribution to the actions
 - tons of changes under the hood
+
 
 alpha1.0.3 (released)
 - the JMOD jar is now executable and provides a simple .jmod validator
@@ -34,6 +36,7 @@ alpha1.0.3 (released)
 - Fixed AddSmeltingRecipe being invalid by default
 - Fixed not executing RemoveSmeltingRecipes
 - Fixed eval error line numbers not working (again...)
+
 
 alpha1.0.2 (no release)
 - JMOD is now a core mod only

@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.oredict.OreDictionary;
 
+import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.primitives.BasicAction;
 import com.jeffpeng.jmod.util.Reflector;
@@ -32,6 +33,7 @@ public class AddArmorMaterial extends BasicAction {
 	public int legginsfactor;
 	public int bootsfactor;
 	public String repairmaterial;
+	public ItemStack repairstack;
 	private ArmorMaterial armormat;
 	private int[] factors;
 	
@@ -53,24 +55,17 @@ public class AddArmorMaterial extends BasicAction {
 	public boolean on(FMLPreInitializationEvent event){
 		factors = new int[]{helmetfactor,chestfactor,legginsfactor,bootsfactor};
 		armormat = EnumHelper.addArmorMaterial(name, reductionbase, factors, enchantability);
-		
+		config.armormaterials.put(name,this);
 		return true;
 	}
 	
 	@Override
 	public boolean on(FMLPostInitializationEvent event){
-		new Thread(new Runnable(){
-			@Override
-			public void run() {
-				log.info("[armor material patcher] Patching ArmorMaterial " + armormat.name());
-				new Reflector(armormat).set(5, reductionbase).set(6, factors).set(7, enchantability);
-				ArrayList<ItemStack> entryoredictstacks = OreDictionary.getOres(repairmaterial);
-				if(entryoredictstacks.size() > 0) 
-					armormat.customCraftingMaterial = entryoredictstacks.get(0).getItem();
-				else log.warn("[armor material patcher] the repairmaterial " + repairmaterial + " is unknown. " + armormat.name() + " will not be repairable.");
-			}
-		}).start();
-		
+
+		log.info("[armor material patcher] Patching ArmorMaterial " + armormat.name());
+		new Reflector(armormat).set(5, reductionbase).set(6, factors).set(7, enchantability);
+		repairstack = lib.stringToItemStackOrFirstOreDict(repairmaterial);
+		if(repairstack == null)	log.warn("[armor material patcher] the repairmaterial " + repairmaterial + " is unknown. " + armormat.name() + " will not be repairable.");
 		return true;
 	}
 	
