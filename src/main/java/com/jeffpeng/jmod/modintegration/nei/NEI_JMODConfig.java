@@ -9,6 +9,8 @@ public class NEI_JMODConfig  implements IConfigureNEI {
 	@Override
 	public void loadConfig() {
 		API.registerRecipeHandler(new RecipeHandler());
+		API.registerUsageHandler(new RecipeHandler());
+		
 		
 	}
 

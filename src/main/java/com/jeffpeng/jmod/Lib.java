@@ -178,7 +178,7 @@ public class Lib extends OwnedObject {
 	
 	public static Object stringToItemStackImpl(String inputstring, JMODRepresentation jmod) {
 		if(inputstring == null){
-			jmod.getLogger().warn("[ItemStackString parser] Received a null string");
+			//jmod.getLogger().warn("[ItemStackString parser] Received a null string");
 			return null;
 		}
 		int amount = 1;

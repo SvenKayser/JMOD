@@ -1,7 +1,9 @@
 package com.jeffpeng.jmod.crafting;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -9,6 +11,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 
+import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.primitives.OwnedObject;
 
@@ -27,6 +30,7 @@ public class StringListRecipe extends OwnedObject implements IRecipe {
 	private int size = 0;
 	private List<String[]> lines = new ArrayList<>(); 
 	private List<String[]> originalShape;
+	private Map<String,Boolean> containsIngredientCache = new HashMap<>(); 
 	
 	public boolean isValid(){return this.valid;}
 	
@@ -213,7 +217,6 @@ public class StringListRecipe extends OwnedObject implements IRecipe {
 	
 	public Object[] getIngredientArray(){
 		Object[] array = new Object[this.size];
-		
 		for(int y = 0; y < this.height;y++){
 			for(int x = 0; x < this.width;x++){
 				Object ingredient = lib.stringToItemStack(lines.get(y)[x]);
@@ -221,7 +224,20 @@ public class StringListRecipe extends OwnedObject implements IRecipe {
 				if(ingredient instanceof String) array[y*this.width+x] = OreDictionary.getOres((String) ingredient);
 			}
 		}
-		
-		return array;
+		return array; 
+	}
+	
+	public boolean containsIngredient(ItemStack is){
+		if(containsIngredientCache.containsKey(is.toString())) return containsIngredientCache.get(is.toString());
+		for(String[] line : lines){
+			for(String element : line){
+				if(element != null && lib.matchItemStacksOreDict(is, element)){
+					containsIngredientCache.put(is.toString(), true);
+					return true;
+				}
+			}
+		}
+		containsIngredientCache.put(is.toString(), false);
+		return false;
 	}
 }

@@ -6,7 +6,7 @@ import Reika.RotaryCraft.API.RecipeInterface;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.primitives.BasicAction;
 
-
+import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 
 public class AddBlastFurnaceAlloying extends BasicAction {
@@ -92,12 +92,11 @@ public class AddBlastFurnaceAlloying extends BasicAction {
 	
 	@Override
 	public boolean isValid() {
-		// TODO Auto-generated method stub
 		return valid;
 	}
 	
 	@Override
-	public void execute(){
+	public boolean on(FMLLoadCompleteEvent event){
 		for(ItemStack iin1 : in1){
 			for(ItemStack iin2 : in2){
 				for(ItemStack iin3 : in3){
@@ -107,5 +106,6 @@ public class AddBlastFurnaceAlloying extends BasicAction {
 				}
 			}
 		}
+		return true;
 	}
 }

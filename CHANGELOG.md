@@ -1,6 +1,11 @@
 Changelog
 
-beta1.2.0 (release pending, LTS until Mar 31st 2017)
+beta1.2.1 (LTS release)
+- Implemented proper support for ingredient based search for Shaped StringRecipes for NEI [Issue #31](https://github.com/SvenKayser/JMOD/issues/31)
+- fixed RoC blast furnace handler not executing [Issue #32](https://github.com/SvenKayser/JMOD/issues/32)
+
+
+beta1.2.0 (LTS until Mar 31st 2017)
 - Added support for RotaryCraft PulseJetFurnace and Compactor
 - Fixed some RotaryCraft script bindings cause crashes when used without RotaryCraft present
 - Added support for RotaryCraft DryingBed, RockMelter and Liquefaction (Wetter)
