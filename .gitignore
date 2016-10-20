@@ -4,11 +4,8 @@
 #**/gradle
 **/bin
 **/build
-.project
 .gradle
 .settings
 .metadata
-.classpath
-**/.project
 /buildlibs
 
