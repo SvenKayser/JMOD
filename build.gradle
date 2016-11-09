@@ -32,13 +32,13 @@ minecraft {
 }
 
 jar {
-		manifest {
-			attributes 'FMLAT': 'jmod_at.cfg'
-			attributes 'FMLCorePlugin': 'com.jeffpeng.jmod.JMOD','FMLCorePluginContainsFMLMod': 'false'
-			attributes 'Main-Class': 'com.jeffpeng.jmod.validator.Validator'
-		}
-		
-		classifier = 'complete'
+	manifest {
+		attributes 'FMLAT': 'jmod_at.cfg'
+		attributes 'FMLCorePlugin': 'com.jeffpeng.jmod.JMOD','FMLCorePluginContainsFMLMod': 'false'
+		attributes 'Main-Class': 'com.jeffpeng.jmod.validator.Validator'
+	}
+	
+	classifier = 'complete'
 }
 
 repositories {
@@ -49,6 +49,11 @@ repositories {
 	maven {
         url 'http://maven.tterrag.com/'
     }
+    
+    maven {
+        name = "chickenbones"
+        url = "http://chickenbones.net/maven/"
+    }
 }
 
 dependencies {
@@ -58,6 +63,8 @@ dependencies {
 	
 	compile "exnihilo:Ex-Nihilo:1.38-49:deobf"
 	
+	compile "codechicken:CodeChickenLib:1.7.10-1.1.1.104:dev"
+		
     // you may put jars on which you depend on in ./libs
     // or you may define them like so..
     //compile "some.group:artifact:version:classifier"
@@ -78,22 +85,19 @@ sourceSets {
     main {
         java {
             srcDirs += 'src/api/java'
-            srcDirs += 'src/main/java/'
         }
         
         resources {
             srcDir "src/main/resources/"
-            
-            
         }
     }
     
-    pluginIgniter {
+/*    pluginIgniter {
     	java {
     		srcDirs += 'src/main/java/jmodplugins/igniter'
     	}
     }
-    
+  */  
     
 }
 
