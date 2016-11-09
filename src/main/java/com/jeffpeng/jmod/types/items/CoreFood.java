@@ -2,6 +2,7 @@ package com.jeffpeng.jmod.types.items;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,12 +24,15 @@ public class CoreFood extends ItemFood implements IItem {
 	private String internalName;
 	protected List<BuffDescriptor> buffs = new ArrayList<>();
 	private JMODRepresentation owner;
+	protected Optional<ItemStack> containerItemStack = Optional.empty();
 
 	public CoreFood(JMODRepresentation owner, FoodDataDescriptor desc) {
 		super(desc.hunger, desc.saturation, desc.wolffood);
 		this.owner = owner;
 		if(desc.alwaysEdible) this.setAlwaysEdible();
 		buffs = desc.buffdata;
+		
+		containerItemStack = desc.containerItemStack;
 	}
 
 	
@@ -44,6 +48,16 @@ public class CoreFood extends ItemFood implements IItem {
        				ep.addPotionEffect(new PotionEffect(buff.getBuff().getId(), buff.duration, buff.level));
         	}
     }
+	
+	@Override
+	public ItemStack onEaten(ItemStack stack, World world, EntityPlayer player) {
+		ItemStack superItemStack = super.onEaten(stack, world, player);
+		if(containerItemStack.isPresent()) {
+			return containerItemStack.get();
+		} else {
+			return superItemStack;
+		}
+	}
 	
 	@Override
 	public Item setTextureName(String texname){
