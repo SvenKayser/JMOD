@@ -1,6 +1,7 @@
 package com.jeffpeng.jmod.modintegration.applecore;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -50,17 +51,17 @@ public class AppleCoreModifyFoodValues {
 
 	}
 	
-	@SubscribeEvent(priority = EventPriority.NORMAL)
+	@SubscribeEvent(priority = EventPriority.LOWEST)
     public void getModifiedFoodValues(FoodEvent.GetFoodValues event) {
 		
-		UniqueIdentifier uid = GameRegistry.findUniqueIdentifierFor(event.food.getItem());
-		String itemStr = uid.modId + ":" + uid.name;
+		Optional<UniqueIdentifier> uid = Optional.ofNullable(GameRegistry.findUniqueIdentifierFor(event.food.getItem()));
 		
-		FoodValues val = foodItems.get(itemStr);
-		if(val != null) {
-			
-			event.foodValues = new FoodValues(val.hunger, val.saturationModifier);
-		}
+		log.debug("getModifiedFoodValues - food Name: {} uid: {}",event.food.getDisplayName(), uid);
+		uid.map(id -> id.modId + ":" + id.name)
+			.flatMap(itemStr -> Optional.ofNullable(foodItems.get(itemStr)) )
+			.ifPresent(item -> {
+			   event.foodValues = new FoodValues(item.hunger, item.saturationModifier);
+		   });
     }
 	
 }
