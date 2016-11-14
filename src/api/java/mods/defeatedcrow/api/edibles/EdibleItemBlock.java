@@ -1,7 +1,6 @@
 package mods.defeatedcrow.api.edibles;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;

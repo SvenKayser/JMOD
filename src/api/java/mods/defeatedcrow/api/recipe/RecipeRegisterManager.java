@@ -11,6 +11,7 @@ public final class RecipeRegisterManager {
 	 * This is old instance. <br>
 	 * It was changed to IFondueRegister, to deal with recipes other than chocolate fondue.
 	 */
+	@SuppressWarnings("deprecation")
 	public static IChocoFruitsRecipe chocoRecipe;
 	public static IFondueRegister fondueRecipe;
 	public static IPlateRecipeRegister plateRecipe;

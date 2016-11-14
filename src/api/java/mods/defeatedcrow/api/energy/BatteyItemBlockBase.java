@@ -106,6 +106,7 @@ public abstract class BatteyItemBlockBase extends ItemBlock implements IBattery 
 		return reduce;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	@SideOnly(Side.CLIENT)
 	// マウスオーバー時の表示情報

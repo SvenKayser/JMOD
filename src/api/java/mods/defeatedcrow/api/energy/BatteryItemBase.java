@@ -104,6 +104,7 @@ public abstract class BatteryItemBase extends Item implements IBattery {
 		return reduce;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	@SideOnly(Side.CLIENT)
 	// マウスオーバー時の表示情報

@@ -10,13 +10,13 @@ public class PotionBaseAMT extends Potion {
 
 	protected static final ResourceLocation texture = new ResourceLocation("defeatedcrow:textures/gui/icons_potion.png");
 
-	private final int indexX;
-	private final int indexY;
+	// private final int indexX;
+	// private final int indexY;
 
 	public PotionBaseAMT(int id, boolean flag, int color, int x, int y) {
 		super(id, flag, color);
-		indexX = x;
-		indexY = y;
+	//	indexX = x;
+	//	indexY = y;
 		this.setIconIndex(x, y);
 	}
 
