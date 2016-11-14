@@ -35,33 +35,33 @@ public class AppleCoreModifyFoodValues {
 	private static String BLACKLIST_FOOD = "BlacklistFood";
 	public static String HUNGEROVERHAUL_MODID = "HungerOverhaul";
 
-	public void addModifedFoodValue(UniqueIdentifier uid, int hunger, float saturationModifier) {
+	public void addModifedFoodValue(String foodName, int hunger, float saturationModifier) {
 		FoodValues val = new FoodValues(hunger, saturationModifier);
 		
-		String itemStr = uid.modId + ":" + uid.name;
 		
-		foodItems.put(itemStr, val);
-		log.info("addModifedFoodValue - FoodName: {} hunger: {} saturation: {}", 
-							uid, hunger, saturationModifier);
+		foodItems.put(foodName, val);
 		
 		//Send a message, So that HungerOverhaul does not change my values back..
 		if(Loader.isModLoaded(HUNGEROVERHAUL_MODID)) {
-			FMLInterModComms.sendMessage(HUNGEROVERHAUL_MODID, BLACKLIST_FOOD, itemStr);
+			FMLInterModComms.sendMessage(HUNGEROVERHAUL_MODID, BLACKLIST_FOOD, foodName);
 		}
 
 	}
 	
 	@SubscribeEvent(priority = EventPriority.LOWEST)
     public void getModifiedFoodValues(FoodEvent.GetFoodValues event) {
+		Optional<UniqueIdentifier> uid = Optional.ofNullable(
+								GameRegistry.findUniqueIdentifierFor(event.food.getItem()));
 		
-		Optional<UniqueIdentifier> uid = Optional.ofNullable(GameRegistry.findUniqueIdentifierFor(event.food.getItem()));
-		
-		log.debug("getModifiedFoodValues - food Name: {} uid: {}",event.food.getDisplayName(), uid);
-		uid.map(id -> id.modId + ":" + id.name)
-			.flatMap(itemStr -> Optional.ofNullable(foodItems.get(itemStr)) )
-			.ifPresent(item -> {
-			   event.foodValues = new FoodValues(item.hunger, item.saturationModifier);
+		Optional<FoodValues> fv = uid.map(id -> id.modId + ":" + id.name)
+									 .flatMap(itemStr -> 
+									 	Optional.ofNullable(foodItems.get(itemStr)) );
+			
+			fv.ifPresent(foodVal -> {
+			   event.foodValues = foodVal;
 		   });
+		log.debug("ModifedFoodValue - getValues - food DisplayName: {} uid: {} isModified: {}",
+				event.food.getDisplayName(), uid, fv.isPresent());
     }
 	
 }

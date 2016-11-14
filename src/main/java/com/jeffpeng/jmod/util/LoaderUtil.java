@@ -95,7 +95,8 @@ public class LoaderUtil {
 				
 			}
 		} catch (ScriptException e){
-			
+			JMOD.LOG.warn("[JMODLoader] Failed to parse	JSON - ScriptException: {} Message: {} in File: {} LineNumber: {}", 
+					e.getCause(), e.getMessage(), e.getFileName(), e.getLineNumber());
 		}
 		
 		

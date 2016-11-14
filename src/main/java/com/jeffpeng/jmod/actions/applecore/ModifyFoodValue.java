@@ -1,7 +1,6 @@
 package com.jeffpeng.jmod.actions.applecore;
 
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,16 +10,14 @@ import com.jeffpeng.jmod.modintegration.applecore.AppleCoreModifyFoodValues;
 import com.jeffpeng.jmod.primitives.BasicAction;
 
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.GameRegistry.UniqueIdentifier;
 import net.minecraft.item.ItemStack;
 
 public class ModifyFoodValue extends BasicAction {
 
-	UniqueIdentifier uid;
-	String foodName;
-	int hunger;
-	float saturationModifier;
+	private String foodName;
+	private int hunger;
+	private float saturationModifier;
 	private Logger log = LogManager.getLogger("AppleCore Mod Intergration");
 
 	public ModifyFoodValue(JMODRepresentation owner, String food, int hunger, float saturationModifier) {
@@ -29,43 +26,28 @@ public class ModifyFoodValue extends BasicAction {
 		this.hunger = hunger;
 		this.saturationModifier = saturationModifier;
 		
-		log.debug("Food Modify action added for foodItem: {}", food);
+		this.valid = Optional.ofNullable(lib.stringToItemStackNoOreDict(foodName)).isPresent();
+		
+		log.debug("Food Modify Action - Added - foodName: {}, isValid: {}", foodName, this.valid);
 	}
 
-	@Override
-	public boolean on(FMLPostInitializationEvent event){
-		
-		ItemStack stack = (ItemStack) lib.stringToItemStack(foodName);
-		
-		if(stack != null && stack instanceof ItemStack) {
-			Optional.ofNullable(GameRegistry.findUniqueIdentifierFor(stack.getItem()))
-					.ifPresent(uid -> {
-						valid = true;
-						this.uid = uid;
-			});
-			
-			// foodName is not in GameRegistry
-			if(!valid) {
-				Stream.of(foodName).filter(name -> name.contains(":"))
-								   .map(name -> new UniqueIdentifier(name))
-								   .forEach(uid -> {
-									   valid = true;
-									   this.uid = uid;  
-								   });
-			}
-		}
-		else {
-			valid = false;
-		}
-		
-		log.debug("Post Init Modify Food action - foodName: {} isValid: {}", foodName, valid);
-		return valid;
-	}
+//	@Override
+//	public boolean on(FMLPostInitializationEvent event){
+//		ItemStack is = lib.stringToItemStackOrFirstOreDict(foodName);
+//		if(is != null){
+//			valid = true;
+//		} 
+//		
+//		log.debug("Food Modify Action - PostInit - foodName: {}isValid: {}", foodName, valid);
+//		// if(valid) execute();
+//		
+//		return valid;
+//	}
 	
 	@Override
 	public void execute() {
 		AppleCoreModifyFoodValues store = AppleCoreModifyFoodValues.getInstance();
-		log.debug("Execute Modify food action - uid: {} hunger: {} sat: {}", uid, hunger, saturationModifier);
-		store.addModifedFoodValue(uid, hunger, saturationModifier);
+		log.debug("Food Modify Action - Execute - foodItem: {}, ", foodName); 
+		store.addModifedFoodValue(foodName, hunger, saturationModifier);
 	}
 }
