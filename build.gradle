@@ -18,7 +18,7 @@ buildscript {
 apply plugin: 'forge'
 
 
-version = "1.7.10-beta1.2.1-nm1-bugfix1"
+version = "1.7.10-beta1.2.1-nm1-bugfix2"
 group= "com.jeffpeng.jmod" 
 archivesBaseName = "jmod"
 sourceCompatibility = 1.8
@@ -39,6 +39,15 @@ jar {
 	}
 	
 	classifier = 'complete'
+}
+
+task deobfJar(type: Jar, dependsOn: 'jar') {
+    from "build/source/main"
+    classifier "dev"
+}
+
+artifacts {
+    archives deobfJar
 }
 
 repositories {

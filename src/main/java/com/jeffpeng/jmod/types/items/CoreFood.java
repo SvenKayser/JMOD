@@ -3,9 +3,11 @@ package com.jeffpeng.jmod.types.items;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
@@ -40,6 +42,7 @@ public class CoreFood extends ItemFood implements IItem {
 		return this.internalName;
 	}
 	
+	@Override
 	protected void onFoodEaten(ItemStack is, World world, EntityPlayer ep)
     {
         if (!world.isRemote)
@@ -52,11 +55,14 @@ public class CoreFood extends ItemFood implements IItem {
 	@Override
 	public ItemStack onEaten(ItemStack stack, World world, EntityPlayer player) {
 		ItemStack superItemStack = super.onEaten(stack, world, player);
-		if(containerItemStack.isPresent()) {
-			return containerItemStack.get();
-		} else {
-			return superItemStack;
-		}
+		
+		if(containerItemStack.isPresent() && stack.stackSize >= 0) {
+			player.inventory.addItemStackToInventory(new ItemStack(containerItemStack.get().getItem()));
+		} else if (containerItemStack.isPresent() && stack.stackSize == 0)  {
+			return new ItemStack(containerItemStack.get().getItem());
+		} 
+			
+		return superItemStack;
 	}
 	
 	@Override

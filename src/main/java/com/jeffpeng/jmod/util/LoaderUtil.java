@@ -15,6 +15,10 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 import org.apache.commons.io.IOUtils;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.primitives.JMODInfo;
 
@@ -61,51 +65,18 @@ public class LoaderUtil {
 		JMODInfo jmodinfo = null;
 		
 		try {
-			Object configdataraw = jsEngine.eval("Java.asJSONCompatible(" + rawjson + ")");
-			if(configdataraw instanceof Map){
-				Map<String,Object> configdata = (Map<String,Object>) configdataraw;
-				
-				jmodinfo = new JMODInfo();
-				
-				jmodinfo.modid = (String) configdata.get("modid");
-				jmodinfo.name = (String) configdata.get("name");
-				jmodinfo.version = (String) configdata.get("version");
-				jmodinfo.credits = (String) configdata.get("credits");
-				jmodinfo.logo = (String) configdata.get("logo");
-				jmodinfo.description = (String) configdata.get("description");
-				jmodinfo.url = (String) configdata.get("url");
-				
-				
-				if(configdata.get("authors") != null && configdata.get("authors") instanceof List){
-					jmodinfo.authors = (List<String>) configdata.get("authors");
-				} else {
-					jmodinfo.authors = new ArrayList<String>();
-					jmodinfo.authors.add("John Doe (no author specified)");
-				}
-				
-				
-				if(configdata.get("scripts") != null && configdata.get("scripts") instanceof List){
-					jmodinfo.scripts = (List<String>) configdata.get("scripts");
-				} else {
-					jmodinfo.scripts = new ArrayList<String>();
-				}
-						
-				
-				
-				
+			GsonBuilder builder = new GsonBuilder();
+			Gson gson = builder.create();
+			jmodinfo = gson.fromJson(rawjson, JMODInfo.class);
+			
+			if(jmodinfo.authors.isEmpty()) {
+				jmodinfo.authors.add("John Doe (no author specified)");
 			}
-		} catch (ScriptException e){
-			JMOD.LOG.warn("[JMODLoader] Failed to parse	JSON - ScriptException: {} Message: {} in File: {} LineNumber: {}", 
-					e.getCause(), e.getMessage(), e.getFileName(), e.getLineNumber());
+
+		} catch (JsonSyntaxException e){
+			JMOD.LOG.warn("[JMODLoader] Failed to parse	JSON - Message: {}, RawJson: {}", 
+					e.getMessage(), rawjson);
 		}
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		return jmodinfo;
 	}
