@@ -5,14 +5,10 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 
 import org.apache.commons.io.IOUtils;
 
@@ -25,9 +21,6 @@ import com.jeffpeng.jmod.primitives.JMODInfo;
 public class LoaderUtil {
 	
 	public static final ScriptEngineManager jsManager = new ScriptEngineManager(null);
-	private static ScriptEngine jsEngine = jsManager.getEngineByName("nashorn");
-	
-    
 	
 	public static String readFile(Path from, String file) throws IOException{
 		String retstr = "";
@@ -60,7 +53,6 @@ public class LoaderUtil {
 		return rawjson;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static JMODInfo parseModJson(String rawjson){
 		JMODInfo jmodinfo = null;
 		

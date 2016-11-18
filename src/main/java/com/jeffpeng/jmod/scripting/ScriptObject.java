@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jeffpeng.jmod.JMODLoader;
+import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.Lib;
 import com.jeffpeng.jmod.actions.*;
 import com.jeffpeng.jmod.descriptors.*;
@@ -36,6 +37,9 @@ public class ScriptObject extends OwnedObject {
 		log.info(msg);
 	}
 	
+	public JMODRepresentation JModScript() {
+		return owner;
+	}
 	
 	public void addShapelessRecipe(String result, Object ingredients){
 		new AddShapelessRecipe(owner,result, Lib.convertArray(ingredients,String[].class) );
