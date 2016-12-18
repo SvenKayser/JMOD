@@ -9,9 +9,9 @@ import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.modintegration.applecore.AppleCoreModifyFoodValues;
 import com.jeffpeng.jmod.primitives.BasicAction;
 
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.registry.GameRegistry.UniqueIdentifier;
-import net.minecraft.item.ItemStack;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.event.FMLInterModComms;
+import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 
 public class ModifyFoodValue extends BasicAction {
 
@@ -20,34 +20,33 @@ public class ModifyFoodValue extends BasicAction {
 	private float saturationModifier;
 	private Logger log = LogManager.getLogger("AppleCore Mod Intergration");
 
+	private static String BLACKLIST_FOOD = "BlacklistFood";
+	private static String HUNGEROVERHAUL_MODID = "HungerOverhaul";
+	
 	public ModifyFoodValue(JMODRepresentation owner, String food, int hunger, float saturationModifier) {
 		super(owner);
 		this.foodName = food;
 		this.hunger = hunger;
 		this.saturationModifier = saturationModifier;
 		
-		this.valid = Optional.ofNullable(lib.stringToItemStackNoOreDict(foodName)).isPresent();
-		
+		//Send a message, So that HungerOverhaul does not change my values back..
+		if(Loader.isModLoaded(HUNGEROVERHAUL_MODID)) {
+			FMLInterModComms.sendMessage(HUNGEROVERHAUL_MODID, BLACKLIST_FOOD, foodName);
+		}
+				
 		log.debug("Food Modify Action - Added - foodName: {}, isValid: {}", foodName, this.valid);
 	}
 
-//	@Override
-//	public boolean on(FMLPostInitializationEvent event){
-//		ItemStack is = lib.stringToItemStackOrFirstOreDict(foodName);
-//		if(is != null){
-//			valid = true;
-//		} 
-//		
-//		log.debug("Food Modify Action - PostInit - foodName: {}isValid: {}", foodName, valid);
-//		// if(valid) execute();
-//		
-//		return valid;
-//	}
-	
 	@Override
-	public void execute() {
-		AppleCoreModifyFoodValues store = AppleCoreModifyFoodValues.getInstance();
-		log.debug("Food Modify Action - Execute - foodItem: {}, ", foodName); 
-		store.addModifedFoodValue(foodName, hunger, saturationModifier);
+	public boolean on(FMLLoadCompleteEvent event){
+		valid = Optional.ofNullable(lib.stringToItemStackNoOreDict(foodName)).isPresent();
+		if(valid) {
+			AppleCoreModifyFoodValues store = AppleCoreModifyFoodValues.getInstance();
+			store.addModifedFoodValue(foodName, hunger, saturationModifier);
+		}
+		
+		log.debug("Food Modify Action - LoadComplete - foodItem: {}, valid: {}", foodName, valid); 
+		return valid;
 	}
+
 }
