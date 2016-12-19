@@ -12,41 +12,60 @@ import com.jeffpeng.jmod.primitives.BasicAction;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.GameRegistry.UniqueIdentifier;
+import net.minecraft.item.ItemStack;
+import squeek.applecore.api.food.FoodValues;
 
 public class ModifyFoodValue extends BasicAction {
 
 	private String foodName;
-	private int hunger;
-	private float saturationModifier;
+	private FoodValues foodValues;
+	
 	private Logger log = LogManager.getLogger("AppleCore Mod Intergration");
 
-	private static String BLACKLIST_FOOD = "BlacklistFood";
+	private Optional<UniqueIdentifier> uid = Optional.empty();
+	
+	private static String MSG_KEY_BLACKLIST_FOOD = "BlacklistFood";
 	private static String HUNGEROVERHAUL_MODID = "HungerOverhaul";
 	
 	public ModifyFoodValue(JMODRepresentation owner, String food, int hunger, float saturationModifier) {
 		super(owner);
 		this.foodName = food;
-		this.hunger = hunger;
-		this.saturationModifier = saturationModifier;
-		
-		//Send a message, So that HungerOverhaul does not change my values back..
+		foodValues = new FoodValues(hunger, saturationModifier);
+			
+		// If HungerOverhaul is installed, Send a IMC  So that HungerOverhaul does not also try to change the food values
 		if(Loader.isModLoaded(HUNGEROVERHAUL_MODID)) {
-			FMLInterModComms.sendMessage(HUNGEROVERHAUL_MODID, BLACKLIST_FOOD, foodName);
+			FMLInterModComms.sendMessage(HUNGEROVERHAUL_MODID, MSG_KEY_BLACKLIST_FOOD, foodName);
+			log.debug("Food Modify Action - Send IMC to HungerOverhaul - foodName: {}", foodName);
 		}
-				
-		log.debug("Food Modify Action - Added - foodName: {}, isValid: {}", foodName, this.valid);
+		
+		log.debug("Food Modify Action - Added - foodName: {}, hunger: {}, Saturation: {}, isValid: {}", 
+				foodName, foodValues.hunger, foodValues.saturationModifier, this.valid);
 	}
 
 	@Override
-	public boolean on(FMLLoadCompleteEvent event){
-		valid = Optional.ofNullable(lib.stringToItemStackNoOreDict(foodName)).isPresent();
-		if(valid) {
-			AppleCoreModifyFoodValues store = AppleCoreModifyFoodValues.getInstance();
-			store.addModifedFoodValue(foodName, hunger, saturationModifier);
-		}
+	public boolean on(FMLLoadCompleteEvent event) {
+		this.valid = false;
 		
-		log.debug("Food Modify Action - LoadComplete - foodItem: {}, valid: {}", foodName, valid); 
+		
+		Optional.ofNullable(lib.stringToItemStackNoOreDict(foodName))
+				.filter(obj -> obj instanceof ItemStack)
+				.ifPresent(obj -> {
+					
+					ItemStack itemStack= (ItemStack) obj;
+					uid = Optional.ofNullable(GameRegistry.findUniqueIdentifierFor(itemStack.getItem()));
+
+					this.valid = true;
+					
+					AppleCoreModifyFoodValues store = AppleCoreModifyFoodValues.getInstance();
+					store.addModifedFoodValue(foodName, foodValues);
+		});
+		
+		log.debug("Food Modify Action - Load Complete - foodName: {}, hunger: {}, Saturation: {}, isValid: {}, Uid: {}", 
+				foodName, foodValues.hunger, foodValues.saturationModifier, 
+				this.valid, this.uid.map(UniqueIdentifier::toString).orElse("No uid Found"));
+		
 		return valid;
 	}
-
 }
