@@ -27,6 +27,7 @@ public class ScriptObject extends OwnedObject {
 	public Applecore Applecore = new Applecore(owner);
 	public Sync Sync = new Sync(owner);
 	public ExNihilo ExNihilo = new ExNihilo(owner);
+	public AppleMilkTea2 amt = new AppleMilkTea2(owner);
 	public RailCraft RailCraft = new RailCraft(owner);
 	public ImmersiveEngineering ImmersiveEngineering  = new ImmersiveEngineering(owner);
 	public GardenStuff GardenStuff = new GardenStuff(owner);
