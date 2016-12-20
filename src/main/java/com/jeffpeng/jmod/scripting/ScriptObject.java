@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jeffpeng.jmod.JMODLoader;
-import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.Lib;
 import com.jeffpeng.jmod.actions.*;
 import com.jeffpeng.jmod.descriptors.*;
@@ -28,6 +27,7 @@ public class ScriptObject extends OwnedObject {
 	public Applecore Applecore = new Applecore(owner);
 	public Sync Sync = new Sync(owner);
 	public ExNihilo ExNihilo = new ExNihilo(owner);
+	public RailCraft RailCraft = new RailCraft(owner);
 	public ImmersiveEngineering ImmersiveEngineering  = new ImmersiveEngineering(owner);
 	public GardenStuff GardenStuff = new GardenStuff(owner);
 	
