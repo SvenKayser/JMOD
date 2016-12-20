@@ -39,10 +39,6 @@ public class ScriptObject extends OwnedObject {
 		log.info(msg);
 	}
 	
-	public JMODRepresentation JModScript() {
-		return owner;
-	}
-	
 	public void addShapelessRecipe(String result, Object ingredients){
 		new AddShapelessRecipe(owner,result, Lib.convertArray(ingredients,String[].class) );
 	}
