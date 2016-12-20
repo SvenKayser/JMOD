@@ -4,6 +4,7 @@ import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.actions.dcamt2.AddClayPanRecipe;
 import com.jeffpeng.jmod.actions.dcamt2.AddIronPlateRecipe;
 import com.jeffpeng.jmod.actions.dcamt2.AddProcessorRecipe;
+import com.jeffpeng.jmod.actions.dcamt2.RemoveDryingRecipe;
 import com.jeffpeng.jmod.actions.dcamt2.RemoveIronPlateRecipe;
 import com.jeffpeng.jmod.actions.dcamt2.RemoveProcessorRecipe;
 import com.jeffpeng.jmod.primitives.OwnedObject;
@@ -52,5 +53,9 @@ public class AppleMilkTea2 extends OwnedObject {
 	
 	public void removeProcessorRecipe(String output, boolean isFoodRecipe) {
 		if(owner.testForMod("DCsAppleMilk")) new RemoveProcessorRecipe(owner, output, isFoodRecipe);
+	}
+	
+	public void removeDryingRecipe(String output) {
+		if(owner.testForMod("AMTAddonJP")) new RemoveDryingRecipe(owner, output);
 	}
 }
