@@ -28,6 +28,7 @@ public class ScriptObject extends OwnedObject {
 	public Applecore Applecore = new Applecore(owner);
 	public Sync Sync = new Sync(owner);
 	public ExNihilo ExNihilo = new ExNihilo(owner);
+	public ImmersiveEngineering ImmersiveEngineering  = new ImmersiveEngineering(owner);
 	public GardenStuff GardenStuff = new GardenStuff(owner);
 	
 	public void loadjs(String script){
