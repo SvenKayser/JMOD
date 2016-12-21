@@ -162,7 +162,15 @@ task coreJar(type: Jar, dependsOn: reobf){
 		}
 	doFirst {
 		from(project.ext.jarFile){
-			includes.addAll(["assets/**","com/jeffpeng/jmod/**","com/cricketcraft/**","jmod/API/**","META-INF/**","LICENSE**"])
+			includes.addAll(["assets/**",
+							 "com/jeffpeng/jmod/**",
+							 "com/cricketcraft/**",
+							 "com/jaquadro/**",
+							 "mods/defeatedcrow/**",
+							 "defeatedcrow/**",
+							 "jmod/API/**",
+							 "META-INF/**",
+							 "LICENSE**"])
 		}
 	}
 }
