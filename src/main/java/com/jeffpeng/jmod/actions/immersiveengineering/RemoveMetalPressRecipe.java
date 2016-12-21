@@ -3,26 +3,25 @@ package com.jeffpeng.jmod.actions.immersiveengineering;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.primitives.BasicAction;
 
-import blusunrize.immersiveengineering.api.crafting.CrusherRecipe;
+import blusunrize.immersiveengineering.api.crafting.MetalPressRecipe;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 
-public class RemoveCrusherRecipe extends BasicAction {
+public class RemoveMetalPressRecipe extends BasicAction {
 	private String outputItemName;
 
-	public RemoveCrusherRecipe(JMODRepresentation owner, String outputItemName) {
+	public RemoveMetalPressRecipe(JMODRepresentation owner, String outputItemName) {
 		super(owner);
 		this.outputItemName = outputItemName;
 	}
-
+	
 	@Override
 	public boolean on(FMLLoadCompleteEvent event){
 		valid = false;
 		lib.stringToMaybeItemStack(outputItemName)
 		   .ifPresent(outputIS -> {
 			valid = true;
-			CrusherRecipe.removeRecipes(outputIS);
+			MetalPressRecipe.removeRecipes(outputIS);
 		});
-		
 		return valid;
 	}
 }

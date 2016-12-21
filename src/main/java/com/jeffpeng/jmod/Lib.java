@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import org.apache.logging.log4j.Logger;
@@ -217,6 +218,12 @@ public class Lib extends OwnedObject {
 
 	public Object stringToItemStack(String inputstring) {
 		return stringToItemStackImpl(inputstring,owner);
+	}
+	
+	public Optional<ItemStack> stringToMaybeItemStack(String inputstring) {
+		return Optional.ofNullable(stringToItemStackImpl(inputstring,owner))
+					   .filter(obj -> obj instanceof ItemStack)
+					   .map(obj -> (ItemStack)obj);
 	}
 	
 	public static String substituteItemStackName(String name, JMODRepresentation jmod) {

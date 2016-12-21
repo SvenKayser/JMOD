@@ -1,9 +1,6 @@
 package com.jeffpeng.jmod.actions.immersiveengineering;
 
 import java.util.Optional;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.primitives.BasicAction;
@@ -41,30 +38,22 @@ public class AddCrusherRecipe extends BasicAction {
 	@Override
 	public boolean on(FMLLoadCompleteEvent event){
 		valid = false;
-		
-		Optional.ofNullable(lib.stringToItemStack(inputStack))
-				.filter(obj -> obj instanceof ItemStack)
-				.map(obj -> (ItemStack)obj)
-				.ifPresent(inputIS -> {
-					
-					Optional.ofNullable(lib.stringToItemStack(outputStack))
-							.filter(obj -> obj instanceof ItemStack)
-							.map(obj -> (ItemStack)obj)
-							.ifPresent(outputIS -> {
-								valid = true;
-								CrusherRecipe recipe = CrusherRecipe.addRecipe(outputIS, inputIS, energy);
+		Optional<ItemStack> inputOpt = lib.stringToMaybeItemStack(inputStack);
+		Optional<ItemStack> outputOpt = lib.stringToMaybeItemStack(outputStack);
+	
+		inputOpt.ifPresent(inputIS -> {
+			outputOpt.ifPresent(outputIS -> {
+				valid = true;
+				CrusherRecipe recipe = CrusherRecipe.addRecipe(outputIS, inputIS, energy);
 								
-								secondaryOutput.map(sec -> lib.stringToItemStack(sec))
-											   .filter(obj -> obj instanceof ItemStack)
-											   .map(obj -> (ItemStack)obj)
-											   .ifPresent( secIS -> {
-												   recipe.addToSecondaryOutput(secIS, secondaryOutputChance);
-											   });
-							});
-				});
+				secondaryOutput.flatMap(lib::stringToMaybeItemStack)
+							   .ifPresent( secIS -> {
+								   recipe.addToSecondaryOutput(secIS, secondaryOutputChance);
+								});
+			});
+		});
 		
 		return valid;
 	}
-	
 	
 }
