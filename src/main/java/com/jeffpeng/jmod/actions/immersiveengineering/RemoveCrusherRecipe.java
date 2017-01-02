@@ -17,7 +17,7 @@ public class RemoveCrusherRecipe extends BasicAction {
 	@Override
 	public boolean on(FMLLoadCompleteEvent event){
 		valid = false;
-		lib.stringToMaybeItemStack(outputItemName)
+		lib.stringToMaybeItemStackNoOreDic(outputItemName)
 		   .ifPresent(outputIS -> {
 			valid = true;
 			CrusherRecipe.removeRecipes(outputIS);

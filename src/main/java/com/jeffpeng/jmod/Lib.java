@@ -219,11 +219,26 @@ public class Lib extends OwnedObject {
 	public Object stringToItemStack(String inputstring) {
 		return stringToItemStackImpl(inputstring,owner);
 	}
+
+	/**
+	 * Looks for inputstring ItemStack
+	 * <p>
+	 * Should be used to find ItemStacks no OreDic lookup is done
+	 * </p>
+	 * @param inputstring the Item to lookup
+	 * @return an Optional<ItemStack> if the inputstring is a valid Item. 
+	 */
+	public Optional<ItemStack> stringToMaybeItemStackNoOreDic(String inputstring) {
+		return Optional.ofNullable(stringToItemStackNoOreDict(inputstring));
+	}
 	
-	public Optional<ItemStack> stringToMaybeItemStack(String inputstring) {
-		return Optional.ofNullable(stringToItemStackImpl(inputstring,owner))
-					   .filter(obj -> obj instanceof ItemStack)
-					   .map(obj -> (ItemStack)obj);
+	/**
+	 * Does lookup on inputstring. inputstring could be an OreDic String.
+	 * @param inputstring the Item to lookup
+	 * @return an Optional<Object> is an ItemStack or String
+	 */
+	public Optional<Object> stringToMaybeItemStack(String inputstring) {
+		return Optional.ofNullable(stringToItemStack(inputstring));
 	}
 	
 	public static String substituteItemStackName(String name, JMODRepresentation jmod) {

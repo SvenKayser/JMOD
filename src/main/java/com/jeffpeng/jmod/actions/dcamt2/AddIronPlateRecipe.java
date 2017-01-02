@@ -1,6 +1,6 @@
 package com.jeffpeng.jmod.actions.dcamt2;
 
-import java.util.Optional;
+import java.util.stream.Stream;
 
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.primitives.BasicAction;
@@ -26,19 +26,28 @@ public class AddIronPlateRecipe extends BasicAction {
 	
 	@Override
 	public boolean on(FMLLoadCompleteEvent event) {
-		Optional<ItemStack> outItem = Optional.ofNullable(lib.stringToItemStackNoOreDict(outputStr));
-		Optional<ItemStack> inputItem = Optional.ofNullable(lib.stringToItemStackNoOreDict(inputStr));
-		boolean isValid = false;
+		this.valid = false;
 		
-		if ( outItem.isPresent() && inputItem.isPresent() && this.cookingTime > 0) {
-			isValid = true;
-			
-			outItem.ifPresent(output -> inputItem.ifPresent(input -> {
-				RecipeRegisterManager.plateRecipe.register(input, output, this.cookingTime, this.isOvenRecipe);
-			}));
-		}
+		Stream.of(lib.stringToMaybeItemStackNoOreDic(inputStr), 
+				  lib.stringToMaybeItemStackNoOreDic(outputStr));
 		
-		return isValid;
+		lib.stringToMaybeItemStackNoOreDic(inputStr).ifPresent(input -> {
+			lib.stringToMaybeItemStackNoOreDic(outputStr).ifPresent(output -> {
+				if(this.recipeTests()) {
+					addRecipe(input, output);
+				}
+			});
+		});
+		
+		return this.valid;
+	}
+
+	private void addRecipe(ItemStack input, ItemStack output){
+		RecipeRegisterManager.plateRecipe.register(input, output, this.cookingTime, this.isOvenRecipe);
+		this.valid = true;
 	}
 	
+	private boolean recipeTests() {
+		return this.cookingTime > 0;
+	}
 }

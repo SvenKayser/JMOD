@@ -1,6 +1,7 @@
 package com.jeffpeng.jmod.scripting.mods;
 
 import com.jeffpeng.jmod.JMODRepresentation;
+import com.jeffpeng.jmod.Lib;
 import com.jeffpeng.jmod.actions.dcamt2.AddClayPanRecipe;
 import com.jeffpeng.jmod.actions.dcamt2.AddIronPlateRecipe;
 import com.jeffpeng.jmod.actions.dcamt2.AddProcessorRecipe;
@@ -34,22 +35,32 @@ public class AppleMilkTea2 extends OwnedObject {
 			new AddIronPlateRecipe(owner, output, input, cookingTime, isOvenRecipe);
 	}
 	
-	public void addJawCrusherRecipe(String output, String secondaryOutput, String inputs, float secondaryChance, int tier) {
+	public void addJawCrusherRecipe(String output, Object inputArray, int tier) {
+		boolean isFoodRecipe = false;
+		boolean forceReturnContainer = false;
+		String secondaryOutput = null;
+		float secondaryChance = 0F;
+		
+		if(owner.testForMod("DCsAppleMilk")) 
+			new AddProcessorRecipe(owner, output, secondaryOutput, Lib.convertPattern(inputArray), isFoodRecipe, secondaryChance, forceReturnContainer, tier);
+	}
+	
+	public void addJawCrusherRecipe(String output, String secondaryOutput, Object inputArray, float secondaryChance, int tier) {
 		boolean isFoodRecipe = false;
 		boolean forceReturnContainer = false;
 		
 		if(owner.testForMod("DCsAppleMilk")) 
-			new AddProcessorRecipe(owner, output, secondaryOutput, inputs, isFoodRecipe, secondaryChance, forceReturnContainer, tier);
+			new AddProcessorRecipe(owner, output, secondaryOutput, Lib.convertPattern(inputArray), isFoodRecipe, secondaryChance, forceReturnContainer, tier);
 	}
 	
-	public void addFoodProcessorRecipe(String output, String inputs, boolean forceReturnContainer) {
+	public void addFoodProcessorRecipe(String output, Object inputArray, boolean forceReturnContainer) {
 		String secondaryOutput = null;
 		boolean isFoodRecipe = true;
 		float secondaryChance = 1;
 		int tier = 1;
 		
 		if(owner.testForMod("DCsAppleMilk")) 
-			new AddProcessorRecipe(owner, output, secondaryOutput, inputs, isFoodRecipe, secondaryChance, forceReturnContainer, tier);
+			new AddProcessorRecipe(owner, output, secondaryOutput, Lib.convertPattern(inputArray), isFoodRecipe, secondaryChance, forceReturnContainer, tier);
 	}
 	
 	public void removeIronPlateRecipe(String output) {

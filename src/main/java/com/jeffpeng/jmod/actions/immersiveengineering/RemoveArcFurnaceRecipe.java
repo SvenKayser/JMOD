@@ -17,7 +17,7 @@ public class RemoveArcFurnaceRecipe extends BasicAction {
 	@Override
 	public boolean on(FMLLoadCompleteEvent event){
 		valid = false;
-		lib.stringToMaybeItemStack(outputStr)
+		lib.stringToMaybeItemStackNoOreDic(outputStr)
 		   .ifPresent(outputIS -> {
 			valid = true;
 			ArcFurnaceRecipe.removeRecipes(outputIS);

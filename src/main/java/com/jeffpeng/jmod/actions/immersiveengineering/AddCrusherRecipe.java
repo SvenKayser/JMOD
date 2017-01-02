@@ -38,15 +38,15 @@ public class AddCrusherRecipe extends BasicAction {
 	@Override
 	public boolean on(FMLLoadCompleteEvent event){
 		valid = false;
-		Optional<ItemStack> inputOpt = lib.stringToMaybeItemStack(inputStack);
-		Optional<ItemStack> outputOpt = lib.stringToMaybeItemStack(outputStack);
+		Optional<ItemStack> inputOpt = lib.stringToMaybeItemStackNoOreDic(inputStack);
+		Optional<ItemStack> outputOpt = lib.stringToMaybeItemStackNoOreDic(outputStack);
 	
 		inputOpt.ifPresent(inputIS -> {
 			outputOpt.ifPresent(outputIS -> {
 				valid = true;
 				CrusherRecipe recipe = CrusherRecipe.addRecipe(outputIS, inputIS, energy);
 								
-				secondaryOutput.flatMap(lib::stringToMaybeItemStack)
+				secondaryOutput.flatMap(lib::stringToMaybeItemStackNoOreDic)
 							   .ifPresent( secIS -> {
 								   recipe.addToSecondaryOutput(secIS, secondaryOutputChance);
 								});

@@ -1,8 +1,9 @@
 package com.jeffpeng.jmod.actions.dcamt2;
 
-import java.util.Optional;
+import java.util.List;
 
 import com.jeffpeng.jmod.JMODRepresentation;
+import com.jeffpeng.jmod.crafting.StringListRecipe;
 import com.jeffpeng.jmod.primitives.BasicAction;
 
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
@@ -10,18 +11,18 @@ import mods.defeatedcrow.api.recipe.RecipeRegisterManager;
 import net.minecraft.item.ItemStack;
 
 public class AddProcessorRecipe extends BasicAction {
-	private String outStr;
+	private String output;
 	private String secondaryStr;
-	private String inputs;
+	private List<String[]> inputs;
 	private boolean isFoodRecipe = false;
 	private float secondaryChance = 1;
 	private boolean forceReturnContainer = false;
 	private int tier = 0;
 	
-	public AddProcessorRecipe(JMODRepresentation owner, String output, String secondaryOutput, String inputs,
+	public AddProcessorRecipe(JMODRepresentation owner, String output, String secondaryOutput, List<String[]> inputs,
 			boolean isFoodRecipe, float secondaryChance, boolean forceReturnContainer, int tier) {
 		super(owner);
-		this.outStr = output;
+		this.output = output;
 		this.secondaryStr = secondaryOutput;
 		this.inputs = inputs;
 		this.isFoodRecipe = isFoodRecipe;
@@ -33,24 +34,18 @@ public class AddProcessorRecipe extends BasicAction {
 
 	@Override
 	public boolean on(FMLLoadCompleteEvent event) {
-		Optional<ItemStack> outputItem = Optional.ofNullable(lib.stringToItemStackNoOreDict(outStr));
-		Optional<ItemStack> secondaryItem = Optional.ofNullable(lib.stringToItemStackNoOreDict(secondaryStr));
-		Optional<Object[]> inputItems = Optional.ofNullable(lib.stringToItemStackArray(inputs));
-		boolean isValid = false;
+		this.valid = false;
 		
-		if ( outputItem.isPresent() && inputItems.isPresent()) {
-			isValid = true;
-			outputItem.ifPresent(output -> inputItems.ifPresent(input -> {
-				if (secondaryItem.isPresent()) {
-					secondaryItem.ifPresent(secondary -> {
-						RecipeRegisterManager.processorRecipe.addRecipe(output, isFoodRecipe, tier, forceReturnContainer, secondary, secondaryChance, input);
-					});
-				} else {
-					RecipeRegisterManager.processorRecipe.addRecipe(output, isFoodRecipe, tier, forceReturnContainer, null, secondaryChance, input);
-				}
-			}));
-		}
+		StringListRecipe shapper = new StringListRecipe(owner, output, inputs);
+		ItemStack secStack = lib.stringToItemStackOrFirstOreDict(secondaryStr);
 		
-		return isValid;
+		addRecipe(shapper.getRecipeOutput(), secStack, shapper.getIngredientArray());
+	
+		return valid;
+	}
+	
+	private void addRecipe(ItemStack output, ItemStack secondary, Object[] input) {
+		RecipeRegisterManager.processorRecipe.addRecipe(output, isFoodRecipe, tier, forceReturnContainer, secondary, secondaryChance, input);
+		this.valid = true;
 	}
 }

@@ -38,9 +38,9 @@ public class AddMetalPressRecipe extends BasicAction {
 	@Override
 	public boolean on(FMLLoadCompleteEvent event){
 		valid = false;
-		Optional<ItemStack> outputOpt = lib.stringToMaybeItemStack(outputStack);
-		Optional<ItemStack> inputOpt  = lib.stringToMaybeItemStack(inputStack);
-		Optional<ItemStack> moldOpt = lib.stringToMaybeItemStack(mold);
+		Optional<ItemStack> outputOpt = lib.stringToMaybeItemStackNoOreDic(outputStack);
+		Optional<ItemStack> inputOpt  = lib.stringToMaybeItemStackNoOreDic(inputStack);
+		Optional<ItemStack> moldOpt = lib.stringToMaybeItemStackNoOreDic(mold);
 		
 		outputOpt.ifPresent(output -> {
 			inputOpt.ifPresent(input -> {

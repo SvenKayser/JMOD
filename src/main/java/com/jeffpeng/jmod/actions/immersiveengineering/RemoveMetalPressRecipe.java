@@ -17,7 +17,7 @@ public class RemoveMetalPressRecipe extends BasicAction {
 	@Override
 	public boolean on(FMLLoadCompleteEvent event){
 		valid = false;
-		lib.stringToMaybeItemStack(outputItemName)
+		lib.stringToMaybeItemStackNoOreDic(outputItemName)
 		   .ifPresent(outputIS -> {
 			valid = true;
 			MetalPressRecipe.removeRecipes(outputIS);

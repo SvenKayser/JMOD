@@ -33,9 +33,9 @@ public class AddArcFurnaceRecipe extends BasicAction {
 	@Override
 	public boolean on(FMLLoadCompleteEvent event){
 		valid = false;
-		Optional<ItemStack> inputOpt = lib.stringToMaybeItemStack(inputStack);
-		Optional<ItemStack> outputOpt = lib.stringToMaybeItemStack(outputStack);
-		ItemStack slag = slagItem.flatMap(lib::stringToMaybeItemStack).orElseGet(IE_Slag);
+		Optional<ItemStack> inputOpt = lib.stringToMaybeItemStackNoOreDic(inputStack);
+		Optional<ItemStack> outputOpt = lib.stringToMaybeItemStackNoOreDic(outputStack);
+		ItemStack slag = slagItem.flatMap(lib::stringToMaybeItemStackNoOreDic).orElseGet(IE_Slag);
 	
 		inputOpt.ifPresent(inputIS -> {
 			outputOpt.ifPresent(outputIS -> {
@@ -51,6 +51,6 @@ public class AddArcFurnaceRecipe extends BasicAction {
 	}
 	
 	private Supplier<ItemStack> IE_Slag = () -> {
-		return lib.stringToMaybeItemStack("ImmersiveEngineering:material:13").get();
+		return lib.stringToMaybeItemStackNoOreDic("ImmersiveEngineering:material:13").get();
 	};
 }

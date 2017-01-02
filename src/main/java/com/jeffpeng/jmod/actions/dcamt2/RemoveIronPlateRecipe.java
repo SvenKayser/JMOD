@@ -1,7 +1,5 @@
 package com.jeffpeng.jmod.actions.dcamt2;
 
-import java.util.Optional;
-
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.primitives.BasicAction;
 
@@ -11,27 +9,27 @@ import net.minecraft.item.ItemStack;
 
 public class RemoveIronPlateRecipe extends BasicAction {
 
-	String inputStr;
+	String output;
 
-	public RemoveIronPlateRecipe(JMODRepresentation owner, String inputStr) {
+	public RemoveIronPlateRecipe(JMODRepresentation owner, String output) {
 		super(owner);
-		this.inputStr = inputStr;
+		this.output = output;
 	}
 	
 	@Override
 	public boolean on(FMLLoadCompleteEvent event) {
-		Optional<ItemStack> inputItem = Optional.ofNullable(lib.stringToItemStackNoOreDict(inputStr));
-		boolean isValid = false;
-
-		if ( inputItem.isPresent() ) {
-			isValid = true;
+		valid= false;
+	
+		lib.stringToMaybeItemStackNoOreDic(output).ifPresent(this::removeRecipe);
 			
-			inputItem.flatMap(item -> Optional.ofNullable(RecipeRegisterManager.plateRecipe.getRecipe(item)))
-					 .ifPresent(recipe -> {
-						 RecipeRegisterManager.plateRecipe.getRecipeList().remove(recipe);
-					 });
-		}
-		
-		return isValid;
+		return valid;
+	}
+	
+	private void removeRecipe(ItemStack itemStack) {
+		this.valid = RecipeRegisterManager.plateRecipe
+										  .getRecipeList()
+										  .removeIf( recipe -> 
+										  	recipe.getOutput().isItemEqual(itemStack)
+										  );
 	}
 }
