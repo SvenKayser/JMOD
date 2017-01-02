@@ -2,10 +2,9 @@ package com.jeffpeng.jmod;
 
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import com.jeffpeng.jmod.actions.AddToolMaterial;
 import com.jeffpeng.jmod.util.Reflector;
@@ -26,11 +25,15 @@ import net.minecraft.item.ItemTool;
 
 public class Patcher {
 	
-	private static Patcher instance = new Patcher();
+	private static Patcher instance;
 
 	private Patcher(){}
 
-	public static Patcher getInstance(){
+	public static Patcher getInstance() {
+		if ( instance == null) {
+			instance = new Patcher();
+		}
+		
 	    return instance;
 	}
 	
@@ -46,11 +49,11 @@ public class Patcher {
 
 		allItems.stream()
 				.map(itemName -> gamereg.getObject(itemName))
-				.filter(isItemInstanceOf)
+				.filter(isItemUnpatchable) 
 				.forEach(item -> {
-					Optional<ToolMaterial> toolMat = lookUpToolMaterial.apply(item);
+					Optional<ToolMaterial> toolMat = lookUpToolMaterial(item);
 					toolMat.ifPresent(mat -> {
-						updateToolMaterial.accept(item, mat);
+						updateToolMaterial(item, mat);
 					});
 				});
 		
@@ -59,11 +62,8 @@ public class Patcher {
 	/**
 	 * Filter for Items we can not patch
 	 */
-	private Predicate<Item> isItemInstanceOf = item -> 
-			  !item.getClass().getCanonicalName().contains("Reika.RotaryCraft") ||
-													   item instanceof ItemTool || 
-													   item instanceof ItemHoe  || 
-													   item instanceof ItemSword;
+	private Predicate<Item> isItemUnpatchable = item -> 
+			  !item.getClass().getCanonicalName().contains("Reika.RotaryCraft");
 
     /**
      * Finds the ToolMaterial to Patch our Tool with
@@ -74,34 +74,52 @@ public class Patcher {
      *  3. If not found in added Tool Materials look in Minecraft's ToolMaterial enum
      *  4. If tool material is still not found return empty, this will be skipped
      */
-	private Function<Item, Optional<ToolMaterial>> lookUpToolMaterial = item -> {
-		Optional<String> toolmatname = Optional.empty();
+	private Optional<ToolMaterial> lookUpToolMaterial(Item item) {
+	
+		Optional<ToolMaterial> tmOpt = getItem_ToolMaterialName(item).flatMap(name -> {
+			return Stream.of(this.toolMaterialFromJModMaterials(name),
+					  		 this.toolMaterialFromMinecraftEnum(name)
+					 		)
+						 .map(Supplier::get)
+						 .filter(Optional::isPresent)
+						 .map(Optional::get)
+						 .findFirst();
+		});
 		
-		if (item instanceof ItemTool)
-			toolmatname = Optional.ofNullable( ((ItemTool) item).getToolMaterialName());
-		else if (item instanceof ItemHoe)
-			toolmatname = Optional.ofNullable( ((ItemHoe) item).getToolMaterialName());
-		else if (item instanceof ItemSword)
-			toolmatname = Optional.ofNullable( ((ItemSword) item).getToolMaterialName());
-
-		Optional<ToolMaterial> toolmat = toolmatname.flatMap(name -> 
-											Optional.ofNullable(AddToolMaterial.get(name)).map(add -> add.toolmat)
-													);
+		return tmOpt;
+	}
+	
+	private Optional<String> getItem_ToolMaterialName(Item item) {
+		if (item instanceof ItemTool) 
+			return Optional.ofNullable(((ItemTool)item).getToolMaterialName());
+		if (item instanceof ItemHoe) 
+			return Optional.ofNullable(((ItemHoe)item).getToolMaterialName());
+		if (item instanceof ItemSword) 
+			return Optional.ofNullable(((ItemSword)item).getToolMaterialName());
 		
-		if (!toolmat.isPresent()) {
-			try {
-				toolmat = toolmatname.flatMap(name -> Optional.ofNullable(ToolMaterial.valueOf(name)));
-			} catch (IllegalArgumentException e) {
-				toolmat = Optional.empty();
-			}
-		}
-		return toolmat;
-	};
+		
+		return Optional.empty();
+	}
+	
+	private Supplier<Optional<ToolMaterial>> toolMaterialFromJModMaterials(String name) {
+		return () -> {
+			return Optional.ofNullable(AddToolMaterial.get(name))
+						   .map(add -> add.toolmat);
+		};
+	}
+	
+	private Supplier<Optional<ToolMaterial>> toolMaterialFromMinecraftEnum(String name) {
+		return () -> {
+			return Stream.of(ToolMaterial.values())
+						 .filter(mat -> mat.toString() == name)
+						 .findFirst();
+		};
+	}
 	
 	/**
 	 * Updates the Item to use a Tool Material.
 	 */
-	private BiConsumer<Item, ToolMaterial> updateToolMaterial = (item, toolmat) -> {
+	private void updateToolMaterial(Item item, ToolMaterial toolmat) {
 		// Update the tool material
 		if (item instanceof ItemTool) {
 			if(item.getClass().getCanonicalName().contains("fi.dy.masa.enderutilities")){
@@ -124,8 +142,9 @@ public class Patcher {
 					item.setHarvestLevel("shovel", toolmat.getHarvestLevel());
 				}
 				
-				itemreflector.set(3, toolmat).set(2, toolmat.getDamageVsEntity() + damagemodifier)
-						.set(1, toolmat.getEfficiencyOnProperMaterial());
+				itemreflector.set(3, toolmat)
+							 .set(2, toolmat.getDamageVsEntity() + damagemodifier)
+							 .set(1, toolmat.getEfficiencyOnProperMaterial());
 				
 			}
 
@@ -152,7 +171,7 @@ public class Patcher {
 			JMOD.LOG.info("[tool patcher] " + itemname + " is a " + ((ItemHoe) item).getToolMaterialName() + " hoe (" + item.getClass().getName() + ")");
 		if (item instanceof ItemSword)
 			JMOD.LOG.info("[tool patcher] " + itemname + " is a " + ((ToolMaterial) new Reflector(item, ItemSword.class).get(1)).name() + " weapon (basically a sword) (" + item.getClass().getName() + ")");
-	};
+	}
 	
 	
 	/**
