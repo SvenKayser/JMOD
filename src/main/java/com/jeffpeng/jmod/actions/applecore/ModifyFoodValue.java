@@ -10,8 +10,10 @@ import com.jeffpeng.jmod.modintegration.applecore.AppleCoreModifyFoodValues;
 import com.jeffpeng.jmod.primitives.BasicAction;
 
 import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.GameRegistry.UniqueIdentifier;
 import net.minecraft.item.ItemStack;
@@ -34,14 +36,26 @@ public class ModifyFoodValue extends BasicAction {
 		this.foodName = food;
 		foodValues = new FoodValues(hunger, saturationModifier);
 			
+		
+		
+		log.debug("Food Modify Action - Added - foodName: {}, hunger: {}, Saturation: {}, isValid: {}", 
+				foodName, foodValues.hunger, foodValues.saturationModifier, this.valid);
+	}
+	
+	@Override
+	public boolean on(FMLInitializationEvent event) {
 		// If HungerOverhaul is installed, Send a IMC  So that HungerOverhaul does not also try to change the food values
 		if(Loader.isModLoaded(HUNGEROVERHAUL_MODID)) {
 			FMLInterModComms.sendMessage(HUNGEROVERHAUL_MODID, MSG_KEY_BLACKLIST_FOOD, foodName);
 			log.debug("Food Modify Action - Send IMC to HungerOverhaul - foodName: {}", foodName);
 		}
+		return super.on(event);
+	}
+	
+	@Override
+	public boolean on(FMLPostInitializationEvent event) {
 		
-		log.debug("Food Modify Action - Added - foodName: {}, hunger: {}, Saturation: {}, isValid: {}", 
-				foodName, foodValues.hunger, foodValues.saturationModifier, this.valid);
+		return super.on(event);
 	}
 
 	@Override
