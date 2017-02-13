@@ -36,6 +36,9 @@ public class ScriptObject extends OwnedObject {
 		jscriptInstance.evalScript(script);
 	}
 	
+	public void importJs(String script) {
+	}
+	
 	public  void log(String msg){
 		log.info(msg);
 	}

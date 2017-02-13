@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import com.jeffpeng.jmod.JMODRepresentation;
+import com.jeffpeng.jmod.Lib;
 import com.jeffpeng.jmod.primitives.BasicAction;
 
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
@@ -16,22 +17,27 @@ import net.minecraft.item.ItemStack;
 public class AddHeatSource extends BasicAction {
 
 	private String blockStr;
+	private int meta;
 
-	public AddHeatSource(JMODRepresentation owner, String block) {
+	public AddHeatSource(JMODRepresentation owner, String block, Optional<Integer> meta) {
 		super(owner);
 		this.blockStr = block;
+		this.meta = meta.orElse(0);
 	}
 	
 	@Override
 	public boolean on(FMLLoadCompleteEvent event) {
+		valid = false;
 		Optional<ItemStack> blockItem = Optional.ofNullable(lib.stringToItemStackOrFirstOreDict(blockStr));
 		
-		blockItem.map(ItemStack::getItem)
-				 .filter(isItemBlock)
-				 .map(item -> ((ItemBlock)item) );
+		blockItem.filter(Lib::itemStackIsBlockImpl)
+				 .map(ItemStack::getItem)
+				 .map(Block::getBlockFromItem)
+				 .ifPresent(block -> {
+					 RecipeRegisterManager.panRecipe.registerHeatSource(block, meta);
+				 });
 		
-		// RecipeRegisterManager.panRecipe.registerHeatSource(block, meta);
-		return false;
+		return valid;
 	}
 	
 	Predicate<Item> isItemBlock = item -> item instanceof ItemBlock;

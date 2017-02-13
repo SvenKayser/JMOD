@@ -1,8 +1,11 @@
 package com.jeffpeng.jmod.scripting.mods;
 
+import java.util.Optional;
+
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.Lib;
 import com.jeffpeng.jmod.actions.dcamt2.AddClayPanRecipe;
+import com.jeffpeng.jmod.actions.dcamt2.AddHeatSource;
 import com.jeffpeng.jmod.actions.dcamt2.AddIronPlateRecipe;
 import com.jeffpeng.jmod.actions.dcamt2.AddProcessorRecipe;
 import com.jeffpeng.jmod.actions.dcamt2.RemoveDryingRecipe;
@@ -16,6 +19,16 @@ public class AppleMilkTea2 extends OwnedObject {
 		super(owner);
 	}
 
+	public void addHeatSource(String block) {
+		if(owner.testForMod("DCsAppleMilk"))
+			new AddHeatSource(owner, block, Optional.empty());
+	}
+	
+	public void addHeatSource(String block, int meta) {
+		if(owner.testForMod("DCsAppleMilk"))
+			new AddHeatSource(owner, block, Optional.of(meta));
+	}
+	
 	public void addClayPanRecipe(String out, String input, String texture, String display) {
 		if(owner.testForMod("DCsAppleMilk")) 
 			new AddClayPanRecipe(owner, out, input, texture, display);
@@ -42,7 +55,7 @@ public class AppleMilkTea2 extends OwnedObject {
 		float secondaryChance = 0F;
 		
 		if(owner.testForMod("DCsAppleMilk")) 
-			new AddProcessorRecipe(owner, output, secondaryOutput, Lib.convertPattern(inputArray), isFoodRecipe, secondaryChance, forceReturnContainer, tier);
+			new AddProcessorRecipe(owner, output, secondaryOutput, Lib.convertArray(inputArray, String[].class), isFoodRecipe, secondaryChance, forceReturnContainer, tier);
 	}
 	
 	public void addJawCrusherRecipe(String output, String secondaryOutput, Object inputArray, float secondaryChance, int tier) {
@@ -50,7 +63,7 @@ public class AppleMilkTea2 extends OwnedObject {
 		boolean forceReturnContainer = false;
 		
 		if(owner.testForMod("DCsAppleMilk")) 
-			new AddProcessorRecipe(owner, output, secondaryOutput, Lib.convertPattern(inputArray), isFoodRecipe, secondaryChance, forceReturnContainer, tier);
+			new AddProcessorRecipe(owner, output, secondaryOutput, Lib.convertArray(inputArray, String[].class), isFoodRecipe, secondaryChance, forceReturnContainer, tier);
 	}
 	
 	public void addFoodProcessorRecipe(String output, Object inputArray, boolean forceReturnContainer) {
@@ -60,7 +73,7 @@ public class AppleMilkTea2 extends OwnedObject {
 		int tier = 1;
 		
 		if(owner.testForMod("DCsAppleMilk")) 
-			new AddProcessorRecipe(owner, output, secondaryOutput, Lib.convertPattern(inputArray), isFoodRecipe, secondaryChance, forceReturnContainer, tier);
+			new AddProcessorRecipe(owner, output, secondaryOutput, Lib.convertArray(inputArray, String[].class), isFoodRecipe, secondaryChance, forceReturnContainer, tier);
 	}
 	
 	public void removeIronPlateRecipe(String output) {

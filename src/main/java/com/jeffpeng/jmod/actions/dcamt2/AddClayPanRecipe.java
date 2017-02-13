@@ -1,7 +1,5 @@
 package com.jeffpeng.jmod.actions.dcamt2;
 
-import java.util.stream.Stream;
-
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.primitives.BasicAction;
 
@@ -27,9 +25,6 @@ public class AddClayPanRecipe extends BasicAction {
 	@Override
 	public boolean on(FMLLoadCompleteEvent event) {
 		this.valid = false;
-		
-		Stream.of(lib.stringToMaybeItemStackNoOreDic(inputStr), 
-				  lib.stringToMaybeItemStackNoOreDic(outputStr));
 		
 		lib.stringToMaybeItemStackNoOreDic(inputStr).ifPresent(input -> {
 			lib.stringToMaybeItemStackNoOreDic(outputStr).ifPresent(output -> {

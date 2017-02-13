@@ -5,6 +5,9 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+
+import org.apache.logging.log4j.Logger;
 
 import com.jeffpeng.jmod.actions.AddToolMaterial;
 import com.jeffpeng.jmod.util.Reflector;
@@ -26,8 +29,10 @@ import net.minecraft.item.ItemTool;
 public class Patcher {
 	
 	private static Patcher instance;
-
-	private Patcher(){}
+	public final Logger LOG;
+	private Patcher(){
+		this.LOG = JMOD.LOG;
+	}
 
 	public static Patcher getInstance() {
 		if ( instance == null) {
@@ -42,21 +47,39 @@ public class Patcher {
 	 * Patches tools to use any added ToolMaterials
 	 */
 	public void patchTools() {
-		FMLControlledNamespacedRegistry<Item> gamereg = GameData.getItemRegistry();
+		LOG.debug("Patching Tools - Begaining");
+		
+		long itemCount = StreamSupport.stream(GameData.getItemRegistry().typeSafeIterable().spliterator(), true)
+					 .filter(isItemToolOrLike)
+					 .peek(item -> LOG.debug("Patching Tools - a Tool - {}", 
+							 item.getUnlocalizedName()))
+					 .count();
+		
+		LOG.debug("Patching Tools - Count: {}", itemCount);
+		
+//		LOG.debug("Patching Tools - Contains minecraft:iron_shovel? {}, iron_pickaxe? {}",
+//		GameData.getItemRegistry().containsKey("minecraft:iron_shovel"),
+//		GameData.getItemRegistry().containsKey("minecraft:iron_pickaxe")
+//		);
+		
+		// FMLControlledNamespacedRegistry<Item> gamereg = GameData.getItemRegistry();
 
-		@SuppressWarnings("unchecked")
-		Set<String> allItems = GameData.getItemRegistry().getKeys();
+//		@SuppressWarnings("unchecked")
+//		Set<String> allItems = GameData.getItemRegistry().typeSafeIterable().spliterator();
+//		Set<String> allItems = GameData.getItemRegistry().getKeys();
 
-		allItems.stream()
-				.map(itemName -> gamereg.getObject(itemName))
+		StreamSupport.stream(GameData.getItemRegistry().typeSafeIterable().spliterator(), true)
+//		allItems.stream()
+				// .map(itemName -> gamereg.getObject(itemName))
 				.filter(isItemUnpatchable) 
+				.filter(isItemToolOrLike) 
+				.peek(item -> LOG.debug("Patching Tools - Lookup ItemName: {}", item.getUnlocalizedName() ))
 				.forEach(item -> {
 					Optional<ToolMaterial> toolMat = lookUpToolMaterial(item);
 					toolMat.ifPresent(mat -> {
 						updateToolMaterial(item, mat);
 					});
 				});
-		
 	}
 	
 	/**
@@ -65,6 +88,15 @@ public class Patcher {
 	private Predicate<Item> isItemUnpatchable = item -> 
 			  !item.getClass().getCanonicalName().contains("Reika.RotaryCraft");
 
+	private Predicate<Item> isItemToolOrLike = item -> 
+				(item instanceof ItemTool || 
+				 item instanceof ItemHoe  || 
+				 item instanceof ItemSword ||
+				 item instanceof ItemAxe || 
+				 item instanceof ItemPickaxe ||
+				 item instanceof ItemSpade 
+				 );
+				
     /**
      * Finds the ToolMaterial to Patch our Tool with
      * 
@@ -75,16 +107,29 @@ public class Patcher {
      *  4. If tool material is still not found return empty, this will be skipped
      */
 	private Optional<ToolMaterial> lookUpToolMaterial(Item item) {
-	
 		Optional<ToolMaterial> tmOpt = getItem_ToolMaterialName(item).flatMap(name -> {
-			return Stream.of(this.toolMaterialFromJModMaterials(name),
-					  		 this.toolMaterialFromMinecraftEnum(name)
+			LOG.debug("Patching Tools - Lookup Item's ToolMat name: {}", name);
+			return Stream.of(toolMaterialFromJModMaterials(name), 
+					  		 toolMaterialFromMinecraftEnum(name)  
 					 		)
 						 .map(Supplier::get)
 						 .filter(Optional::isPresent)
 						 .map(Optional::get)
+						 .peek(tm -> LOG.debug("Patching Tools - Lookup ToolMaterial: {} Harvestlvl: {}", tm.toString(), tm.getHarvestLevel()))
 						 .findFirst();
 		});
+		
+		
+//		Optional<ToolMaterial> tmOpt = getItem_ToolMaterialName(item).flatMap(name -> {
+//			return Stream.of(this.toolMaterialFromJModMaterials(name), // lazy lookup
+//					  		 this.toolMaterialFromMinecraftEnum(name)  // lazy lookup
+//					 		)
+//						 .map(Supplier::get)
+//						 .filter(Optional::isPresent)
+//						 .map(Optional::get)
+//						 .peek(tm -> LOG.debug("Pactching Tools - Lookup ToolMaterial: {} Harvestlvl: {}", tm.toString(), tm.getHarvestLevel()))
+//						 .findFirst();
+//		});
 		
 		return tmOpt;
 	}
@@ -97,9 +142,22 @@ public class Patcher {
 		if (item instanceof ItemSword) 
 			return Optional.ofNullable(((ItemSword)item).getToolMaterialName());
 		
-		
 		return Optional.empty();
 	}
+	
+//	private Optional<ToolMaterial> toolMaterialFromJModMaterialsOpt(String name) {
+//		LOG.debug("Patching Tools - Tool Mat Lookup - from JMod Name: {}", name);
+//		return Optional.ofNullable(AddToolMaterial.get(name))
+//					   .map(add -> add.toolmat);
+//	}
+//		
+//	private Optional<ToolMaterial> toolMaterialFromMinecraftEnumOpt(String name) {
+//		LOG.debug("Patching Tools - Tool Mat Lookup - from Minecraft Name: {}", name);
+//		return Stream.of(ToolMaterial.values())
+//					 .filter(mat -> mat.toString() == name)
+//					 .findFirst();
+//	}
+
 	
 	private Supplier<Optional<ToolMaterial>> toolMaterialFromJModMaterials(String name) {
 		return () -> {
@@ -133,6 +191,7 @@ public class Patcher {
 				Float damagemodifier = 0F;
 				if (item instanceof ItemAxe)
 					damagemodifier = 3F;
+					item.setHarvestLevel("axe", toolmat.getHarvestLevel());
 				if (item instanceof ItemPickaxe) {
 					damagemodifier = 2F;
 					item.setHarvestLevel("pickaxe", toolmat.getHarvestLevel());

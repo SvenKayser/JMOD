@@ -124,14 +124,14 @@ public class JMOD implements IFMLLoadingPlugin {
 
 	
 	public void on(FMLPostInitializationEvent event) {
-		Patcher.getInstance().patchTools();
-		Patcher.getInstance().patchArmor();
 		// Lib.patchTools();
 		// Lib.patchArmor();
 	}
 	
 	
 	public void on(FMLLoadCompleteEvent event){
+		Patcher.getInstance().patchTools();
+		Patcher.getInstance().patchArmor();
 		if(Loader.isModLoaded("props"))			DecoCraftDyeFix.fix();
 	}
 	

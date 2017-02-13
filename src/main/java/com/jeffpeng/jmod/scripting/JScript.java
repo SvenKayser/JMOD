@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -115,8 +116,6 @@ public class JScript {
 
 		
 	}
-	
-	
 	
 	private String readScript(String script) {
 		
