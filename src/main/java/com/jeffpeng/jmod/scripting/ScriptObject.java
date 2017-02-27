@@ -226,7 +226,14 @@ public class ScriptObject extends OwnedObject {
 			pattern.add(new String[]{null,mat,null});
 			pattern.add(new String[]{null,"stickWood",null});
 		} else
-		
+			
+		if(shape.equals("shears")){
+			pattern = new ArrayList<>();
+			pattern.add(new String[]{null, null, null});
+			pattern.add(new String[]{null, mat,  null});
+			pattern.add(new String[]{mat,  null, null});
+		} else
+			
 		if(shape.equals("hoe")){
 			pattern = new ArrayList<>();
 			pattern.add(new String[]{null,mat,mat});
