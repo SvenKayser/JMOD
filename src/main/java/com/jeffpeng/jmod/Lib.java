@@ -508,12 +508,12 @@ public class Lib extends OwnedObject {
 		@SuppressWarnings("unchecked")
 		Set<String> allItems = GameData.getItemRegistry().getKeys();
 
+		
+		
 		for (String itemname : allItems) {
 
 			Item item = gamereg.getObject(itemname);
 			if (item instanceof ItemTool || item instanceof ItemHoe || item instanceof ItemSword) {
-
-				
 
 				if (item.getClass().getCanonicalName().contains("Reika.RotaryCraft")) {
 					continue;
