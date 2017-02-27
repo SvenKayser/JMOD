@@ -24,10 +24,10 @@ public class SetBlockProperties extends BasicAction {
 	private Float blastresistance;
 	private Map<Integer,Integer> harvestlevel = new HashMap<>();
 	private String tool;
-	private Integer opacity;
+	private Boolean opaque;
 	private String sound;
 	private Float slipperiness;
-	private int lightlevel;
+	private Float lightlevel;
 	
 	
 	public SetBlockProperties hardness(Float hardness){
@@ -69,8 +69,8 @@ public class SetBlockProperties extends BasicAction {
 		
 	}
 	
-	public SetBlockProperties opacity(int opacity){
-		this.opacity = opacity;
+	public SetBlockProperties opaque(boolean op){
+		this.opaque = op;
 		return this;
 		
 	}
@@ -82,6 +82,11 @@ public class SetBlockProperties extends BasicAction {
 	
 	public SetBlockProperties br(float br){
 		return blastresistance(br);
+	}
+	
+	public SetBlockProperties lightlevel(float ll){
+		this.lightlevel = ll;
+		return this;
 	}
 	
 	public void execute(){
@@ -104,8 +109,14 @@ public class SetBlockProperties extends BasicAction {
 					block.setHardness(hardness);
 				}
 				
-				if (opacity != null){
-					block.setLightOpacity(opacity);
+				if (opaque != null){
+					block.opaque = opaque;
+					block.setLightOpacity(opaque ? 255 : 0);
+				}
+				
+				if (lightlevel != null)
+				{
+					block.setLightLevel(lightlevel);
 				}
 
 			} else {

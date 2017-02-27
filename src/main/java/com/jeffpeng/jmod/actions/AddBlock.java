@@ -7,11 +7,12 @@ import net.minecraft.creativetab.CreativeTabs;
 import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.Lib;
+import com.jeffpeng.jmod.interfaces.ISettingsProcessor;
 import com.jeffpeng.jmod.primitives.BasicAction;
 import com.jeffpeng.jmod.types.blocks.CoreBlock;
-
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+
 
 public class AddBlock extends BasicAction{
 	private static final String QUALIFIEDCLASSNAMEBASE = "com.jeffpeng.jmod.types.blocks.";
@@ -24,6 +25,11 @@ public class AddBlock extends BasicAction{
 	private int harvestlevel;
 	private String material;
 	private String tab;
+	
+	private Float lightlevel = 0.0f;
+	private Integer opacity;
+	private Integer power;
+	private Integer powerSides;
 	
 	private CoreBlock instance;
 	
@@ -41,6 +47,21 @@ public class AddBlock extends BasicAction{
 		this.valid = true;
 	}
 	
+	public AddBlock lightlevel(float ll){
+		this.lightlevel = ll;
+		return this;
+	}
+	
+	public AddBlock opacity(int op){
+		this.opacity = op;
+		return this;
+	}
+	
+	public AddBlock power(int power, int sides){
+		this.power = power;
+		this.powerSides = sides;
+		return this;
+	}
 
 	@Override
 	public boolean on(FMLPreInitializationEvent event){
@@ -62,6 +83,22 @@ public class AddBlock extends BasicAction{
 			instance.setResistance(blastresistance);
 			instance.setHarvestLevel(tool, harvestlevel);
 			instance.setBlockTextureName(instance.getPrefix() + ":" + name);
+			instance.setLightLevel(lightlevel);
+			if(opacity != null){
+				instance.setOpaque(true);
+				instance.setLightOpacity(opacity);
+			}
+			
+			if(instance instanceof ISettingsProcessor)
+			{
+				((ISettingsProcessor)instance).processSettings(this);
+			}
+			
+			
+//			if(instance instanceof DynamicBlock && power != null && power > 0){
+//				((DynamicBlock)instance).setPowered(true);
+//				((DynamicBlock)instance).setPower(power, powerSides);
+//			}
 			
 			
 			

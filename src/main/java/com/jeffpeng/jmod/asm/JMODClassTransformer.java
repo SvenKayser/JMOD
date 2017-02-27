@@ -72,6 +72,7 @@ public class JMODClassTransformer implements IClassTransformer{
 	}
 	
 	private byte[] patchModDiscoverer(byte[] basicClass) {
+		return basicClass;/*
 		JMOD.LOG.info("PatchModDiscoverer");
 		AbstractInsnNode iNode;
 		String method = "findClasspathMods";
@@ -100,7 +101,7 @@ public class JMODClassTransformer implements IClassTransformer{
 		}
 		ClassWriter cW = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
 		cN.accept(cW);
-		return cW.toByteArray();
+		return cW.toByteArray();*/
 
 	}
 	

@@ -1,14 +1,23 @@
 package com.jeffpeng.jmod.scripting;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.script.Bindings;
+
+import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
+
+import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.JMODLoader;
 import com.jeffpeng.jmod.Lib;
 import com.jeffpeng.jmod.actions.*;
 import com.jeffpeng.jmod.descriptors.*;
 import com.jeffpeng.jmod.primitives.OwnedObject;
 import com.jeffpeng.jmod.scripting.mods.*;
+import com.jeffpeng.jmod.util.JSFunctionWrapper;
 import com.jeffpeng.jmod.validator.Validator;
 
 public class ScriptObject extends OwnedObject {
@@ -22,6 +31,12 @@ public class ScriptObject extends OwnedObject {
 	
 	public Settings Settings = new Settings(owner);
 	public Global Global = new Global(owner);
+	
+	
+	public World World = new World(owner);
+	public Players Players = new Players(owner);
+	public Game Game = new Game(owner);
+	
 	public RotaryCraft RotaryCraft = new RotaryCraft(owner);
 	public Chisel Chisel = new Chisel(owner);
 	public Applecore Applecore = new Applecore(owner);
@@ -279,8 +294,7 @@ public class ScriptObject extends OwnedObject {
 		return pattern;
 	}
 	
-	
-	
+
 	public  boolean isModLoaded(String modid){
 		return Validator.isValidator || JMODLoader.isModLoaded(modid);
 	}
@@ -292,5 +306,36 @@ public class ScriptObject extends OwnedObject {
 	public int celcius(float c){	return Math.round(c + 273.15F);				}
 	public int fahrenheit(float f){	return Math.round((f + 459.67F) * (5/9));	}
 	
+	public ItemStack getItemStack(String id){
+		ItemStack is = lib.stringToItemStackOrFirstOreDict(id);
+		if(is == null) return null;
+		return is;
+	}
+	
+	public Block getBlock(String id){
+		ItemStack is = lib.stringToItemStackOrFirstOreDict(id);
+		if(is == null) return null;
+		Block block = Block.getBlockFromItem(is.getItem());
+		return block;		
+	}
+	
+	public int NONE   = Lib.SIDES.NONE;
+	public int BOTTOM = Lib.SIDES.BOTTOM; 
+	public int TOP    = Lib.SIDES.TOP;
+	public int NORTH  = Lib.SIDES.NORTH;
+	public int SOUTH  = Lib.SIDES.SOUTH;
+	public int WEST   = Lib.SIDES.WEST;
+	public int EAST   = Lib.SIDES.EAST;
+	public int SIDES  = Lib.SIDES.SIDES;
+	public int ALL    = Lib.SIDES.ALL;
+	
+	public void testObjectType(Object o){
+		owner.getLogger().info(getClass());
+	}
+	
+	public Object invoke(Object function){
+		JSFunctionWrapper jsfw = new JSFunctionWrapper(function,this);
+		return jsfw.invoke(null);
+	}
 	
 }

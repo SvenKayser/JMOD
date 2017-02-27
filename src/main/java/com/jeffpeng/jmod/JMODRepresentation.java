@@ -3,6 +3,8 @@ package com.jeffpeng.jmod;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.script.Bindings;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,6 +22,7 @@ import com.jeffpeng.jmod.actions.SetBlockProperties;
 import com.jeffpeng.jmod.crafting.AnvilHandler;
 import com.jeffpeng.jmod.crafting.DropHandler;
 import com.jeffpeng.jmod.crafting.ToolRepairRecipe;
+import com.jeffpeng.jmod.interfaces.IEventObject;
 import com.jeffpeng.jmod.interfaces.IItem;
 import com.jeffpeng.jmod.interfaces.IBlock;
 import com.jeffpeng.jmod.interfaces.IStagedObject;
@@ -41,7 +44,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-public class JMODRepresentation {
+public class JMODRepresentation implements IEventObject {
 
 	private JScript script;
 	private Config config = new Config();
@@ -199,6 +202,15 @@ public class JMODRepresentation {
 	
 	public void registerStagedObject(IStagedObject o){
 		stageables.add(o);
+	}
+
+	@Override
+	public void on(String trigger) {
+	}
+	
+	@Override
+	public boolean fire(String trigger) {
+		return false;
 	}
 
 }

@@ -215,18 +215,25 @@ public class JMODContainer implements ModContainer {
 		JMOD.LOG.info("modstage " + modInstance.getModId() + " " + event.getClass());
 		
 		IStagedObject.broadcast(event, modInstance.stageables);
-		if (event instanceof FMLPreInitializationEvent)
+		if (event instanceof FMLPreInitializationEvent){
 			modInstance.on((FMLPreInitializationEvent) event);
-		else if (event instanceof FMLInitializationEvent)
+			modInstance.fire("fmlPreInit");
+		} else if (event instanceof FMLInitializationEvent) {
 			modInstance.on((FMLInitializationEvent) event);
-		else if (event instanceof FMLPostInitializationEvent)
+			modInstance.fire("fmlInit");
+		} else if (event instanceof FMLPostInitializationEvent) {
 			modInstance.on((FMLPostInitializationEvent) event);
-		else if (event instanceof FMLLoadCompleteEvent)
+			modInstance.fire("fmlPostInit");
+		} else if (event instanceof FMLLoadCompleteEvent) {
 			modInstance.on((FMLLoadCompleteEvent) event);
-		else if (event instanceof FMLServerAboutToStartEvent)
+			modInstance.fire("fmlLoacComplete");
+		} else if (event instanceof FMLServerAboutToStartEvent) {
 			modInstance.on((FMLServerAboutToStartEvent) event);
-		else if (event instanceof FMLModIdMappingEvent)
+			modInstance.fire("fmlServerBeforeStart");
+		} else if (event instanceof FMLModIdMappingEvent) {
 			modInstance.on((FMLModIdMappingEvent) event);
+			modInstance.fire("fmlModIdMapping");
+		}
 	}
 
 	@Override

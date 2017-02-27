@@ -4,11 +4,14 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.script.Bindings;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+
+import jdk.nashorn.api.scripting.ScriptObjectMirror;
 
 import com.jeffpeng.jmod.Config;
 import com.jeffpeng.jmod.JMOD;
@@ -111,9 +114,6 @@ public class JScript {
 		} catch (ScriptException | NoSuchMethodException e) {
 			e.printStackTrace();
 		}
-		
-
-		
 	}
 	
 	
@@ -136,6 +136,7 @@ public class JScript {
 	public JMODRepresentation getMod(){
 		return jmod;
 	}
+	
 	
 	
 	
