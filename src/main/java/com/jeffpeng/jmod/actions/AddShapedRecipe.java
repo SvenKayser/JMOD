@@ -48,6 +48,6 @@ public class AddShapedRecipe extends BasicAction{
 	
 	@Override
 	public int priority(){
-		return 10;
+		return Priorities.AddShapedRecipe;
 	}
 }

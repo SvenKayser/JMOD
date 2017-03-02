@@ -50,6 +50,73 @@ public class BasicAction extends OwnedObject implements IExecutableObject, ISett
 		return this;
 	}
 	
+	public Object getObject(String name){
+		return settingObjects.get(name);
+	}
+	
+	public String getString(String name){
+		Object o = settingObjects.get(name);
+		if(o instanceof String){
+			return (String) o;
+		}
+		return o.toString();
+	}
+	
+	public Float getFloat(String name){
+		Object o = settingObjects.get(name);
+		if(o instanceof Double){
+			return ((Double)o).floatValue();
+		}
+		if(o instanceof Float){
+			return ((Float)o);
+		}
+		if(o instanceof String){
+			return Float.parseFloat((String)o);
+		}
+		return null;
+	}
+	
+	public Double getDouble(String name){
+		Object o = settingObjects.get(name);
+		if(o instanceof Double){
+			return ((Double)o);
+		}
+		if(o instanceof Float){
+			return ((Float)o).doubleValue();
+		}
+		if(o instanceof String){
+			return Double.parseDouble((String)o);
+		}
+		return null;
+	}
+	
+	public Integer getInt(String name){
+		Object o = settingObjects.get(name);
+		if(o instanceof Integer){
+			return (Integer) o;
+		}
+		if(o instanceof String){
+			return Integer.parseInt((String)o);
+		}
+		return null;
+	}
+	
+	public Boolean getBoolean(String name){
+		Object o = settingObjects.get(name);
+		if(o instanceof Boolean){
+			return (Boolean) o;
+		}
+		if(o instanceof String){
+			return Boolean.parseBoolean((String)o);
+		}
+		return null;
+		
+	}
+	
+	public boolean hasSetting(String name){
+		return settingObjects.containsKey(name);
+	}
+	
 	public Map<String,Object> getSettingObjects(){
 		return settingObjects;
 	}

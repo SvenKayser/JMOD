@@ -312,7 +312,11 @@ public class Lib extends OwnedObject {
 			if(is2 instanceof String) return is1.equals(is2);
 		}
 		if(is1 instanceof ItemStack){
-			if(is2 instanceof ItemStack) return matchItemStacks((ItemStack)is1,(ItemStack)is2);
+			if(is2 instanceof ItemStack){
+				
+				log.warn("IvI");
+				return belongToSameOreDictEntry((ItemStack)is1,(ItemStack)is2);
+			}
 			if(is2 instanceof String){
 				
 				if(((String) is2).contains(":")){

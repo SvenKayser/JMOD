@@ -80,6 +80,6 @@ public class AddToolMaterial extends BasicAction{
 	@Override
 	public int priority()
 	{
-		return 250;
+		return Priorities.AddToolMaterial;
 	}
 }

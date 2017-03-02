@@ -12,7 +12,7 @@ public class Players extends OwnedObject implements IEventObject {
 	}
 
 	@Override
-	public void on(String trigger) {
+	public void on(String trigger, Object callback) {
 		// TODO Auto-generated method stub
 		
 	}

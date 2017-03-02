@@ -73,8 +73,9 @@ public class AnvilHandler extends OwnedObject {
 					if (repairmat == null||repairmat.getItem() == null) return;
 					
 				}
-				
+
 				if (!lib.matchItemStacksOreDict(event.right, repairmat)) return;
+				
 				durability = left.getMaxDamage();
 				damage = event.left.getItemDamage();
 				if (!Loader.isModLoaded("enderutilities") || !((left instanceof ItemEnderTool) || (left instanceof ItemEnderSword))) {

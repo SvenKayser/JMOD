@@ -11,7 +11,7 @@ public class World extends OwnedObject implements IEventObject {
 	}
 
 	@Override
-	public void on(String trigger) {
+	public void on(String trigger, Object callback) {
 		
 		
 	}

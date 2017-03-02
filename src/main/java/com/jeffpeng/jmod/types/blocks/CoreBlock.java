@@ -11,10 +11,12 @@ import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.Lib;
 import com.jeffpeng.jmod.Lib.SIDES;
 import com.jeffpeng.jmod.interfaces.IBlock;
+import com.jeffpeng.jmod.interfaces.ISettingsProcessor;
+import com.jeffpeng.jmod.interfaces.ISettingsReceiver;
 import com.jeffpeng.jmod.primitives.BasicAction;
 import com.jeffpeng.jmod.types.blocks.placers.CoreBlockPlacer;
 
-public class CoreBlock extends Block implements IBlock {
+public class CoreBlock extends Block implements IBlock, ISettingsProcessor {
 	
 
 	private CoreBlockPlacer placer;
@@ -78,6 +80,11 @@ public class CoreBlock extends Block implements IBlock {
 	@Override
 	public JMODRepresentation getOwner() {
 		return owner;
+	}
+
+	@Override
+	public void processSettings(ISettingsReceiver settings) {
+		
 	}
 	
 	

@@ -72,6 +72,6 @@ public class AddArmorMaterial extends BasicAction {
 	@Override
 	public int priority()
 	{
-		return 250;
+		return Priorities.AddArmorMaterial;
 	}
 }

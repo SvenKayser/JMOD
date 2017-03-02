@@ -86,6 +86,7 @@ public class JMODRepresentation implements IEventObject {
 	public JMODInfo getModInfo() {
 		return this.modinfo;
 	}
+	
 
 	public void on(FMLConstructionEvent event) {
 
@@ -205,7 +206,8 @@ public class JMODRepresentation implements IEventObject {
 	}
 
 	@Override
-	public void on(String trigger) {
+	public void on(String trigger, Object callback){
+		
 	}
 	
 	@Override

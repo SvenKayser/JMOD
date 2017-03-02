@@ -27,7 +27,7 @@ public class OwnedObject implements IEventObject, IOwned {
 	}
 
 	@Override
-	public void on(String trigger) {
+	public void on(String trigger, Object callback) {
 		
 	}
 

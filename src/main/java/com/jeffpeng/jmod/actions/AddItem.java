@@ -26,59 +26,24 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 @SuppressWarnings("unused")
 public class AddItem extends BasicAction{
+	private static int itemcounter = 0;
 	private static final String QUALIFIEDCLASSNAMEBASE = "com.jeffpeng.jmod.types.items.";
 	
-	private String name;
 	private String refClass;
-	private int stackSize;
-	private String tab;
-	private ToolDataDescriptor tooldata;
-	private ArmorDataDescriptor armordata;
-	private FoodDataDescriptor fooddata;
-	private ColorDescriptor colordata;
-	private Integer colorindex;
 	private IItem instance; 
-	
 
-	public AddItem(JMODRepresentation owner, String name, String refClass, int stackSize, String tab){
+	public AddItem(JMODRepresentation owner, String refClass){
 		super(owner);
-		this.name = name;
 		this.refClass = refClass;
-		this.stackSize = stackSize;
-		this.tab = tab;
-	}
-	
-	public AddItem tooldata(ToolDataDescriptor tooldata){
-		this.tooldata = tooldata;
-		return this;
-	}
-	
-
-	
-	public AddItem armordata(ArmorDataDescriptor armordata){
-		this.armordata = armordata;
-		return this;
-	}
-	
-	public AddItem fooddata(FoodDataDescriptor fooddata){
-		this.fooddata = fooddata;
-		return this;
-	}
-	
-	public AddItem color(ColorDescriptor color){
-		this.colordata = color;
-		return this;
-	}
-	
-	public AddItem colorindex(int colorindex){
-		this.colorindex = colorindex;
-		return this;
+		set("name",this.refClass+AddItem.itemcounter++);
+		set("stacksize",1);
+		set("tab",null);
 	}
 	
 	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean on(FMLPreInitializationEvent event){
-		if(JMOD.isDevVersion()) log.info("Creating item creation for " + name);
+		if(JMOD.isDevVersion()) log.info("Creating item creation for " + getString("name"));
 		try {
 			Class<?> clazz;
 
@@ -89,26 +54,38 @@ public class AddItem extends BasicAction{
 			}
 
 			if (ITool.class.isAssignableFrom(clazz) && IItem.class.isAssignableFrom(clazz)) {
+				if(getObject("tooldata") == null || !(getObject("tooldata") instanceof ToolDataDescriptor)){
+					log.warn("Item " + getString("name") + " is a tool but has no tooldata. Omitting.");
+					return false;
+				}
 				Class[] args = new Class[2];
 				args[0] = JMODRepresentation.class;
 				args[1] = ToolDataDescriptor.class;
-				instance = (IItem) clazz.getDeclaredConstructor(args).newInstance(owner,tooldata);
+				instance = (IItem) clazz.getDeclaredConstructor(args).newInstance(owner,(ToolDataDescriptor) getObject("tooldata"));
 			} else
 				
 			if (IArmor.class.isAssignableFrom(clazz) && IItem.class.isAssignableFrom(clazz)) {
-
+				if(getObject("armordata") == null || !(getObject("armordata") instanceof ArmorDataDescriptor)){
+					log.warn("Item " + getString("name") + " is an armor but has no armordata. Omitting.");
+					return false;
+				}
+				ArmorDataDescriptor add = (ArmorDataDescriptor) getObject("armordata");
 				Class[] args = new Class[3];
 				args[0] = JMODRepresentation.class;
 				args[1] = String.class;
 				args[2] = String.class;
-				instance = (IItem) clazz.getDeclaredConstructor(args).newInstance(owner,armordata.armorMaterial,armordata.armorType);
+				instance = (IItem) clazz.getDeclaredConstructor(args).newInstance(owner,add.armorMaterial,add.armorType);
 			} else 
 			
 			if (CoreFood.class.isAssignableFrom(clazz)) {
+				if(getObject("fooddata") == null || !(getObject("fooddata") instanceof FoodDataDescriptor)){
+					log.warn("Item " + getString("name") + " is a food but has no fooddata. Omitting.");
+					return false;
+				}
 				Class[] args = new Class[2];
 				args[0] = JMODRepresentation.class;
 				args[1] = FoodDataDescriptor.class;
-				instance = (IItem) clazz.getDeclaredConstructor(args).newInstance(owner,fooddata);
+				instance = (IItem) clazz.getDeclaredConstructor(args).newInstance(owner,(FoodDataDescriptor) getObject("fooddata"));
 			} else
 
 			if (IItem.class.isAssignableFrom(clazz)) {
@@ -120,18 +97,21 @@ public class AddItem extends BasicAction{
 			}
 			
 			if(instance instanceof IItemColor){
-				if(colordata != null) ((IItemColor)instance).setColor(colordata.red,colordata.green,colordata.blue);
-				if(colorindex != null) ((IItemColor)instance).setColorIndex(colorindex);
+				if(getObject("colordata") != null && getObject("colordata") instanceof ColorDescriptor){
+					ColorDescriptor cd = (ColorDescriptor) getObject("colordata");
+					((IItemColor)instance).setColor(cd.red,cd.green,cd.blue);
+				}
+				if(getInt("colorindex") != null) ((IItemColor)instance).setColorIndex(getInt("colorindex"));
 			}
 
-			instance.setName(name);
+			instance.setName(getString("name"));
 			
-			((Item) instance).setTextureName(instance.getPrefix() + ":" + name);
-			((Item) instance).setMaxStackSize(stackSize);
+			((Item) instance).setTextureName(instance.getPrefix() + ":" + getString("name"));
+			((Item) instance).setMaxStackSize(getInt("stacksize"));
 			
 			
 		} catch (Exception e) {
-			log.warn("Could not instantiate " + name + ". Possibly the constructor is malformed?");
+			log.warn("Could not instantiate " + getString("name") + ". Possibly the constructor is malformed?");
 			e.printStackTrace();
 			return false;
 		}
@@ -143,8 +123,8 @@ public class AddItem extends BasicAction{
 	@Override
 	public boolean on(FMLLoadCompleteEvent event){
 		instance.setRecipes();
-		if(!JMOD.isServer()){
-			CreativeTabs tabInstance = Lib.getCreativeTabByName(tab);
+		if(!JMOD.isServer() && getString("tab") != null){
+			CreativeTabs tabInstance = Lib.getCreativeTabByName(getString("tab"));
 			if(tabInstance != null && instance != null){
 				((Item )instance).setCreativeTab(tabInstance);
 				return true;
@@ -161,6 +141,6 @@ public class AddItem extends BasicAction{
 	
 	@Override
 	public int priority(){
-		return 200;
+		return Priorities.AddItem;
 	}
 }

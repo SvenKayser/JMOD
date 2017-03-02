@@ -70,6 +70,6 @@ public class AddOreDictionaryEntry extends BasicAction {
 	
 	@Override
 	public int priority(){
-		return 100;
+		return Priorities.AddOreDictionaryEntry;
 	}
 }
