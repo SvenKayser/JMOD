@@ -7,3 +7,6 @@
 [submodule "JMOD-Chisel"]
 	path = JMOD-Chisel
 	url = https://github.com/SvenKayser/JMOD-Chisel
+[submodule "JMOD-RotaryCraft"]
+	path = JMOD-RotaryCraft
+	url = https://github.com/SvenKayser/JMOD-RotaryCraft
