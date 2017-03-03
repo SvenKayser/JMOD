@@ -14,11 +14,4 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>config</name>
-			<type>2</type>
-			<location>/home/sven/.minecraftdevtest/config</location>
-		</link>
-	</linkedResources>
 </projectDescription>

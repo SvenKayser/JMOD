@@ -1,5 +1,6 @@
 package com.jeffpeng.jmod;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraftforge.common.MinecraftForge;
@@ -11,21 +12,19 @@ import com.jeffpeng.jmod.asm.JMODAnnotationParser;
 import com.jeffpeng.jmod.asm.JMODClassTransformer;
 import com.jeffpeng.jmod.asm.JMODObfuscationHelper;
 import com.jeffpeng.jmod.asm.annotionhandlers.InjectInterfaceHandler;
+import com.jeffpeng.jmod.asm.annotionhandlers.JMODBindingHandler;
 import com.jeffpeng.jmod.asm.annotionhandlers.StripMissingInterfacesHandler;
 import com.jeffpeng.jmod.crafting.BlacklistCraftingResults;
 import com.jeffpeng.jmod.crafting.ToolUnbreaker;
-
 import com.jeffpeng.jmod.interfaces.IExecutableObject;
 import com.jeffpeng.jmod.interfaces.IStagedObject;
 import com.jeffpeng.jmod.modintegration.applecore.AppleCoreModifyFoodValues;
-
 import com.jeffpeng.jmod.interfaces.IAnnotationHandler;
-
 import com.jeffpeng.jmod.modintegration.decocraft.DecoCraftDyeFix;
 import com.jeffpeng.jmod.modintegration.nei.NEI_JMODConfig;
+import com.jeffpeng.jmod.primitives.ModScriptObject;
 import com.jeffpeng.jmod.registry.BlockMaterialRegistry;
 import com.jeffpeng.jmod.util.ForgeDeepInterface;
-
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ProgressManager;
@@ -47,16 +46,17 @@ public class JMOD implements IFMLLoadingPlugin {
 	{
 		IAnnotationHandler.register(new InjectInterfaceHandler());
 		IAnnotationHandler.register(new StripMissingInterfacesHandler());
+		IAnnotationHandler.register(new JMODBindingHandler());
 	}
 	
-	
+	public static Map<String,Class<? extends ModScriptObject>> modScriptList = new HashMap<>(); 
 	
 	public static final Logger LOG = LogManager.getLogger("JMOD");
 
 	
 	public static final String MODID = "jmod";
 	public static final String VERSION = "@VERSION@";
-	public static final String NAME = "The JavaScript MOD Loader";
+	public static final String NAME = "JMOD";
 	private static final GlobalConfig GLOBALCONFIG = new GlobalConfig();
 	private static boolean isServer = false;
 	private static boolean devversion = ("@devversion@".equals("true"));
@@ -73,6 +73,7 @@ public class JMOD implements IFMLLoadingPlugin {
 	public JMOD() {
 		instance = this;
 		JMODObfuscationHelper.init();
+		JMODLoader.discoverPlugins();
 		JMODLoader.discoverMods();
 		
 	}
@@ -87,8 +88,10 @@ public class JMOD implements IFMLLoadingPlugin {
 		BlacklistCraftingResults.init();
 		BlacklistCraftingResults.getInstance().blacklistDomain("RotaryCraft");
 		DEEPFORGE = new ForgeDeepInterface();
+		JMODLoader.initPlugins();
 		JMODLoader.constructMods();
 		JMODLoader.inject();
+		System.out.println("###runscripts");
 		JMODLoader.runScripts();
 		
 		

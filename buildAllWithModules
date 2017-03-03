@@ -1,0 +1,26 @@
+#/bin/sh
+rm build/libs/*
+./buildall
+
+cd JMOD-RotaryCraft
+rm build/libs/*
+./gradlew buildPlugin
+cd ..
+
+cd JMOD-applecore
+rm build/libs/*
+./gradlew buildPlugin
+cd ..
+
+cd JMOD-ExNihilo
+rm build/libs/*
+./gradlew buildPlugin
+cd ..
+
+cd JMOD-Chisel
+rm build/libs/*
+./gradlew buildPlugin
+cd ..
+
+cp build/libs/jmod*-complete.jar ~/.minecraftdevtest/mods
+cp JMOD-*/build/libs/*.jmodplugin ~/.minecraftdevtest/mods

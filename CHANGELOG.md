@@ -8,6 +8,8 @@ alpha1.3.1
 - Implemented first step of the EventSystem
 - Introduction of ISettingsReceiver and ISettingsProcessor, part of the syntax rewrite
 - Fixed the Anvil handler AGAIN [Issue #41](https://github.com/SvenKayser/JMOD/issues/41)
+- Implemented Plugin System (WIP)
+- Started singeling out mod related code into modules
 
 
 beta1.2.1 (no release)

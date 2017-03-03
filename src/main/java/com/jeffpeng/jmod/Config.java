@@ -24,7 +24,6 @@ public class Config{
 	public List<TooltipDescriptor> tooltips								= new ArrayList<>();
 	public List<AddBlockDrop> blockDrops								= new ArrayList<>();
 	
-	public boolean patchRotarycraftSteelTools = false;
 	public boolean enhancedAnvilRepair = false;
 	public boolean craftingGridToolRepair = false;
 	public boolean showToolHarvestLevels = false;

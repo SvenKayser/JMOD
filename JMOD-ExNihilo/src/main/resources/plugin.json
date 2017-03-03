@@ -1,0 +1,10 @@
+{
+  "pluginid": "exnihilo",
+  "name": "JMOD ExNihilo Bindings",
+  "description" : "",
+  "version"	:	"1.3.1",
+  "authors"	: ["SvenKayser"],
+  "url" : "",
+  "credits" : "",
+  "scriptingobjects" : {"ExNihilo" :"com.jeffpeng.jmod.exnihilo.Scripting"}
+}

@@ -27,7 +27,6 @@ import com.jeffpeng.jmod.interfaces.IItem;
 import com.jeffpeng.jmod.interfaces.IBlock;
 import com.jeffpeng.jmod.interfaces.IStagedObject;
 import com.jeffpeng.jmod.interfaces.IExecutableObject;
-import com.jeffpeng.jmod.modintegration.rotarycraft.PatchRoCSteelTools;
 import com.jeffpeng.jmod.primitives.JMODInfo;
 import com.jeffpeng.jmod.registry.PlayerData;
 import com.jeffpeng.jmod.scripting.JScript;
@@ -106,8 +105,6 @@ public class JMODRepresentation implements IEventObject {
 	}
 
 	public void on(FMLPostInitializationEvent event) {
-		if (Loader.isModLoaded("RotaryCraft") && config.patchRotarycraftSteelTools)
-			PatchRoCSteelTools.patchRoCSteelTools();
 		if (config.craftingGridToolRepair)
 			GameRegistry.addRecipe(new ToolRepairRecipe(this));
 

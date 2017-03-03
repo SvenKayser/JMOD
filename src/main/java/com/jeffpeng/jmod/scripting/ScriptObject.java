@@ -3,7 +3,9 @@ package com.jeffpeng.jmod.scripting;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.script.Bindings;
 
@@ -37,12 +39,11 @@ public class ScriptObject extends OwnedObject {
 	public Players Players = new Players(owner);
 	public Game Game = new Game(owner);
 	
-	public RotaryCraft RotaryCraft = new RotaryCraft(owner);
+	
 	public Chisel Chisel = new Chisel(owner);
 	public Applecore Applecore = new Applecore(owner);
 	public Sync Sync = new Sync(owner);
-	public ExNihilo ExNihilo = new ExNihilo(owner);
-	
+		
 	public void loadjs(String script){
 		jscriptInstance.evalScript(script);
 	}
@@ -343,5 +344,7 @@ public class ScriptObject extends OwnedObject {
 		JSFunctionWrapper jsfw = new JSFunctionWrapper(function,this);
 		return jsfw.invoke(null);
 	}
+	
+	
 	
 }

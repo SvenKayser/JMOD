@@ -1,6 +1,9 @@
 package com.jeffpeng.jmod.scripting;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -11,15 +14,21 @@ import javax.script.ScriptException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import net.minecraft.block.material.Material;
+import jdk.nashorn.api.scripting.JSObject;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 
 import com.jeffpeng.jmod.Config;
 import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.JMODContainer;
 import com.jeffpeng.jmod.JMODRepresentation;
+import com.jeffpeng.jmod.Lib;
+import com.jeffpeng.jmod.primitives.ModScriptObject;
+import com.jeffpeng.jmod.types.blocks.CoreBlock;
 import com.jeffpeng.jmod.util.LoaderUtil;
 
 public class JScript {
+	private static Map<String,String> extraScriptingObjects = new HashMap<>(); 
 	private ScriptEngine jsEngine;
 	
 	private JMODRepresentation jmod;
@@ -100,6 +109,7 @@ public class JScript {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public JScript(JMODRepresentation jmod){
 		
 		this.jmod = jmod;
@@ -111,10 +121,35 @@ public class JScript {
 			Object jsObject = jsEngine.eval("Object");
 			Invocable inv = (Invocable)jsEngine;
 			inv.invokeMethod(jsObject, "bindProperties", globalScope,new ScriptObject(this));
+			@SuppressWarnings("rawtypes")
+			Class[] args = new Class[1];
+			args[0] = JMODRepresentation.class;
+			
+			for(Map.Entry<String, String> entry : extraScriptingObjects.entrySet()){
+				try {
+					System.out.println("###aso" + globalScope.getClass());
+					System.out.println("###aso " + entry.getKey() + " " + entry.getValue());
+					ModScriptObject	instance = (ModScriptObject) Class.forName(entry.getValue()).getDeclaredConstructor(args).newInstance(jmod);
+					
+					((Map<String,Object>)globalScope).put(entry.getKey(), instance);
+				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | SecurityException
+						| ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					continue;
+				}
+				
+				
+			}
+			
+			
 		} catch (ScriptException | NoSuchMethodException e) {
 			e.printStackTrace();
 		}
+		
+		
 	}
+	
 	
 	
 	
@@ -137,6 +172,9 @@ public class JScript {
 		return jmod;
 	}
 	
+	public static void addExtraScriptingObject(String scriptObjectName, String className){
+		extraScriptingObjects.put(scriptObjectName, className);
+	}
 	
 	
 	
