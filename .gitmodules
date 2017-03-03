@@ -1,9 +1,6 @@
 [submodule "JMOD-ExNihilo"]
 	path = JMOD-ExNihilo
 	url = https://github.com/SvenKayser/JMOD-ExNihilo
-[submodule "JMOD-RotaryCraft"]
-	path = JMOD-RotaryCraft
-	url = https://github.com/SvenKayser/JMOD-RotaryCraft
 [submodule "JMOD-applecore"]
 	path = JMOD-applecore
 	url = https://github.com/SvenKayser/JMOD-applecore

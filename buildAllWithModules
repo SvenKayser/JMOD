@@ -23,4 +23,4 @@ rm build/libs/*
 cd ..
 
 cp build/libs/jmod*-complete.jar ~/.minecraftdevtest/mods
-cp JMOD-*/build/libs/*.jmodplugin ~/.minecraftdevtest/mods
+cp JMOD-*/build/libs/*.jmodplugin ~/.minecraftdevtest/mods/jmodplugins
