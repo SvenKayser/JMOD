@@ -1,12 +1,6 @@
 [submodule "JMOD-ExNihilo"]
 	path = JMOD-ExNihilo
 	url = https://github.com/SvenKayser/JMOD-ExNihilo
-[submodule "JMOD-applecore"]
-	path = JMOD-applecore
-	url = https://github.com/SvenKayser/JMOD-applecore
-[submodule "JMOD-Chisel"]
-	path = JMOD-Chisel
-	url = https://github.com/SvenKayser/JMOD-Chisel
 [submodule "JMOD-RotaryCraft"]
 	path = JMOD-RotaryCraft
 	url = https://github.com/SvenKayser/JMOD-RotaryCraft
@@ -28,3 +22,6 @@
 [submodule "JMOD-Decocraft"]
 	path = JMOD-Decocraft
 	url = https://github.com/SvenKayser/JMOD-Decocraft.git
+[submodule "JMOD-Chisel"]
+	path = JMOD-Chisel
+	url = https://github.com/SvenKayser/JMOD-Chisel
