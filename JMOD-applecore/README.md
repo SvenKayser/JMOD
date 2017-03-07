@@ -1,1 +1,0 @@
-### JMOD applecore plugin
