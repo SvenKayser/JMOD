@@ -1,6 +1,8 @@
 package com.jeffpeng.jmod;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.minecraftforge.common.MinecraftForge;
@@ -12,21 +14,14 @@ import com.jeffpeng.jmod.asm.JMODAnnotationParser;
 import com.jeffpeng.jmod.asm.JMODClassTransformer;
 import com.jeffpeng.jmod.asm.JMODObfuscationHelper;
 import com.jeffpeng.jmod.asm.annotionhandlers.InjectInterfaceHandler;
-import com.jeffpeng.jmod.asm.annotionhandlers.JMODBindingHandler;
 import com.jeffpeng.jmod.asm.annotionhandlers.StripMissingInterfacesHandler;
 import com.jeffpeng.jmod.crafting.BlacklistCraftingResults;
 import com.jeffpeng.jmod.crafting.ToolUnbreaker;
-import com.jeffpeng.jmod.interfaces.IExecutableObject;
-import com.jeffpeng.jmod.interfaces.IStagedObject;
-import com.jeffpeng.jmod.modintegration.applecore.AppleCoreModifyFoodValues;
 import com.jeffpeng.jmod.interfaces.IAnnotationHandler;
-import com.jeffpeng.jmod.modintegration.decocraft.DecoCraftDyeFix;
-import com.jeffpeng.jmod.modintegration.nei.NEI_JMODConfig;
 import com.jeffpeng.jmod.primitives.ModScriptObject;
 import com.jeffpeng.jmod.registry.BlockMaterialRegistry;
 import com.jeffpeng.jmod.util.ForgeDeepInterface;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ProgressManager;
 import cpw.mods.fml.common.ProgressManager.ProgressBar;
 import cpw.mods.fml.common.event.FMLConstructionEvent;
@@ -42,12 +37,14 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 @MCVersion(value="1.7.10")
 //@TransformerExclusions(value={"com.jeffpeng.jmod.asm"})
 public class JMOD implements IFMLLoadingPlugin {
+	private static List<String> classTransformers = new ArrayList<>();
 	static
 	{
 		IAnnotationHandler.register(new InjectInterfaceHandler());
 		IAnnotationHandler.register(new StripMissingInterfacesHandler());
-		IAnnotationHandler.register(new JMODBindingHandler());
 	}
+	
+	
 	
 	public static Map<String,Class<? extends ModScriptObject>> modScriptList = new HashMap<>(); 
 	
@@ -57,7 +54,8 @@ public class JMOD implements IFMLLoadingPlugin {
 	public static final String MODID = "jmod";
 	public static final String VERSION = "@VERSION@";
 	public static final String NAME = "JMOD";
-	private static final GlobalConfig GLOBALCONFIG = new GlobalConfig();
+	public static final String ARCHIVEBASE ="com.jeffpeng.jmod";
+	public static final GlobalConfig GLOBALCONFIG = new GlobalConfig();
 	private static boolean isServer = false;
 	private static boolean devversion = ("@devversion@".equals("true"));
 	protected JMODModContainer modcontainer;
@@ -65,36 +63,30 @@ public class JMOD implements IFMLLoadingPlugin {
 	public static ForgeDeepInterface DEEPFORGE;
 	
 	
-	private static JMODRepresentation runningMod;
 	private static JMOD instance;
 	
 	
 
 	public JMOD() {
 		instance = this;
-		JMODObfuscationHelper.init();
-		JMODLoader.discoverPlugins();
-		JMODLoader.discoverMods();
+		JMOD.classTransformers.add(JMODAnnotationParser.class.getName());
+		JMOD.classTransformers.add(JMODClassTransformer.class.getName());
 		
+		JMODObfuscationHelper.init();
+		JMODLoader.discoverMods();
+		JMODLoader.discoverPlugins();
+		JMODLoader.initPlugins();
 	}
 	
-	public void forgeLoaderHook(){
-		
-	}
-
-
 	public void on(FMLConstructionEvent event) {
 		if(event.getSide().isServer()) isServer = true;
 		BlacklistCraftingResults.init();
 		BlacklistCraftingResults.getInstance().blacklistDomain("RotaryCraft");
 		DEEPFORGE = new ForgeDeepInterface();
-		JMODLoader.initPlugins();
+//		JMODLoader.loadPluginsIntoClassPath();
 		JMODLoader.constructMods();
 		JMODLoader.inject();
-		System.out.println("###runscripts");
 		JMODLoader.runScripts();
-		
-		
 
 		ProgressBar bar = ProgressManager.push("Initializing JMODs", JMODLoader.getModList().size());
 		for(Map.Entry<String,JMODContainer> entry : JMODLoader.getModList().entrySet()){
@@ -108,34 +100,22 @@ public class JMOD implements IFMLLoadingPlugin {
 	
 	public void on(FMLPreInitializationEvent event) {
 		Lib.blockMaterialRegistry = new BlockMaterialRegistry();
-		runningMod = null;
 	}
 
 	
 	public void on(FMLInitializationEvent event) {
 		if(GLOBALCONFIG.preventToolBreaking) 	MinecraftForge.EVENT_BUS.register(new ToolUnbreaker());
-
-		if(Loader.isModLoaded("NotEnoughItem"))	new NEI_JMODConfig();
-		
-		if(Loader.isModLoaded("AppleCore"))	{
-			MinecraftForge.EVENT_BUS.register(AppleCoreModifyFoodValues.getInstance());
-		}
-
-		if(Loader.isModLoaded("NotEnoughItems"))	new NEI_JMODConfig();
-
 	}
 
 	
 	public void on(FMLPostInitializationEvent event) {
 		Patcher.getInstance().patchTools();
 		Patcher.getInstance().patchArmor();
-		// Lib.patchTools();
-		// Lib.patchArmor();
 	}
 	
 	
 	public void on(FMLLoadCompleteEvent event){
-		if(Loader.isModLoaded("props"))			DecoCraftDyeFix.fix();
+		
 	}
 	
 	public void on(FMLServerStartedEvent event){}
@@ -160,12 +140,18 @@ public class JMOD implements IFMLLoadingPlugin {
 		return devversion;
 	}
 	
+	public static void addExtraClassTransforer(String classTransformer){
+		JMOD.LOG.warn("###aect" + classTransformers.size());
+		JMOD.LOG.warn("###aect" + classTransformer);
+		JMOD.classTransformers.add(classTransformer);
+		JMOD.LOG.warn("###aect" + classTransformers.size());
+	}
+	
 	@Override
 	public String[] getASMTransformerClass() {
-		return new String[] { 
-			JMODAnnotationParser.class.getName(),
-			JMODClassTransformer.class.getName()
-		};
+		JMOD.LOG.warn("###gatc" + classTransformers.size());
+		
+		return classTransformers.toArray(new String[classTransformers.size()]);
 	}
 
 	@Override
@@ -189,6 +175,8 @@ public class JMOD implements IFMLLoadingPlugin {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+
 	
 
 	

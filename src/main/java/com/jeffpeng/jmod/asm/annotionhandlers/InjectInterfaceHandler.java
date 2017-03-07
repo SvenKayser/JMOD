@@ -2,7 +2,6 @@ package com.jeffpeng.jmod.asm.annotionhandlers;
 
 import java.util.Map;
 
-import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.ClassNode;
 
 import com.jeffpeng.jmod.annotations.InjectInterface;

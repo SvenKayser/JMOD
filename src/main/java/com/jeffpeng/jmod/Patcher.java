@@ -3,7 +3,6 @@ package com.jeffpeng.jmod;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -12,7 +11,6 @@ import com.jeffpeng.jmod.util.Reflector;
 
 import cpw.mods.fml.common.registry.FMLControlledNamespacedRegistry;
 import cpw.mods.fml.common.registry.GameData;
-import fi.dy.masa.enderutilities.item.tool.ItemEnderTool;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemAxe;
@@ -102,33 +100,24 @@ public class Patcher {
 	 * Updates the Item to use a Tool Material.
 	 */
 	private BiConsumer<Item, ToolMaterial> updateToolMaterial = (item, toolmat) -> {
-		// Update the tool material
+		if(JMODPlugin.updateToolMaterialCycle(item,toolmat)) return;
 		if (item instanceof ItemTool) {
-			if(item.getClass().getCanonicalName().contains("fi.dy.masa.enderutilities")){
-				Reflector endertoolreflector = new Reflector(item, ItemEnderTool.class);
-				endertoolreflector.set("material", toolmat).set("field_77865_bY",toolmat.getDamageVsEntity()+2F).set("field_77864_a", toolmat.getEfficiencyOnProperMaterial());
-				
-			} else {
-				item.setMaxDamage(toolmat.getMaxUses());
-				
-				Reflector itemreflector = new Reflector(item, ItemTool.class);
-				Float damagemodifier = 0F;
-				if (item instanceof ItemAxe)
-					damagemodifier = 3F;
-				if (item instanceof ItemPickaxe) {
-					damagemodifier = 2F;
-					item.setHarvestLevel("pickaxe", toolmat.getHarvestLevel());
-				}
-				if (item instanceof ItemSpade) {
-					damagemodifier = 1F;
-					item.setHarvestLevel("shovel", toolmat.getHarvestLevel());
-				}
-				
-				itemreflector.set(3, toolmat).set(2, toolmat.getDamageVsEntity() + damagemodifier)
-						.set(1, toolmat.getEfficiencyOnProperMaterial());
-				
+			item.setMaxDamage(toolmat.getMaxUses());
+			Reflector itemreflector = new Reflector(item, ItemTool.class);
+			Float damagemodifier = 0F;
+			if (item instanceof ItemAxe)
+				damagemodifier = 3F;
+			if (item instanceof ItemPickaxe) {
+				damagemodifier = 2F;
+				item.setHarvestLevel("pickaxe", toolmat.getHarvestLevel());
 			}
-
+			if (item instanceof ItemSpade) {
+				damagemodifier = 1F;
+				item.setHarvestLevel("shovel", toolmat.getHarvestLevel());
+			}
+			
+			itemreflector.set(3, toolmat).set(2, toolmat.getDamageVsEntity() + damagemodifier)
+					.set(1, toolmat.getEfficiencyOnProperMaterial());
 		}
 		if (item instanceof ItemHoe) {
 			new Reflector(item, ItemHoe.class).set(0, toolmat);
@@ -136,11 +125,7 @@ public class Patcher {
 		if (item instanceof ItemSword) {
 			new Reflector(item, ItemSword.class).set(1, toolmat).set(0, toolmat.getDamageVsEntity() + 4F);
 		}
-		
-		// if (item instanceof ItemShears) {
-		// }
 
-		// Update the max damage
 		if (item.getMaxDamage() > 0)
 			item.setMaxDamage(toolmat.getMaxUses());
 		

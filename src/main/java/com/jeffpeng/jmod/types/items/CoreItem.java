@@ -1,9 +1,10 @@
 package com.jeffpeng.jmod.types.items;
 
+import java.util.Map;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
-import com.jeffpeng.jmod.Config;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.interfaces.IItem;
 
@@ -12,7 +13,7 @@ public class CoreItem extends Item implements IItem {
 	public CreativeTabs creativetab;
 	private String internalName;
 	protected JMODRepresentation owner;
-	protected Config config;
+	protected Map<String,Object> config;
 	
 	public CoreItem(JMODRepresentation owner){
 		this.owner = owner;

@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import javax.script.Bindings;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -134,6 +133,7 @@ public class LoaderUtil {
 				plugininfo.credits = (String) configdata.get("credits");
 				plugininfo.description = (String) configdata.get("description");
 				plugininfo.url = (String) configdata.get("url");
+				plugininfo.archivebase = (String) configdata.get("archivebase");
 				
 				
 				
@@ -141,6 +141,14 @@ public class LoaderUtil {
 					plugininfo.scriptingobjects = (Map<String,Object>) configdata.get("scriptingobjects");
 				} else {
 					plugininfo.scriptingobjects = null;
+				}
+				
+				JMOD.LOG.info("###classtransformers" + (configdata.get("classtransformers") instanceof List));
+				
+				if(configdata.get("classtransformers") != null && configdata.get("classtransformers") instanceof List){
+					plugininfo.classtransformers = (List<String>) configdata.get("classtransformers");
+				} else {
+					plugininfo.classtransformers = null;
 				}
 				
 				if(configdata.get("authors") != null && configdata.get("authors") instanceof List){
@@ -160,18 +168,26 @@ public class LoaderUtil {
 	
 	public static boolean pluginInfoDataSanity(JMODPluginInfo info,String entry){
 		if(info.pluginid == null){
-			JMOD.LOG.warn("[JMODLoader] The plugin " + entry + " has no modid. That won't work. This is an error of the mod author. Skipping.");
+			JMOD.LOG.warn("[JMODLoader Plugins] The plugin " + entry + " has no modid. That won't work. This is an error of the mod author. Skipping.");
+			return false;
+		}
+		
+		if(info.archivebase == null){
+			JMOD.LOG.warn("[JMODLoader Plugins] The plugin " + entry + " has no archivebase. That won't work. This is an error of the mod author. Skipping.");
 			return false;
 		}
 		
 		if(info.name == null){
-			JMOD.LOG.warn("[JMODLoader] The plugin" + info.pluginid + " has no name. Assuming it's the same as the plugin id. It's ugly tho. This is an error of the mod author.");
+			JMOD.LOG.warn("[JMODLoader Plugins] The plugin" + info.pluginid + " has no name. Assuming it's the same as the plugin id. It's ugly tho. This is an error of the mod author.");
 			info.name = info.pluginid;
 		}
 		
 		if(info.version == null){
-			JMOD.LOG.warn("[JMODLoader] The plugin " + info.name + " has no version. Assuming \"v1\". This should be fixed. This is an error of the mod author.");
+			JMOD.LOG.warn("[JMODLoader Plugins] The plugin " + info.name + " has no version. Assuming \"v1\". This should be fixed. This is an error of the mod author.");
 		}
+		
+		
+		
 		return true;
 		
 	}

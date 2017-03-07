@@ -46,7 +46,10 @@ public class AddItem extends BasicAction{
 		if(JMOD.isDevVersion()) log.info("Creating item creation for " + getString("name"));
 		try {
 			Class<?> clazz;
-
+			
+			if(refClass.startsWith(".")){
+				clazz = Class.forName(JMOD.ARCHIVEBASE+refClass);
+			} else
 			if (refClass.contains(".")) {
 				clazz = Class.forName(refClass);
 			} else {

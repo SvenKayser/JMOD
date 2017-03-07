@@ -9,7 +9,11 @@ alpha1.3.1
 - Introduction of ISettingsReceiver and ISettingsProcessor, part of the syntax rewrite
 - Fixed the Anvil handler AGAIN [Issue #41](https://github.com/SvenKayser/JMOD/issues/41)
 - Implemented Plugin System (WIP)
-- Started singeling out mod related code into modules
+- Started singeling out mod related code into plugins
+- Implemented ASM Transformer loading from plugins
+- revamped internal mod configuration (to allow plugins to add their own config)
+- Implemented several hooks into plugins to perform specific actions (like patch tools, determine the repair value of a tool, etc) on their own merit
+- JMOD is now DEPENDENCY FREE (but the plugins ofc are not)
 
 
 beta1.2.1 (no release)

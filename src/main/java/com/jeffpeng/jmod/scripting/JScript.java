@@ -7,32 +7,24 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.script.Bindings;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import net.minecraft.block.material.Material;
-import jdk.nashorn.api.scripting.JSObject;
-import jdk.nashorn.api.scripting.ScriptObjectMirror;
-
-import com.jeffpeng.jmod.Config;
 import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.JMODContainer;
 import com.jeffpeng.jmod.JMODRepresentation;
-import com.jeffpeng.jmod.Lib;
 import com.jeffpeng.jmod.primitives.ModScriptObject;
-import com.jeffpeng.jmod.types.blocks.CoreBlock;
 import com.jeffpeng.jmod.util.LoaderUtil;
 
 public class JScript {
-	private static Map<String,String> extraScriptingObjects = new HashMap<>(); 
+	private static Map<String,String> extraScriptingObjects = new HashMap<>();
 	private ScriptEngine jsEngine;
 	
 	private JMODRepresentation jmod;
-	private Config config;
+	private Map<String, Object> config;
 	
 	public void evalScript(String script){
 		boolean retry = true;
@@ -175,6 +167,8 @@ public class JScript {
 	public static void addExtraScriptingObject(String scriptObjectName, String className){
 		extraScriptingObjects.put(scriptObjectName, className);
 	}
+	
+	
 	
 	
 	

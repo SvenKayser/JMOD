@@ -5,7 +5,6 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.ClassNode;
 
-import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.interfaces.IAnnotationHandler;
 
 import net.minecraft.launchwrapper.IClassTransformer;

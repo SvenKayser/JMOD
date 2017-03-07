@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
+
 import org.apache.logging.log4j.Logger;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -16,7 +18,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
@@ -32,22 +33,17 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
-import team.chisel.init.ChiselItems;
-import team.chisel.item.chisel.ItemChisel;
 
-import com.cricketcraft.chisel.api.IChiselItem;
+import com.jeffpeng.jmod.descriptors.ItemStackSubstituteDescriptor;
 import com.jeffpeng.jmod.primitives.OwnedObject;
 import com.jeffpeng.jmod.registry.BlockMaterialRegistry;
-import com.jeffpeng.jmod.types.items.ToolChisel;
 import com.jeffpeng.jmod.util.Reflector;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.FMLControlledNamespacedRegistry;
 import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.common.registry.GameRegistry;
-import fi.dy.masa.enderutilities.item.tool.ItemEnderSword;
-import fi.dy.masa.enderutilities.item.tool.ItemEnderTool;
-import fi.dy.masa.enderutilities.item.tool.ItemEnderTool.ToolType;
+
 
 public class Lib extends OwnedObject {
 	
@@ -75,8 +71,9 @@ public class Lib extends OwnedObject {
 		return rand <= percentage;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void checkDependencies(){
-		for(Map.Entry<String,String> entry : config.moddependencies.entrySet()){
+		for(Map.Entry<String,String> entry : ((Map<String,String>) config.get("moddependencies")).entrySet()){
 			if(!Loader.isModLoaded(entry.getKey())){
 				String message = "The mod " + entry.getValue() + " is missing!\n\n" + owner.getModName() + " is not supposed to run without it. We strongly recommend installing it.\n\nIf you do not, these possible problems are all yours to keep:\n\n- Broken progression\n- Missing blocks and items\n- Ruined game experience\n- Horrible crashes of doom\n- Feeling miserable\n\nWe will not care, and will not help, but keep bugging you with this window.";
 				if(!JMOD.isServer()){
@@ -220,24 +217,25 @@ public class Lib extends OwnedObject {
 	}
 	
 	public static String substituteItemStackName(String name, JMODRepresentation jmod) {
-		Config config = jmod.getConfig();
+		@SuppressWarnings("unchecked")
+		List<ItemStackSubstituteDescriptor> iss = (ArrayList<ItemStackSubstituteDescriptor>)jmod.getConfig().get("itemstacksubstitutes");
 		Logger log = jmod.getLogger();
 		boolean changed = true;
 		String toSub = name;
 		int iterations = 0;
 		int i;
-		if(config.itemstacksubstitutes.size() > 0) while(changed){
+		if(iss.size() > 0) while(changed){
 			changed = false;
-			for(i = 0;i<config.itemstacksubstitutes.size();i++){
+			for(i = 0;i<iss.size();i++){
 				
-				if(config.itemstacksubstitutes.get(i).source.equals(toSub)){
-					toSub = config.itemstacksubstitutes.get(i).target;
+				if(iss.get(i).source.equals(toSub)){
+					toSub = iss.get(i).target;
 					changed = true;
 				}
 				
 			}
 			iterations++;
-			if(iterations>config.itemstacksubstitutes.size()){
+			if(iterations>iss.size()){
 				log.warn("The substituteable itemStack " + name + " undergoes a circular chain of substitutions. This doesn't work, hence the original itemStack was returned. Please check your config!");
 				return name;
 			}
@@ -257,41 +255,30 @@ public class Lib extends OwnedObject {
 	}
 	
 	public static ItemStack getRepairItemStack(Item item){
-		ItemStack returnstack = null;
-		
+		ItemStack returnstack = JMODPlugin.getRepairItemStackCycle(item);
+		if(returnstack != null) return returnstack; else
 		if(item instanceof ItemTool) 	returnstack = ToolMaterial.valueOf(((ItemTool)item).getToolMaterialName()).getRepairItemStack(); else
-			if(item instanceof ItemHoe) 	returnstack = ToolMaterial.valueOf(((ItemHoe)item).getToolMaterialName()).getRepairItemStack(); else 
-			if(item instanceof ItemSword) returnstack = ToolMaterial.valueOf(((ItemSword)item).getToolMaterialName()).getRepairItemStack(); else
-			if(item instanceof IChiselItem) {
-				if(Loader.isModLoaded("chisel") && item instanceof ItemChisel){
-					if(item.equals(ChiselItems.chisel)) returnstack = new ItemStack(Items.iron_ingot);
-					if(item.equals(ChiselItems.diamondChisel)) returnstack = new ItemStack(Items.diamond);
-					if(item.equals(ChiselItems.obsidianChisel)) returnstack = new ItemStack(Blocks.obsidian);
-				} else {
-					if(item instanceof ToolChisel){
-						returnstack = ((ToolChisel)item).getRepairItemStack();
-					}
-				}
-			}
+		if(item instanceof ItemHoe) 	returnstack = ToolMaterial.valueOf(((ItemHoe)item).getToolMaterialName()).getRepairItemStack(); else 
+		if(item instanceof ItemSword) returnstack = ToolMaterial.valueOf(((ItemSword)item).getToolMaterialName()).getRepairItemStack(); 
 		return returnstack;
 	}
 	
 	public static Float getRepairAmount(Item item){
-		Float repairamount = 0F;
-		if(!Loader.isModLoaded("enderutilities") || !((item instanceof ItemEnderTool) || (item instanceof ItemEnderSword))){
-			if(item instanceof ItemPickaxe || item instanceof ItemAxe) repairamount = 1F/3F; else
-			if(item instanceof ItemHoe || item instanceof ItemSword) repairamount = 1F/2F; else
-			if(item instanceof ItemSpade || item instanceof IChiselItem) repairamount = 1F;
-		} else {
-			if(item instanceof ItemEnderSword) repairamount = 1F/2F; else {
-				ItemEnderTool enderTool = ((ItemEnderTool)item);
-				ToolType enderToolType = enderTool.getToolType(new ItemStack(item));
-				if(enderToolType == ToolType.PICKAXE || enderToolType == ToolType.AXE) repairamount = 1F/3F; else
-				if(enderToolType == ToolType.HOE) repairamount = 1F/2F; else
-				if(enderToolType == ToolType.SHOVEL) repairamount = 1F;
-			}
+		Float fa = JMODPlugin.getRepairAmountCycle(item);
+		if(fa!=null) return fa;
+		
+		if(item instanceof ItemPickaxe || item instanceof ItemAxe) return 1F/3F; else
+		if(item instanceof ItemHoe || item instanceof ItemSword) return 1F/2F; else
+		if(item instanceof ItemSpade) return 1F;
+		if(item instanceof ItemArmor) {
+			int armortype = ((ItemArmor) item).armorType;
+			if (armortype == 0)	return 1F / 5F;
+			if (armortype == 1) return 1F / 8F;
+			if (armortype == 2) return 1F / 7F;
+			if (armortype == 3) return 1F / 4F;
 		}
-		return repairamount;
+		
+		return 0F;
 	}
 	
 	public static boolean matchItemStacks(ItemStack is1, ItemStack is2){
@@ -515,8 +502,10 @@ public class Lib extends OwnedObject {
 		
 		
 		for (String itemname : allItems) {
-
 			Item item = gamereg.getObject(itemname);
+			if(JMODPlugin.patchToolCycle(item,itemname)) continue;
+
+			
 			if (item instanceof ItemTool || item instanceof ItemHoe || item instanceof ItemSword) {
 
 				if (item.getClass().getCanonicalName().contains("Reika.RotaryCraft")) {
@@ -545,25 +534,18 @@ public class Lib extends OwnedObject {
 				} else {
 					// Update the tool material
 					if (item instanceof ItemTool) {
-						if(item.getClass().getCanonicalName().contains("fi.dy.masa.enderutilities")){
-							Reflector endertoolreflector = new Reflector(item, ItemEnderTool.class);
-							endertoolreflector.set("material", toolmat).set("field_77865_bY",toolmat.getDamageVsEntity()+2F).set("field_77864_a", toolmat.getEfficiencyOnProperMaterial());
-							
-						} else {
-							Reflector itemreflector = new Reflector(item, ItemTool.class);
-							Float damagemodifier = 0F;
-							if (item instanceof ItemAxe)
-								damagemodifier = 3F;
-							if (item instanceof ItemPickaxe)
-								damagemodifier = 2F;
-							if (item instanceof ItemSpade)
-								damagemodifier = 1F;
-
-							itemreflector.set(3, toolmat).set(2, toolmat.getDamageVsEntity() + damagemodifier)
-									.set(1, toolmat.getEfficiencyOnProperMaterial());
-						}
 						
+						Reflector itemreflector = new Reflector(item, ItemTool.class);
+						Float damagemodifier = 0F;
+						if (item instanceof ItemAxe)
+							damagemodifier = 3F;
+						if (item instanceof ItemPickaxe)
+							damagemodifier = 2F;
+						if (item instanceof ItemSpade)
+							damagemodifier = 1F;
 
+						itemreflector.set(3, toolmat).set(2, toolmat.getDamageVsEntity() + damagemodifier)
+								.set(1, toolmat.getEfficiencyOnProperMaterial());
 					}
 					if (item instanceof ItemHoe) {
 						new Reflector(item, ItemHoe.class).set(0, toolmat);
@@ -590,8 +572,6 @@ public class Lib extends OwnedObject {
 	
 
 	// TODO: There must be a more elegant solution to this.
-
-	
 	// Side constants
 	
 	public static class SIDES{

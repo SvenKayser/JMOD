@@ -10,3 +10,21 @@
 [submodule "JMOD-RotaryCraft"]
 	path = JMOD-RotaryCraft
 	url = https://github.com/SvenKayser/JMOD-RotaryCraft
+[submodule "JMOD-Sync"]
+	path = JMOD-Sync
+	url = https://github.com/SvenKayser/JMOD-Sync
+[submodule "JMOD-VanillaIngotWorks"]
+	path = JMOD-VanillaIngotWorks
+	url = https://github.com/SvenKayser/JMOD-VanillaIngotWorks
+[submodule "JMOD-HungerOverhaul"]
+	path = JMOD-HungerOverhaul
+	url = https://github.com/SvenKayser/JMOD-HungerOverhaul.git
+[submodule "JMOD-enderutilities"]
+	path = JMOD-enderutilities
+	url = https://github.com/SvenKayser/JMOD-enderutilities.git
+[submodule "JMOD-NEI"]
+	path = JMOD-NEI
+	url = https://github.com/SvenKayser/JMOD-NEI.git
+[submodule "JMOD-Decocraft"]
+	path = JMOD-Decocraft
+	url = https://github.com/SvenKayser/JMOD-Decocraft.git

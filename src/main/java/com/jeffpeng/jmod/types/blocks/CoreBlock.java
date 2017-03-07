@@ -1,19 +1,16 @@
 package com.jeffpeng.jmod.types.blocks;
 
+import java.util.Map;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.world.IBlockAccess;
 
-import com.jeffpeng.jmod.Config;
 import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.JMODRepresentation;
-import com.jeffpeng.jmod.Lib;
-import com.jeffpeng.jmod.Lib.SIDES;
 import com.jeffpeng.jmod.interfaces.IBlock;
 import com.jeffpeng.jmod.interfaces.ISettingsProcessor;
 import com.jeffpeng.jmod.interfaces.ISettingsReceiver;
-import com.jeffpeng.jmod.primitives.BasicAction;
 import com.jeffpeng.jmod.types.blocks.placers.CoreBlockPlacer;
 
 public class CoreBlock extends Block implements IBlock, ISettingsProcessor {
@@ -22,7 +19,7 @@ public class CoreBlock extends Block implements IBlock, ISettingsProcessor {
 	private CoreBlockPlacer placer;
 	protected String internalName;
 	protected JMODRepresentation owner;
-	protected Config config; 
+	protected Map<String,Object> config; 
 	
 
 

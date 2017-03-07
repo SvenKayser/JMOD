@@ -1,11 +1,12 @@
 package com.jeffpeng.jmod.types.items;
 
+import java.util.Map;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 
-import com.jeffpeng.jmod.Config;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.descriptors.ColorDescriptor;
 import com.jeffpeng.jmod.interfaces.IArmor;
@@ -16,7 +17,7 @@ public class CoreArmor extends ItemArmor implements IArmor {
 	public CreativeTabs creativetab;
 	private String matName;
 	private String armorType;
-	private Config config;
+	private Map<String,Object> config;
 	private JMODRepresentation owner;
 	
 	
@@ -79,9 +80,10 @@ public class CoreArmor extends ItemArmor implements IArmor {
 		return true;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override 
 	public int getColor(ItemStack is){
-		ColorDescriptor armorColor = config.colors.get(matName);
+		ColorDescriptor armorColor = ((Map<String,ColorDescriptor>)config.get("colors")).get(matName);
 		int color = armorColor.red*256*256 + armorColor.green*256 + armorColor.blue;
 		return color;
 	}

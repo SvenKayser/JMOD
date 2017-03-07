@@ -1,0 +1,11 @@
+{
+  "pluginid": "chisel",
+  "archivebase": "com.jeffpeng.jmod.chisel",
+  "name": "JMOD Chisel Bindings",
+  "description" : "",
+  "version"	:	"1.3.1",
+  "authors"	: ["SvenKayser"],
+  "url" : "",
+  "credits" : "",
+  "scriptingobjects" : {"Chisel" :"Scripting"}
+}

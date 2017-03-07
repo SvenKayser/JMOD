@@ -8,7 +8,6 @@ import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.Lib;
 import com.jeffpeng.jmod.interfaces.ISettingsProcessor;
-import com.jeffpeng.jmod.interfaces.ISettingsReceiver;
 import com.jeffpeng.jmod.primitives.BasicAction;
 import com.jeffpeng.jmod.types.blocks.CoreBlock;
 
@@ -37,13 +36,8 @@ public class AddBlock extends BasicAction{
 		this.set("harvestlevel",1);
 		this.set("material","rock");
 		this.set("tab",null);
-
 		this.set("lightlevel",0);
 		this.set("opacity",null);
-		
-		
-		
-		
 		
 		this.valid = true;
 	}
@@ -57,6 +51,9 @@ public class AddBlock extends BasicAction{
 		args[1] = Material.class;
 
 		try{
+			if(refClass.startsWith(".")){
+				instance = (CoreBlock) Class.forName(JMOD.ARCHIVEBASE+refClass).getDeclaredConstructor(args).newInstance(owner,Lib.getBlockMaterial(getString("material")));
+			} else 
 			if(refClass.contains(".")){
 				instance = (CoreBlock) Class.forName(refClass).getDeclaredConstructor(args).newInstance(owner,Lib.getBlockMaterial(getString("material")));
 			} else {

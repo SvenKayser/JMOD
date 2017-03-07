@@ -7,12 +7,14 @@ public class JSFunctionWrapper {
 	
 	private Object context;
 	private Object jsfunction;
+	@SuppressWarnings("rawtypes")
 	private static Class cls;
 	private static Method m;
 	private static boolean init = false;
 	
 	
 	
+	@SuppressWarnings("unchecked")
 	public JSFunctionWrapper(Object jsfunction, Object context){
 		if(!init){
 			cls = jsfunction.getClass();

@@ -1,0 +1,11 @@
+/bin
+**/eclipse
+**/libs
+#**/gradle
+**/bin
+**/build
+.gradle
+.settings
+.metadata
+/buildlibs
+

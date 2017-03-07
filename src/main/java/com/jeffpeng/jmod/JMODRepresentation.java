@@ -1,9 +1,9 @@
 package com.jeffpeng.jmod;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-import javax.script.Bindings;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,6 +11,8 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.item.ItemBlock;
 import net.minecraftforge.common.MinecraftForge;
 
+import com.jeffpeng.jmod.actions.AddArmorMaterial;
+import com.jeffpeng.jmod.actions.AddBlockDrop;
 import com.jeffpeng.jmod.actions.AddChestLoot;
 import com.jeffpeng.jmod.actions.AddShapedRecipe;
 import com.jeffpeng.jmod.actions.AddShapelessRecipe;
@@ -22,18 +24,19 @@ import com.jeffpeng.jmod.actions.SetBlockProperties;
 import com.jeffpeng.jmod.crafting.AnvilHandler;
 import com.jeffpeng.jmod.crafting.DropHandler;
 import com.jeffpeng.jmod.crafting.ToolRepairRecipe;
+import com.jeffpeng.jmod.descriptors.ColorDescriptor;
+import com.jeffpeng.jmod.descriptors.ItemStackSubstituteDescriptor;
+import com.jeffpeng.jmod.descriptors.TooltipDescriptor;
 import com.jeffpeng.jmod.interfaces.IEventObject;
 import com.jeffpeng.jmod.interfaces.IItem;
 import com.jeffpeng.jmod.interfaces.IBlock;
 import com.jeffpeng.jmod.interfaces.IStagedObject;
 import com.jeffpeng.jmod.interfaces.IExecutableObject;
 import com.jeffpeng.jmod.primitives.JMODInfo;
-import com.jeffpeng.jmod.registry.PlayerData;
 import com.jeffpeng.jmod.scripting.JScript;
 import com.jeffpeng.jmod.tooltipper.ToolTipper;
 import com.jeffpeng.jmod.validator.Validator;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.FMLConstructionEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
@@ -46,7 +49,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 public class JMODRepresentation implements IEventObject {
 
 	private JScript script;
-	private Config config = new Config();
+	private Map<String,Object> config = new HashMap<>();
 	private Lib lib;
 	private JMODContainer container;
 
@@ -57,12 +60,40 @@ public class JMODRepresentation implements IEventObject {
 	private JMODRepresentation instance = this;
 	private boolean scriptingFinished = false;
 	private boolean scriptingErrored = false;
-	private PlayerData playerData;
-	
 	protected List<IStagedObject> stageables = new ArrayList<>();
 
+	
+	
 	public JMODRepresentation(JMODInfo modinfo) {
 		this(modinfo, false);
+	}
+	
+	private void initConfig(){
+		
+		
+		//public List<AlloyDescriptor> alloymap								= new ArrayList<>();
+
+		config.put("moddependencies", 			new HashMap<String,String>());
+		config.put("armormaterials", 			new HashMap<String,AddArmorMaterial>());
+		config.put("metalblocks", 				new ArrayList<String>());
+		config.put("metalingots", 				new ArrayList<String>());
+		config.put("itemstacksubstitutes", 		new ArrayList<ItemStackSubstituteDescriptor>());
+		config.put("colors", 					new HashMap<String,ColorDescriptor>());
+		config.put("tooltips",					new ArrayList<TooltipDescriptor>());
+		config.put("blockDrops",				new ArrayList<AddBlockDrop>());
+		config.put("enhancedAnvilRepair",		false);
+		config.put("craftigGridToolRepair",		false);
+		config.put("showToolHarvestLevels",		false);
+		config.put("showArmorValues", 			false);
+		config.put("showBlockHarvestLevels", 	false);
+		config.put("anvilRepairModifier", 		1.1F);
+		config.put("craftingGridRepairModifier",0.9F);
+		
+		for(Map.Entry<String, JMODPluginContainer> jpc : JMODLoader.getPluginList().entrySet()){
+			jpc.getValue().getInstance().initConfig(config);
+		}
+		
+		
 	}
 
 	public JMODRepresentation(JMODInfo modinfo, boolean zipmod) {
@@ -70,6 +101,7 @@ public class JMODRepresentation implements IEventObject {
 		this.modinfo = modinfo;
 		this.log = LogManager.getLogger("" + modinfo.modid);
 		this.lib = new Lib(this);
+		initConfig();
 
 	}
 
@@ -96,16 +128,17 @@ public class JMODRepresentation implements IEventObject {
 			lib.checkDependencies();
 	}
 
+	@SuppressWarnings("unchecked")
 	public void on(FMLInitializationEvent event) {
 		MinecraftForge.EVENT_BUS.register(new ToolTipper(this));
-		if (config.enhancedAnvilRepair)
+		if ((Boolean) config.get("enhancedAnvilRepair"))
 			MinecraftForge.EVENT_BUS.register(new AnvilHandler(this));
-		if (config.blockDrops.size() > 0)
+		if (((ArrayList<AddBlockDrop>) config.get("blockDrops")).size() > 0)
 			MinecraftForge.EVENT_BUS.register(new DropHandler(this));
 	}
 
 	public void on(FMLPostInitializationEvent event) {
-		if (config.craftingGridToolRepair)
+		if ((Boolean) config.get("craftingGridToolRepair"))
 			GameRegistry.addRecipe(new ToolRepairRecipe(this));
 
 	}
@@ -149,7 +182,7 @@ public class JMODRepresentation implements IEventObject {
 		return modinfo.version;
 	}
 
-	public Config getConfig() {
+	public Map<String,Object> getConfig() {
 		return config;
 	}
 

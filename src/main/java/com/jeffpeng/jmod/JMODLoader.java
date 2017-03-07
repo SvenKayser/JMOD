@@ -1,6 +1,7 @@
 package com.jeffpeng.jmod;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -10,18 +11,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.launchwrapper.LaunchClassLoader;
+
 import com.jeffpeng.jmod.primitives.JMODInfo;
-import com.jeffpeng.jmod.primitives.JMODPluginInfo;
 import com.jeffpeng.jmod.primitives.ModCreationException;
 import com.jeffpeng.jmod.scripting.JScript;
-import com.jeffpeng.jmod.util.JarLoader;
 import com.jeffpeng.jmod.util.LoaderUtil;
+import com.jeffpeng.jmod.util.Reflector;
 
 import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ModClassLoader;
+import cpw.mods.fml.relauncher.FMLLaunchHandler;
 
 public class JMODLoader {
-
+	
+	private static LaunchClassLoader lcl = (LaunchClassLoader) new Reflector((FMLLaunchHandler) new Reflector(null,FMLLaunchHandler.class).get("INSTANCE"),FMLLaunchHandler.class).get("classLoader");
+	// ^ Yes, that happened.
 	private static boolean FMLModsDiscovered = false;
 	private static List<Path> modQueue = new ArrayList<>();
 	private static List<Path> pluginQueue = new ArrayList<>();
@@ -30,6 +34,11 @@ public class JMODLoader {
 	private static List<String> modids = new ArrayList<>();
 	private static List<String> pluginids = new ArrayList<>();
 	private static Object fmllock = new Object();
+	private static Map<String,JMODPluginContainer> pluginList = new HashMap<>();
+	
+	public static Map<String,JMODPluginContainer> getPluginList(){
+		return pluginList;
+	}
 	
 	
 	public static Map<String,JMODContainer> getModList(){
@@ -71,6 +80,7 @@ public class JMODLoader {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	protected static void initPlugins(){
 		if(JMOD.DEEPFORGE != null &&JMOD.DEEPFORGE.isLocked()){
 			throw new RuntimeException("Cannot add any more plugins at this point.");
@@ -88,41 +98,53 @@ public class JMODLoader {
 			}
 			JMOD.LOG.info("loaded plugin declaration " + entry.toString());
 			
-			JMODPluginInfo configdata = LoaderUtil.parsePluginJson(rawjson);
-			if(configdata == null){
+			JMODPluginContainer newPlugin = new JMODPluginContainer();
+			newPlugin.info = LoaderUtil.parsePluginJson(rawjson);
+			if(newPlugin.info == null){
 				JMOD.LOG.warn("[JMODLoader Plugins] Failed to parse JSON from " + entry.toString() + "   Probably the JSON is malformed. This is an error of the mod's author. Skipping.");
 				continue;
 			}
 			
-			if(!LoaderUtil.pluginInfoDataSanity(configdata,entry.getFileName().toString())) continue;
+			if(!LoaderUtil.pluginInfoDataSanity(newPlugin.info,entry.getFileName().toString())) continue;
 			
-			if(pluginids.contains(configdata.pluginid)){
-				JMOD.LOG.warn("[JMODLoader Plugins] The plugin " + configdata.pluginid + " seems to be present more than once. Cannot load the same plugin twice. This is either an error of the ModPack creator or you - so fix it! Skipping.");
+			if(pluginids.contains(newPlugin.info.pluginid)){
+				JMOD.LOG.warn("[JMODLoader Plugins] The plugin " + newPlugin.info.pluginid + " seems to be present more than once. Cannot load the same plugin twice. This is either an error of the ModPack creator or you - so fix it! Skipping.");
 				continue;
 			}
 			
 			JMOD.LOG.info("sanity " + entry.toString());
-			pluginids.add(configdata.pluginid);
+			pluginids.add(newPlugin.info.pluginid);
 			
 			try {
-				((ModClassLoader) Loader.instance().getModClassLoader()).addFile(entry.toFile());
+				lcl.addURL(entry.toUri().toURL());
 			} catch (MalformedURLException e) {
 				JMOD.LOG.warn("failed to add " + entry.toString() +" to the classpath");
 				e.printStackTrace();
 				continue;
 			}
 			
-			if(configdata.scriptingobjects != null) for(Map.Entry<String, Object> soentry : ((Map<String, Object>) configdata.scriptingobjects).entrySet()){
-				JScript.addExtraScriptingObject(soentry.getKey(), (String) soentry.getValue());
+			if(newPlugin.info.scriptingobjects != null) for(Map.Entry<String, Object> soentry : ((Map<String, Object>) newPlugin.info.scriptingobjects).entrySet()){
+				JScript.addExtraScriptingObject(soentry.getKey(), newPlugin.info.archivebase + "." + (String) soentry.getValue());
 			}
 			
+			if(newPlugin.info.classtransformers != null) for(String lientry : (List<String>) newPlugin.info.classtransformers){
+				JMOD.addExtraClassTransforer(newPlugin.info.archivebase + "." + lientry);
+			}
 			
-
+			@SuppressWarnings("rawtypes")
+			Class[] args = new Class[1];
+			args[0] = JMODPluginContainer.class;
+			try {
+				newPlugin.setInstance((JMODPlugin) Class.forName(newPlugin.info.archivebase + ".Plugin").getDeclaredConstructor(args).newInstance(newPlugin));
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+					| SecurityException | ClassNotFoundException e) {
+				JMOD.LOG.info("[JMODLoader Plugins] The plugin " + newPlugin.info.pluginid + " apparently doesn't ship its own Plugin.class. That's okay, but not optimal. Going with the default.");
+				newPlugin.setInstance(new JMODPlugin(newPlugin));
+			}
 			
-			//newmod.getMod().runScripts();
+			pluginList.put(newPlugin.info.pluginid,newPlugin);
 			
 		}
-		//ProgressManager.pop(bar);
 	}
 	
 	protected static void constructMods(){
@@ -223,6 +245,10 @@ public class JMODLoader {
 		}
 	}
 	
+	public static boolean isPluginLoaded(String pluginid){
+		return pluginList.containsKey(pluginid);
+	}
+	
 	public static boolean isModLoaded(String modid){
 		if(FMLModsDiscovered)	return Loader.isModLoaded(modid);
 		
@@ -239,4 +265,5 @@ public class JMODLoader {
 		}
 		return Loader.isModLoaded(modid);
 	}
+	
 }
