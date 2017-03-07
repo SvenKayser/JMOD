@@ -25,3 +25,6 @@
 [submodule "JMOD-Chisel"]
 	path = JMOD-Chisel
 	url = https://github.com/SvenKayser/JMOD-Chisel
+[submodule "JMOD-applecore"]
+	path = JMOD-applecore
+	url = https://github.com/SvenKayser/JMOD-applecore
