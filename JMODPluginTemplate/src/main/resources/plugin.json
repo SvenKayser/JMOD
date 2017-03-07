@@ -1,0 +1,11 @@
+{
+  "pluginid": "--pluginidhere--",
+  "archivebase": "com.jeffpeng.jmod.--pluginidhere--",
+  "name": "JMOD --Plugin--",
+  "description" : "",
+  "version"	:	"--Pluginversion--",
+  "authors"	: [],
+  "url" : "",
+  "credits" : "",
+  "scriptingobjects" : {}
+}
