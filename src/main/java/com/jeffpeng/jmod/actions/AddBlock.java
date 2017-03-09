@@ -3,6 +3,7 @@ package com.jeffpeng.jmod.actions;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemStack;
 
 import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.JMODRepresentation;
@@ -74,6 +75,8 @@ public class AddBlock extends BasicAction{
 			if(instance instanceof ISettingsProcessor)
 			{
 				((ISettingsProcessor)instance).processSettings(this);
+			} else {
+				if(this.hasSetting("burntime")) owner.fuelHandler.setBurnTime(new ItemStack(instance), this.getInt("burntime"));
 			}
 			
 			

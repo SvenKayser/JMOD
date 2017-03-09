@@ -2,6 +2,7 @@ package com.jeffpeng.jmod.actions;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 import org.apache.logging.log4j.Level;
 
@@ -116,6 +117,8 @@ public class AddItem extends BasicAction{
 			if(instance instanceof ISettingsProcessor)
 			{
 				((ISettingsProcessor)instance).processSettings(this);
+			} else {
+				if(this.hasSetting("burntime")) owner.fuelHandler.setBurnTime(new ItemStack((Item)instance), this.getInt("burntime"));
 			}
 			
 			

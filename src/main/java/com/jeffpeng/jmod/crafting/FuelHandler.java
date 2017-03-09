@@ -38,13 +38,15 @@ public class FuelHandler implements IFuelHandler {
 		Block block = Block.getBlockFromItem(item);
 		
 		if(block != null && block instanceof IFurnaceFuel){
-			return ((CoreBlock)block).getBurnTime();
+			return ((IFurnaceFuel)block).getBurnTime();
 		}
 		
 		if(item instanceof IFurnaceFuel){
 			return ((IItem)item).getBurnTime();
 		} else {
-			return fuelList.get(Item.getIdFromItem(item));
+			int id = Item.getIdFromItem(item);
+			if(fuelList.containsKey(id)) return fuelList.get(id);
+			else return 0;
 		}
 	}
 }
