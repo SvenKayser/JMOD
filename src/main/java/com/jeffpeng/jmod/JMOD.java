@@ -21,6 +21,7 @@ import com.jeffpeng.jmod.interfaces.IAnnotationHandler;
 import com.jeffpeng.jmod.primitives.ModScriptObject;
 import com.jeffpeng.jmod.registry.BlockMaterialRegistry;
 import com.jeffpeng.jmod.util.ForgeDeepInterface;
+import com.jeffpeng.jmod.util.ModId;
 
 import cpw.mods.fml.common.ProgressManager;
 import cpw.mods.fml.common.ProgressManager.ProgressBar;
@@ -78,15 +79,19 @@ public class JMOD implements IFMLLoadingPlugin {
 		JMODLoader.initPlugins();
 	}
 	
+	public void forgeLoaderHook(){
+		
+	}
+	
 	public void on(FMLConstructionEvent event) {
 		if(event.getSide().isServer()) isServer = true;
 		BlacklistCraftingResults.init();
 		BlacklistCraftingResults.getInstance().blacklistDomain("RotaryCraft");
 		DEEPFORGE = new ForgeDeepInterface();
-//		JMODLoader.loadPluginsIntoClassPath();
 		JMODLoader.constructMods();
 		JMODLoader.inject();
 		JMODLoader.runScripts();
+		ModId.init();
 
 		ProgressBar bar = ProgressManager.push("Initializing JMODs", JMODLoader.getModList().size());
 		for(Map.Entry<String,JMODContainer> entry : JMODLoader.getModList().entrySet()){

@@ -6,7 +6,7 @@ import net.minecraft.world.IBlockAccess;
 import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.Lib.SIDES;
-import com.jeffpeng.jmod.interfaces.ISettingsReceiver;
+import com.jeffpeng.jmod.primitives.BasicAction;
 
 
 public class DynamicBlock extends CoreBlock{
@@ -44,7 +44,7 @@ public class DynamicBlock extends CoreBlock{
 	}
 
 	@Override
-	public void processSettings(ISettingsReceiver settings) {
+	public void processSettings(BasicAction settings) {
 		if(settings.hasSetting("power"))		this.power	 = settings.getInt("power") & 15;
 		if(settings.hasSetting("powered"))		this.powered = settings.getBoolean("powered");
 		if(settings.hasSetting("poweredsides"))	this.poweredSides = settings.getInt("poweredsides");

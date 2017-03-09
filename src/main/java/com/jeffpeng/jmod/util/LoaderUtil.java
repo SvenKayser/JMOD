@@ -143,8 +143,6 @@ public class LoaderUtil {
 					plugininfo.scriptingobjects = null;
 				}
 				
-				JMOD.LOG.info("###classtransformers" + (configdata.get("classtransformers") instanceof List));
-				
 				if(configdata.get("classtransformers") != null && configdata.get("classtransformers") instanceof List){
 					plugininfo.classtransformers = (List<String>) configdata.get("classtransformers");
 				} else {

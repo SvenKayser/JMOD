@@ -187,4 +187,12 @@ public class CoreFluidBlock extends BlockFluidClassic implements IBlock {
 			((EntityLivingBase)entity).addPotionEffect(new PotionEffect(BuffRegistry.getBuff("poison").id,10*20,1));
 		}
 	}
+
+	@Override
+	public int getBurnTime() {
+		return 0;
+	}
+
+	@Override
+	public void setBurnTime(int burntime) {}
 }

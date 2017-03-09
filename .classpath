@@ -66,6 +66,6 @@
 	<classpathentry exported="true" kind="lib" path="/home/sven/.gradle/caches/modules-2/files-2.1/org.lwjgl.lwjgl/lwjgl-platform/2.9.1/aa9aae879af8eb378e22cfc64db56ec2ca9a44d1/lwjgl-platform-2.9.1-natives-linux.jar"/>
 	<classpathentry exported="true" kind="lib" path="/home/sven/.gradle/caches/modules-2/files-2.1/org.lwjgl.lwjgl/lwjgl-platform/2.9.1/2d12c83fdfbc04ecabf02c7bc8cc54d034f0daac/lwjgl-platform-2.9.1-natives-osx.jar"/>
 	<classpathentry exported="true" kind="lib" path="/home/sven/.gradle/caches/minecraft/net/minecraftforge/forge/1.7.10-10.13.4.1558-1.7.10/start"/>
-	<classpathentry kind="lib" path="/home/sven/mcdev/JMOD/build/dirtyArtifacts/forgeBin-1.7.10-10.13.4.1558-1.7.10.jar" sourcepath="/home/sven/mcdev/simods/si.core/build/dirtyArtifacts/forgeSrc-1.7.10-10.13.4.1558-1.7.10-sources.jar"/>
+	<classpathentry kind="lib" path="build/dirtyArtifacts/forgeBin-1.7.10-10.13.4.1558-1.7.10.jar" sourcepath="build/dirtyArtifacts/forgeSrc-1.7.10-10.13.4.1558-1.7.10-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

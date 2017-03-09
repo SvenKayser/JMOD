@@ -10,7 +10,7 @@ import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.interfaces.IBlock;
 import com.jeffpeng.jmod.interfaces.ISettingsProcessor;
-import com.jeffpeng.jmod.interfaces.ISettingsReceiver;
+import com.jeffpeng.jmod.primitives.BasicAction;
 import com.jeffpeng.jmod.types.blocks.placers.CoreBlockPlacer;
 
 public class CoreBlock extends Block implements IBlock, ISettingsProcessor {
@@ -19,7 +19,9 @@ public class CoreBlock extends Block implements IBlock, ISettingsProcessor {
 	private CoreBlockPlacer placer;
 	protected String internalName;
 	protected JMODRepresentation owner;
-	protected Map<String,Object> config; 
+	protected Map<String,Object> config;
+	private int burnTime = 0; 
+	
 	
 
 
@@ -60,6 +62,14 @@ public class CoreBlock extends Block implements IBlock, ISettingsProcessor {
 		return false;
 	}
 	
+	public int getBurnTime(){
+		return burnTime;
+	}
+	
+	public void setBurnTime(int bt){
+		this.burnTime = bt;
+	}
+	
 	
     @Override
     public boolean renderAsNormalBlock()    {        return false;    }
@@ -80,9 +90,12 @@ public class CoreBlock extends Block implements IBlock, ISettingsProcessor {
 	}
 
 	@Override
-	public void processSettings(ISettingsReceiver settings) {
+	public void processSettings(BasicAction settings) {
+		if(settings.hasSetting("burntime"))		this.burnTime	 = settings.getInt("burntime") & 15;
 		
 	}
+
+
 	
 	
 	

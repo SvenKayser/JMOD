@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.descriptors.ColorDescriptor;
 import com.jeffpeng.jmod.interfaces.IArmor;
+import com.jeffpeng.jmod.primitives.BasicAction;
 
 public class CoreArmor extends ItemArmor implements IArmor {
 	
@@ -19,6 +20,7 @@ public class CoreArmor extends ItemArmor implements IArmor {
 	private String armorType;
 	private Map<String,Object> config;
 	private JMODRepresentation owner;
+	private int burnTime = 0;
 	
 	
 	public CoreArmor(JMODRepresentation owner, String mat,String armorType){
@@ -97,6 +99,22 @@ public class CoreArmor extends ItemArmor implements IArmor {
 	@Override
 	public JMODRepresentation getOwner() {
 		return owner;
+	}
+
+	@Override
+	public void processSettings(BasicAction settings) {
+		if(settings.hasSetting("burntime"))		this.burnTime	 = settings.getInt("burntime") & 15;
+		
+	}
+	
+	@Override 
+	public int getBurnTime(){
+		return this.burnTime;
+	}
+	
+	@Override
+	public void setBurnTime(int bt){
+		this.burnTime = bt;
 	}
 
 }

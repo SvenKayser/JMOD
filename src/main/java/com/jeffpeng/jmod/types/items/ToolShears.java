@@ -3,6 +3,7 @@ package com.jeffpeng.jmod.types.items;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.interfaces.IItem;
 import com.jeffpeng.jmod.interfaces.ITool;
+import com.jeffpeng.jmod.primitives.BasicAction;
 import com.jeffpeng.jmod.descriptors.ToolDataDescriptor;
 
 import net.minecraft.creativetab.CreativeTabs;
@@ -14,6 +15,7 @@ public class ToolShears extends ItemShears implements ITool, IItem{
 	private String internalName;
 	private JMODRepresentation owner;
 	private ToolMaterial toolMat;
+	private int burnTime = 0;
 
 	public ToolShears(JMODRepresentation owner,ToolDataDescriptor desc) {
 		toolMat = ToolMaterial.valueOf(desc.toolmat);
@@ -38,6 +40,17 @@ public class ToolShears extends ItemShears implements ITool, IItem{
 	}
 	
 	@Override
+	public void processSettings(BasicAction settings) {
+		if(settings.hasSetting("burntime"))		this.burnTime	 = settings.getInt("burntime") & 15;
+		
+	}
+	
+	@Override 
+	public int getBurnTime(){
+		return this.burnTime;
+	}
+	
+	@Override
     public int getItemEnchantability()
     {
         return this.toolMat.getEnchantability();
@@ -51,5 +64,10 @@ public class ToolShears extends ItemShears implements ITool, IItem{
 	@Override
 	public String getName() {
 		return this.internalName;
+	}
+	
+	@Override
+	public void setBurnTime(int bt){
+		this.burnTime = bt;
 	}
 }

@@ -16,6 +16,7 @@ import com.jeffpeng.jmod.Lib;
 import com.jeffpeng.jmod.descriptors.BuffDescriptor;
 import com.jeffpeng.jmod.descriptors.FoodDataDescriptor;
 import com.jeffpeng.jmod.interfaces.IItem;
+import com.jeffpeng.jmod.primitives.BasicAction;
 
 public class CoreFood extends ItemFood implements IItem {
 	
@@ -23,6 +24,7 @@ public class CoreFood extends ItemFood implements IItem {
 	private String internalName;
 	protected List<BuffDescriptor> buffs = new ArrayList<>();
 	private JMODRepresentation owner;
+	private int burnTime = 0;
 
 	public CoreFood(JMODRepresentation owner, FoodDataDescriptor desc) {
 		super(desc.hunger, desc.saturation, desc.wolffood);
@@ -60,6 +62,22 @@ public class CoreFood extends ItemFood implements IItem {
 	@Override
 	public JMODRepresentation getOwner() {
 		return owner;
+	}
+	
+	@Override
+	public void processSettings(BasicAction settings) {
+		if(settings.hasSetting("burntime"))		this.burnTime	 = settings.getInt("burntime") & 15;
+		
+	}
+	
+	@Override 
+	public int getBurnTime(){
+		return this.burnTime;
+	}
+	
+	@Override
+	public void setBurnTime(int bt){
+		this.burnTime = bt;
 	}
 
 }

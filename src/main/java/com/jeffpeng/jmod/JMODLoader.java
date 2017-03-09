@@ -211,6 +211,7 @@ public class JMODLoader {
 	
 	protected static void runScripts(){
 		for(Map.Entry<String,JMODContainer> entry : modList.entrySet()){
+			JMOD.LOG.info("'###rsc " + entry.getValue().getModId());
 			entry.getValue().getMod().runScripts();
 		}
 	}

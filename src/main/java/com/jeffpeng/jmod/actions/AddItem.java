@@ -15,6 +15,7 @@ import com.jeffpeng.jmod.descriptors.ToolDataDescriptor;
 import com.jeffpeng.jmod.interfaces.IArmor;
 import com.jeffpeng.jmod.interfaces.IItem;
 import com.jeffpeng.jmod.interfaces.IItemColor;
+import com.jeffpeng.jmod.interfaces.ISettingsProcessor;
 import com.jeffpeng.jmod.interfaces.ITool;
 import com.jeffpeng.jmod.primitives.BasicAction;
 import com.jeffpeng.jmod.types.items.CoreFood;
@@ -111,6 +112,11 @@ public class AddItem extends BasicAction{
 			
 			((Item) instance).setTextureName(instance.getPrefix() + ":" + getString("name"));
 			((Item) instance).setMaxStackSize(getInt("stacksize"));
+			
+			if(instance instanceof ISettingsProcessor)
+			{
+				((ISettingsProcessor)instance).processSettings(this);
+			}
 			
 			
 		} catch (Exception e) {

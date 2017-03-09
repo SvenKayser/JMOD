@@ -71,18 +71,31 @@ public class Lib extends OwnedObject {
 		return rand <= percentage;
 	}
 	
+	public void displayWarningMessage(String title, String message){
+		if(!JMOD.isServer()){
+			JFrame frame = new JFrame();
+			JOptionPane.showMessageDialog(frame, message,title,JOptionPane.WARNING_MESSAGE);
+			
+		}
+		log.warn(message);
+	}
+	
+	public void displayErrorMessage(String title, String message){
+		if(!JMOD.isServer()){
+			JFrame frame = new JFrame();
+			JOptionPane.showMessageDialog(frame, message,title,JOptionPane.ERROR_MESSAGE);
+		}
+		log.error(message);
+		throw new RuntimeException(message);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public void checkDependencies(){
 		for(Map.Entry<String,String> entry : ((Map<String,String>) config.get("moddependencies")).entrySet()){
 			if(!Loader.isModLoaded(entry.getKey())){
 				String message = "The mod " + entry.getValue() + " is missing!\n\n" + owner.getModName() + " is not supposed to run without it. We strongly recommend installing it.\n\nIf you do not, these possible problems are all yours to keep:\n\n- Broken progression\n- Missing blocks and items\n- Ruined game experience\n- Horrible crashes of doom\n- Feeling miserable\n\nWe will not care, and will not help, but keep bugging you with this window.";
-				if(!JMOD.isServer()){
-					JFrame frame = new JFrame();
-					JOptionPane.showMessageDialog(frame, message,"The mod " + entry.getValue() + " is missing!",JOptionPane.WARNING_MESSAGE);
-				}
-				
-				log.warn(message);
-				
+				String title = "The mod " + entry.getValue() + " is missing!";
+				displayWarningMessage(title,message);
 			}
 		}
 	}

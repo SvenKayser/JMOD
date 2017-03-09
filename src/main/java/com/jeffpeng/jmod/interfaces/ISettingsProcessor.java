@@ -1,7 +1,11 @@
 package com.jeffpeng.jmod.interfaces;
 
+import com.jeffpeng.jmod.primitives.BasicAction;
+
 public interface ISettingsProcessor {
 	
-	public abstract void processSettings(ISettingsReceiver settings );
+	default public void processSettings(BasicAction settings ){
+	};
+	//public abstract void processSetting(String k, Object v);
 
 }

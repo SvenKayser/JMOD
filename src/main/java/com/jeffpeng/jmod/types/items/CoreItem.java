@@ -7,6 +7,7 @@ import net.minecraft.item.Item;
 
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.interfaces.IItem;
+import com.jeffpeng.jmod.primitives.BasicAction;
 
 public class CoreItem extends Item implements IItem {
 	
@@ -14,6 +15,7 @@ public class CoreItem extends Item implements IItem {
 	private String internalName;
 	protected JMODRepresentation owner;
 	protected Map<String,Object> config;
+	private int burnTime = 0;
 	
 	public CoreItem(JMODRepresentation owner){
 		this.owner = owner;
@@ -43,6 +45,22 @@ public class CoreItem extends Item implements IItem {
 	public Item setTextureName(String texname){
 		super.setTextureName(texname);
 		return this;
+	}
+	
+	@Override
+	public void processSettings(BasicAction settings) {
+		if(settings.hasSetting("burntime"))		this.burnTime	 = settings.getInt("burntime") & 15;
+		
+	}
+	
+	@Override 
+	public int getBurnTime(){
+		return this.burnTime;
+	}
+	
+	@Override
+	public void setBurnTime(int bt){
+		this.burnTime = bt;
 	}
 
 }

@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.primitives.BasicAction;
@@ -25,6 +27,7 @@ public class SetBlockProperties extends BasicAction {
 	private Map<Integer,Integer> harvestlevel = new HashMap<>();
 	private Boolean opaque;
 	private Float lightlevel;
+	private int burnTime;
 	
 	
 	public SetBlockProperties hardness(Float hardness){
@@ -66,7 +69,11 @@ public class SetBlockProperties extends BasicAction {
 	public SetBlockProperties opaque(boolean op){
 		this.opaque = op;
 		return this;
-		
+	}
+	
+	public SetBlockProperties furnaceBurnTime(int burnTime){
+		this.burnTime = 0;
+		return this;
 	}
 	
 	public SetBlockProperties blastresistance(float blastresistance){
@@ -111,6 +118,10 @@ public class SetBlockProperties extends BasicAction {
 				if (lightlevel != null)
 				{
 					block.setLightLevel(lightlevel);
+				}
+				
+				if (burnTime != 0){
+					owner.fuelHandler.setBurnTime(new ItemStack(block), burnTime);
 				}
 
 			} else {

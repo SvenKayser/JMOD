@@ -304,6 +304,10 @@ public class ScriptObject extends OwnedObject {
 		return Validator.isValidator || JMODLoader.isModLoaded(modid);
 	}
 	
+	public  boolean isPluginLoaded(String pluginid){
+		return JMODLoader.isPluginLoaded(pluginid);
+	}
+	
 	public String getModId(){
 		return owner.getModId();
 	}
@@ -341,6 +345,14 @@ public class ScriptObject extends OwnedObject {
 	public Object invoke(Object function){
 		JSFunctionWrapper jsfw = new JSFunctionWrapper(function,this);
 		return jsfw.invoke(null);
+	}
+	
+	public void displayWarningMessage(String title, String message){
+		lib.displayWarningMessage(title, message);
+	}
+	
+	public void displayErrorMessage(String title, String message){
+		lib.displayErrorMessage(title, message);
 	}
 	
 	

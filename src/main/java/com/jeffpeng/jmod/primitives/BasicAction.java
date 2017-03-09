@@ -5,17 +5,13 @@ import java.util.Map;
 
 import javax.script.Bindings;
 
-
-
-
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.actions.SharedRoutines;
 import com.jeffpeng.jmod.interfaces.IExecutableObject;
-import com.jeffpeng.jmod.interfaces.ISettingsReceiver;
 import com.jeffpeng.jmod.interfaces.IStagedObject;
 import com.jeffpeng.jmod.validator.Validator;
 
-public class BasicAction extends OwnedObject implements IExecutableObject, ISettingsReceiver {
+public class BasicAction extends OwnedObject implements IExecutableObject {
 	
 	protected boolean valid = false;
 	protected SharedRoutines routines;
@@ -38,7 +34,6 @@ public class BasicAction extends OwnedObject implements IExecutableObject, ISett
 				
 	}
 	
-	@Override	
 	public BasicAction set(Bindings o){
 		for(String key : o.keySet()) settingObjects.put(key, o.get(key));
 		
@@ -126,9 +121,4 @@ public class BasicAction extends OwnedObject implements IExecutableObject, ISett
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
-
-
-	
-
 }

@@ -23,6 +23,7 @@ import com.jeffpeng.jmod.actions.RemoveSmeltingRecipe;
 import com.jeffpeng.jmod.actions.SetBlockProperties;
 import com.jeffpeng.jmod.crafting.AnvilHandler;
 import com.jeffpeng.jmod.crafting.DropHandler;
+import com.jeffpeng.jmod.crafting.FuelHandler;
 import com.jeffpeng.jmod.crafting.ToolRepairRecipe;
 import com.jeffpeng.jmod.descriptors.ColorDescriptor;
 import com.jeffpeng.jmod.descriptors.ItemStackSubstituteDescriptor;
@@ -61,6 +62,7 @@ public class JMODRepresentation implements IEventObject {
 	private boolean scriptingFinished = false;
 	private boolean scriptingErrored = false;
 	protected List<IStagedObject> stageables = new ArrayList<>();
+	public FuelHandler fuelHandler = new FuelHandler();
 
 	
 	
@@ -108,6 +110,7 @@ public class JMODRepresentation implements IEventObject {
 	public void runScripts() {
 		log.info("Scripts for " + this.getModId());
 		script = new JScript(instance);
+		log.info("Scripts for " + this.getModId());
 		for (String entry : modinfo.scripts) {
 			script.evalScript(entry);
 		}
@@ -126,6 +129,7 @@ public class JMODRepresentation implements IEventObject {
 	public void on(FMLPreInitializationEvent event) {
 		if (!JMOD.isDevVersion())
 			lib.checkDependencies();
+		GameRegistry.registerFuelHandler(fuelHandler);
 	}
 
 	@SuppressWarnings("unchecked")

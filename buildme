@@ -1,0 +1,5 @@
+#!/bin/sh
+rm build/libs/*
+./gradlew build
+cp build/libs/jmod-*-complete.jar ~/.minecraftdevtest/mods
+#cp ~/mcdev/Survival-Industry-dev/Documents\ and\ Notes/Resource\ Packs/Survival\ Industry ~/.minecraftdevtest/resourcepacks -R
