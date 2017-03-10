@@ -35,6 +35,7 @@ import com.jeffpeng.jmod.JMODContainer;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.primitives.JMODInfo;
 import com.jeffpeng.jmod.primitives.ModCreationException;
+import com.jeffpeng.jmod.util.JarLoader;
 import com.jeffpeng.jmod.util.LoaderUtil;
 
 public class Validator extends JPanel implements ActionListener {

@@ -68,6 +68,7 @@ public class AddShapelessRecipe extends BasicAction {
 	
 	@Override
 	public int priority(){
-		return 10;
+		return Priorities.AddShapelessRecipe;
+
 	}
 }

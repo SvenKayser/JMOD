@@ -37,7 +37,7 @@ public class RemoveSmeltingRecipe extends BasicAction {
 	
 	@Override
 	public int priority(){
-		return 20;
+		return Priorities.RemoveSmeltingRecipe;
 	}
 
 }

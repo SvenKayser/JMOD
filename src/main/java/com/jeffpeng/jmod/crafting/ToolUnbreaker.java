@@ -1,6 +1,5 @@
 package com.jeffpeng.jmod.crafting;
 
-import iguanaman.hungeroverhaul.config.IguanaConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemHoe;
@@ -11,25 +10,14 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
-
-import com.cricketcraft.chisel.api.IChiselItem;
-
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class ToolUnbreaker {
 	
-	private int hoeUseCost = 1;
+	public static int hoeUseCost = 1;
 	
-	public ToolUnbreaker(){
-		if(Loader.isModLoaded("HungerOverhaul")){
-			hoeUseCost = IguanaConfig.hoeToolDamageMultiplier;
-		}
-	}
-
+	
 	@SubscribeEvent
 	public void onItemBreak(PlayerDestroyItemEvent event){
 		
@@ -83,18 +71,7 @@ public class ToolUnbreaker {
 			}
 		}
 	}
-	@SubscribeEvent(priority=EventPriority.HIGHEST)
-	public void onUseChisel(PlayerInteractEvent event){
-		EntityPlayer player = event.entityPlayer;
-		if(player != null){
-			ItemStack equipped = player.getCurrentEquippedItem();
-			if(equipped == null) return;
-			
-			if(equipped.getItem() instanceof IChiselItem && equipped.isItemStackDamageable() && equipped.getMaxDamage() <= equipped.getItemDamage()){
-				event.setCanceled(true);
-			}
-		}
-	}
+	
 	
 	@SubscribeEvent
 	public void onAttackEntity(LivingAttackEvent event){

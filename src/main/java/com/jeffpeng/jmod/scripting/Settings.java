@@ -11,22 +11,22 @@ public class Settings extends OwnedObject {
 	}
 	
 	public void showToolHarvestLevels(boolean value){
-		config.showToolHarvestLevels = value;
+		config.put("showToolHarvestLevels",value);
 	}
 	
 	public void showArmorValues(boolean value){
-		config.showArmorValues = value;
+		config.put("showArmorValues",value);
 	}
 	
 	public void showBlockHarvestLevels(boolean value){
-		config.showBlockHarvestLevels = value;
+		config.put("showBlockHarvestLevels",value);
 	}
 	
 	public void enhancedAnvilRepair(boolean value){
-		config.enhancedAnvilRepair = value;
+		config.put("enhancedAnvilRepair",value);
 	}
 	
 	public void craftingGridToolRepair(boolean value){
-		config.craftingGridToolRepair = value;
+		config.put("craftingGridToolRepair",value);
 	}
 }

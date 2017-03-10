@@ -1,5 +1,6 @@
 package com.jeffpeng.jmod.tooltipper;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,7 +17,6 @@ import net.minecraft.item.ItemTool;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
-import com.jeffpeng.jmod.Config;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.Lib;
 import com.jeffpeng.jmod.descriptors.TooltipDescriptor;
@@ -24,11 +24,11 @@ import com.jeffpeng.jmod.util.Reflector;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
-
+@SuppressWarnings("unchecked")
 public class ToolTipper {
 	
 	private JMODRepresentation jmod;
-	private Config config;
+	private Map<String,Object> config;
 	private Lib lib;
 	
 
@@ -36,13 +36,14 @@ public class ToolTipper {
 	private Map<ItemStack, String[]> tooltips = new HashMap<ItemStack, String[]>();
 	
 
+	
 	public ToolTipper(JMODRepresentation jmod){
 		this.jmod = jmod;
 		this.config = jmod.getConfig();
 		this.lib = jmod.getLib();
 		
 		
-		for(TooltipDescriptor entry : config.tooltips){
+		for(TooltipDescriptor entry : (ArrayList<TooltipDescriptor>)config.get("tooltips")){
 			for(String target : entry.target){
 				Object is = lib.stringToItemStack(target);
 				if(is instanceof ItemStack){
@@ -68,13 +69,13 @@ public class ToolTipper {
 			}
 		}
 		
-		if(config.showArmorValues)
+		if((Boolean)config.get("showArmorValues"))
 		if(item instanceof ItemArmor){
 			event.toolTip.add(StatCollector.translateToLocal("info." + jmod.getModId() + ".armorvalue")+" " + ((ItemArmor)item).damageReduceAmount);
 		}
 		
 		
-		if(config.showToolHarvestLevels){
+		if((Boolean)config.get("showToolHarvestLevels")){
 			if(item instanceof ItemBlock){
 				try{
 					Block block = ((ItemBlock)item).field_150939_a;
@@ -135,7 +136,7 @@ public class ToolTipper {
 		}
 		
 		
-		if(config.showBlockHarvestLevels && event.itemStack.getItem() instanceof ItemBlock ){
+		if((Boolean)config.get("showBlockHarvestLevels") && event.itemStack.getItem() instanceof ItemBlock ){
 			ItemBlock itemblock = ((ItemBlock)event.itemStack.getItem());
 			try{
 				Integer hlevel = itemblock.field_150939_a.getHarvestLevel(itemblock.getDamage(event.itemStack));

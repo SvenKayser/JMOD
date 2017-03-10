@@ -8,7 +8,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 public class AddFluid extends BasicAction{
 	
-	private String fluidName;
 	private CoreFluid fluid;
 	private boolean hasBucket = false;
 	

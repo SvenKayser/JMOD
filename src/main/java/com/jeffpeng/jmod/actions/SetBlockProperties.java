@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.primitives.BasicAction;
@@ -23,11 +25,9 @@ public class SetBlockProperties extends BasicAction {
 	private Float hardness;
 	private Float blastresistance;
 	private Map<Integer,Integer> harvestlevel = new HashMap<>();
-	private String tool;
-	private Integer opacity;
-	private String sound;
-	private Float slipperiness;
-	private int lightlevel;
+	private Boolean opaque;
+	private Float lightlevel;
+	private int burnTime;
 	
 	
 	public SetBlockProperties hardness(Float hardness){
@@ -36,7 +36,6 @@ public class SetBlockProperties extends BasicAction {
 	}
 	
 	public SetBlockProperties slipperiness(Float slipperiness){
-		this.slipperiness = slipperiness;
 		return this;
 	}
 	
@@ -59,20 +58,22 @@ public class SetBlockProperties extends BasicAction {
 	}
 	
 	public SetBlockProperties tool(String tool){
-		this.tool = tool;
 		return this;
 	}
 	
 	public SetBlockProperties sound(String sound){
-		this.sound = sound;
 		return this;
 		
 	}
 	
-	public SetBlockProperties opacity(int opacity){
-		this.opacity = opacity;
+	public SetBlockProperties opaque(boolean op){
+		this.opaque = op;
 		return this;
-		
+	}
+	
+	public SetBlockProperties furnaceBurnTime(int burnTime){
+		this.burnTime = 0;
+		return this;
 	}
 	
 	public SetBlockProperties blastresistance(float blastresistance){
@@ -82,6 +83,11 @@ public class SetBlockProperties extends BasicAction {
 	
 	public SetBlockProperties br(float br){
 		return blastresistance(br);
+	}
+	
+	public SetBlockProperties lightlevel(float ll){
+		this.lightlevel = ll;
+		return this;
 	}
 	
 	public void execute(){
@@ -104,8 +110,18 @@ public class SetBlockProperties extends BasicAction {
 					block.setHardness(hardness);
 				}
 				
-				if (opacity != null){
-					block.setLightOpacity(opacity);
+				if (opaque != null){
+					block.opaque = opaque;
+					block.setLightOpacity(opaque ? 255 : 0);
+				}
+				
+				if (lightlevel != null)
+				{
+					block.setLightLevel(lightlevel);
+				}
+				
+				if (burnTime != 0){
+					owner.fuelHandler.setBurnTime(new ItemStack(block), burnTime);
 				}
 
 			} else {
