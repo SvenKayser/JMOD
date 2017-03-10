@@ -34,7 +34,7 @@ public class AddArmorMaterial extends BasicAction {
 	public int bootsfactor;
 	public String repairmaterial;
 	public ItemStack repairstack;
-	private ArmorMaterial armormat;
+	public ArmorMaterial armormat;
 	private int[] factors;
 	
 	public AddArmorMaterial(JMODRepresentation owner, String name, int reductionbase, int helmetfactor, int chestfactor,int legginsfactor,int bootsfactor,int enchantability,String repairmaterial){
