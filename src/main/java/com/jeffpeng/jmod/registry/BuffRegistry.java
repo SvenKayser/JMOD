@@ -1,12 +1,11 @@
 package com.jeffpeng.jmod.registry;
 
-import iguanaman.hungeroverhaul.HungerOverhaul;
-
 import java.util.HashMap;
 import java.util.Map;
 
-import cpw.mods.fml.common.Loader;
 import net.minecraft.potion.Potion;
+
+import com.jeffpeng.jmod.JMODPlugin;
 
 public class BuffRegistry {
 	
@@ -41,7 +40,7 @@ public class BuffRegistry {
 		buffMap.put("healthBoost", Potion.field_76434_w);
 		buffMap.put("absorption", Potion.field_76444_x);
 		buffMap.put("saturation", Potion.field_76443_y);
-		if(Loader.isModLoaded("HungerOverhaul")) buffMap.put("wellfed", HungerOverhaul.potionWellFed);
+		JMODPlugin.addBuffsCycle(buffMap);
 	}
 	
 	public void registerBuff(){

@@ -1,6 +1,5 @@
 package com.jeffpeng.jmod.types.items;
 
-import iguanaman.hungeroverhaul.config.IguanaConfig;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -72,8 +71,10 @@ public class ItemWoodenBucket extends CoreItem implements IItem {
 					if (!ep.worldObj.isRemote)
 					event.target.playSound("mob.cow.hurt",  0.4F, 0.9F);
 					return;
-				} else
-					tags.setInteger("Milked", IguanaConfig.milkedTimeout * 60);
+				} 
+					//TODO: Fix
+					//else tags.setInteger("Milked", IguanaConfig.milkedTimeout * 60);
+				
 			}
 				
 				

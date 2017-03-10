@@ -1,6 +1,8 @@
 package com.jeffpeng.jmod.crafting;
 
 
+import java.util.Map;
+
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemHoe;
@@ -10,19 +12,18 @@ import net.minecraft.item.ItemTool;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 
-import com.cricketcraft.chisel.api.IChiselItem;
-import com.jeffpeng.jmod.Config;
+import com.jeffpeng.jmod.JMODPlugin;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.Lib;
 
 public class ToolRepairRecipe implements IRecipe {
 	
-	private Config config;
+	private Map<String,Object> config;
 	public float DISCOUNT;
 	
 	public ToolRepairRecipe(JMODRepresentation jmod){
 		this.config = jmod.getConfig();
-		DISCOUNT =  config.craftingGridRepairModifier;
+		DISCOUNT =  (float)config.get("craftingGridRepairModifier");
 	}
 	
 	 
@@ -42,7 +43,7 @@ public class ToolRepairRecipe implements IRecipe {
 			if(is == null) continue;
 			Item item = is.getItem();
 			items++;
-			if(item instanceof ItemTool || item instanceof ItemHoe || item instanceof ItemSword || item instanceof IChiselItem){
+			if(item instanceof ItemTool || item instanceof ItemHoe || item instanceof ItemSword || JMODPlugin.isToolCycle(item)){
 				tools++;
 				
 				tool = is;
@@ -74,7 +75,7 @@ public class ToolRepairRecipe implements IRecipe {
 			ItemStack is = ic.getStackInSlot(c);
 			if(is == null) continue;
 			Item item = is.getItem();
-			if(item instanceof ItemTool || item instanceof ItemHoe || item instanceof ItemSword || item instanceof IChiselItem){
+			if(item instanceof ItemTool || item instanceof ItemHoe || item instanceof ItemSword || JMODPlugin.isToolCycle(item)){
 				tool = is;
 			}
 		}

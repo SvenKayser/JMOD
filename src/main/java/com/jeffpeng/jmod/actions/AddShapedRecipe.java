@@ -3,7 +3,6 @@ package com.jeffpeng.jmod.actions;
 import java.util.List;
 
 import com.jeffpeng.jmod.JMODRepresentation;
-import com.jeffpeng.jmod.API.Blacklist;
 import com.jeffpeng.jmod.crafting.BlacklistCraftingResults;
 import com.jeffpeng.jmod.crafting.StringListRecipe;
 import com.jeffpeng.jmod.primitives.BasicAction;
@@ -48,6 +47,6 @@ public class AddShapedRecipe extends BasicAction{
 	
 	@Override
 	public int priority(){
-		return 10;
+		return Priorities.AddShapedRecipe;
 	}
 }
