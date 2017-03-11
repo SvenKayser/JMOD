@@ -3,7 +3,7 @@ package com.jeffpeng.jmod.interfaces;
 import net.minecraft.item.Item;
 
 
-public interface IItem extends IOwned{
+public interface IItem extends IOwned, ISettingsProcessor, IFurnaceFuel{
 	
 	
 	
@@ -25,5 +25,4 @@ public interface IItem extends IOwned{
 	default public void setRecipes(){
 		
 	}
-
 }

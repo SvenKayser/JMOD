@@ -1,5 +1,7 @@
 package com.jeffpeng.jmod.crafting;
 
+import java.util.ArrayList;
+
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -15,18 +17,20 @@ import com.jeffpeng.jmod.primitives.OwnedObject;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
+@SuppressWarnings("unchecked")
 public class DropHandler extends OwnedObject {
 	
 	public DropHandler(JMODRepresentation jmod){
 		super(jmod);
 	}
 	
+	
 	@SubscribeEvent(priority=EventPriority.HIGH)
 	public void onBreakBlock(BreakEvent event){
 		EntityPlayer player = event.getPlayer();
 		if(player != null && player.capabilities.isCreativeMode) return;
 		
-		for(AddBlockDrop bdd : config.blockDrops){
+		for(AddBlockDrop bdd : (ArrayList<AddBlockDrop>)config.get("blockDrops")){
 			if(!bdd.isValid() || bdd.mode != "fail") continue;
 			
 			int blockmeta = event.world.getBlockMetadata(event.x, event.y, event.z);
@@ -60,7 +64,7 @@ public class DropHandler extends OwnedObject {
 		EntityPlayer player = event.harvester;
 		if(player != null && player.capabilities.isCreativeMode) return;
 		
-		for(AddBlockDrop bdd : config.blockDrops){
+		for(AddBlockDrop bdd : (ArrayList<AddBlockDrop>)config.get("blockDrops")){
 			if(!bdd.isValid() || bdd.mode == "fail") continue;
 			int blockmeta = event.blockMetadata;
 			if(Lib.chance(bdd.chance)){

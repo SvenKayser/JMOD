@@ -1,21 +1,29 @@
 package com.jeffpeng.jmod.types.blocks;
 
+import java.util.Map;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 
-import com.jeffpeng.jmod.Config;
 import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.interfaces.IBlock;
+import com.jeffpeng.jmod.interfaces.ISettingsProcessor;
+import com.jeffpeng.jmod.primitives.BasicAction;
 import com.jeffpeng.jmod.types.blocks.placers.CoreBlockPlacer;
 
-public class CoreBlock extends Block implements IBlock {
+public class CoreBlock extends Block implements IBlock, ISettingsProcessor {
+	
 
 	private CoreBlockPlacer placer;
 	protected String internalName;
 	protected JMODRepresentation owner;
-	protected Config config; 
+	protected Map<String,Object> config;
+	private int burnTime = 0; 
+	
+	
+
 
 	protected CreativeTabs creativetab = null;
 
@@ -38,6 +46,10 @@ public class CoreBlock extends Block implements IBlock {
 		this.internalName = name;
 		this.setBlockName(getPrefix() + "." + name);
 	}
+	
+	public void setOpaque(boolean b){
+		this.opaque = b;
+	}
 
 	public String getName() {
 		return this.internalName;
@@ -49,6 +61,15 @@ public class CoreBlock extends Block implements IBlock {
 		}
 		return false;
 	}
+	
+	public int getBurnTime(){
+		return burnTime;
+	}
+	
+	public void setBurnTime(int bt){
+		this.burnTime = bt;
+	}
+	
 	
     @Override
     public boolean renderAsNormalBlock()    {        return false;    }
@@ -67,6 +88,14 @@ public class CoreBlock extends Block implements IBlock {
 	public JMODRepresentation getOwner() {
 		return owner;
 	}
+
+	@Override
+	public void processSettings(BasicAction settings) {
+		if(settings.hasSetting("burntime"))		this.burnTime	 = settings.getInt("burntime") & 15;
+		
+	}
+
+
 	
 	
 	

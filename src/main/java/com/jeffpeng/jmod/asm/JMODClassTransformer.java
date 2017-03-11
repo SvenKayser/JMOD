@@ -11,16 +11,15 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.IntInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
-import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import com.jeffpeng.jmod.JMOD;
 
 public class JMODClassTransformer implements IClassTransformer{
+	
 
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] basicClass) {
@@ -32,17 +31,12 @@ public class JMODClassTransformer implements IClassTransformer{
 			return patchContainerRepair2(basicClass);
 		if (name.equalsIgnoreCase(JMODObfuscationHelper.get("net.minecraft.block.BlockSapling")))
 			return patchBlockSapling(basicClass);
-		if (name.equalsIgnoreCase("sync.common.Sync"))
-			return patchSync(basicClass);
-		if (name.equalsIgnoreCase("sync.common.Sync"))
-			return patchSync(basicClass);
 		return basicClass;
 	}
 	
 	private byte[] patchBlockSapling(byte[] basicClass){
 		JMOD.LOG.info("PatchBlockSapling");
 		AbstractInsnNode iNode;
-		String method = "updateTick";
 		ClassNode cN = new ClassNode();
 		ClassReader cR = new ClassReader(basicClass);
 		cR.accept(cN, 0);
@@ -72,6 +66,7 @@ public class JMODClassTransformer implements IClassTransformer{
 	}
 	
 	private byte[] patchModDiscoverer(byte[] basicClass) {
+		return basicClass;/*
 		JMOD.LOG.info("PatchModDiscoverer");
 		AbstractInsnNode iNode;
 		String method = "findClasspathMods";
@@ -100,7 +95,7 @@ public class JMODClassTransformer implements IClassTransformer{
 		}
 		ClassWriter cW = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
 		cN.accept(cW);
-		return cW.toByteArray();
+		return cW.toByteArray();*/
 
 	}
 	
@@ -148,40 +143,6 @@ public class JMODClassTransformer implements IClassTransformer{
 		System.out.println("[JMOD ASM] [JMODClassTransformer] This provides hooks for the JMOD Loading process.");
 		
 		return cW.toByteArray();
-	}
-	
-	
-	
-	private byte[] patchSync(byte[] basicClass){
-		/*
-		 * This patches Sync so it does not add recipes on server startup
-		 */
-		String method = "mapHardmodeRecipe";
-		ClassNode cN = new ClassNode();
-		ClassReader cR = new ClassReader(basicClass);
-		cR.accept(cN, 0);
-		Iterator<MethodNode> methods = cN.methods.iterator();
-		while(methods.hasNext()){
-			MethodNode mN = methods.next();
-			if(mN.name.equals(method)){
-				LabelNode lblnde = new LabelNode();
-				AbstractInsnNode aIN = mN.instructions.getFirst();
-				InsnList inject = new InsnList();
-				inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC,"com/jeffpeng/jmod/JMOD","getGlobalConfig","()Lcom/jeffpeng/jmod/GlobalConfig;",false));
-				inject.add(new FieldInsnNode(Opcodes.GETFIELD,"com/jeffpeng/jmod/GlobalConfig","preventSyncRecipeReload","Z"));
-				inject.add(new JumpInsnNode(Opcodes.IFEQ,  lblnde));
-				inject.add(new InsnNode(Opcodes.RETURN));
-				inject.add(lblnde);
-				mN.instructions.insertBefore(aIN, inject);
-				
-			}
-		}
-		ClassWriter cW = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
-		cN.accept(cW);
-		System.out.println("[JMOD ASM] sync.common.Sync");
-		System.out.println("[JMOD ASM] This prevents Sync from adding the recipe for Sync:Sync_ItemPlaceholder on server start.");
-		
-		return cW.toByteArray();		
 	}
 	
 	private byte[] patchContainerRepair2(byte[] basicClass){

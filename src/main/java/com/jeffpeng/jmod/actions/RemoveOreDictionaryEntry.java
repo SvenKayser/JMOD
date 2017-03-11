@@ -57,6 +57,6 @@ public class RemoveOreDictionaryEntry extends BasicAction {
 	
 	@Override
 	public int priority(){
-		return 105;
+		return Priorities.RemoveOreDictionaryEntry;
 	}
 }

@@ -1,0 +1,8 @@
+LoaderStageEvents
+	fmlPreInit
+	fmlInit
+	fmlPostInit
+	fmlLoadComplete
+	fmlServerStartedEvent
+	fmlModIdMapping
+	

@@ -2,6 +2,8 @@ package com.jeffpeng.jmod.types.blocks.placers;
 
 
 
+import java.util.ArrayList;
+
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.Lib;
 
@@ -14,9 +16,10 @@ public class MetalBlockPlacer extends CoreBlockPlacer {
 		super(owner,block);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public String getUnlocalizedName(ItemStack stack) {
 		
-		return "tile."+ owner.getModId() + "." + Lib.blockyfy(config.metalblocks.get(stack.getItemDamage()));
+		return "tile."+ owner.getModId() + "." + Lib.blockyfy(((ArrayList<String>)config.get("metalblocks")).get(stack.getItemDamage()));
 		
 	}
 	

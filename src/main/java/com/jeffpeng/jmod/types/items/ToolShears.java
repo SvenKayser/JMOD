@@ -14,6 +14,7 @@ public class ToolShears extends ItemShears implements ITool, IItem{
 	private String internalName;
 	private JMODRepresentation owner;
 	private ToolMaterial toolMat;
+	private int burnTime = 0;
 
 	public ToolShears(JMODRepresentation owner,ToolDataDescriptor desc) {
 		toolMat = ToolMaterial.valueOf(desc.toolmat);
@@ -38,10 +39,21 @@ public class ToolShears extends ItemShears implements ITool, IItem{
 	}
 	
 	@Override
-    public int getItemEnchantability()
-    {
-        return this.toolMat.getEnchantability();
-    }
+	public void processSettings(BasicAction settings) {
+		if(settings.hasSetting("burntime"))		this.burnTime	 = settings.getInt("burntime") & 15;
+		
+	}
+	
+	@Override 
+	public int getBurnTime(){
+		return this.burnTime;
+	}
+	
+	@Override
+  public int getItemEnchantability()
+  {
+    return this.toolMat.getEnchantability();
+  }
 
 	@Override
 	public JMODRepresentation getOwner() {
@@ -52,4 +64,10 @@ public class ToolShears extends ItemShears implements ITool, IItem{
 	public String getName() {
 		return this.internalName;
 	}
+	
+	@Override
+	public void setBurnTime(int bt){
+		this.burnTime = bt;
+	}
+
 }
