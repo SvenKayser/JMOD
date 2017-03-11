@@ -31,12 +31,11 @@ public class AddArmorMaterial extends BasicAction {
 	public int bootsfactor;
 	public String repairmaterial;
 	public ItemStack repairstack;
-	private ArmorMaterial armormat;
+	public ArmorMaterial armormat;
 	private int[] factors;
 	
 	public AddArmorMaterial(JMODRepresentation owner, String name, int reductionbase, int helmetfactor, int chestfactor,int legginsfactor,int bootsfactor,int enchantability,String repairmaterial){
 		super(owner);
-		list.put(name,this);
 		this.name = name;
 		this.reductionbase = reductionbase;
 		this.helmetfactor = helmetfactor;
@@ -45,6 +44,7 @@ public class AddArmorMaterial extends BasicAction {
 		this.bootsfactor = bootsfactor;
 		this.repairmaterial = repairmaterial;
 		this.valid = true;
+		list.put(name,this);
 	}
 
 	
