@@ -3,7 +3,6 @@ package com.jeffpeng.jmod.types.items;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.interfaces.IItem;
 import com.jeffpeng.jmod.interfaces.ITool;
-import com.jeffpeng.jmod.primitives.BasicAction;
 import com.jeffpeng.jmod.descriptors.ToolDataDescriptor;
 
 import net.minecraft.creativetab.CreativeTabs;
@@ -51,10 +50,10 @@ public class ToolShears extends ItemShears implements ITool, IItem{
 	}
 	
 	@Override
-    public int getItemEnchantability()
-    {
-        return this.toolMat.getEnchantability();
-    }
+  public int getItemEnchantability()
+  {
+    return this.toolMat.getEnchantability();
+  }
 
 	@Override
 	public JMODRepresentation getOwner() {
@@ -70,4 +69,5 @@ public class ToolShears extends ItemShears implements ITool, IItem{
 	public void setBurnTime(int bt){
 		this.burnTime = bt;
 	}
+
 }
