@@ -2,5 +2,5 @@
 
 cd JMOD-$1
 ./gradlew buildPlugin
-cp build/libs/*.jmodplugin ~/.minecraftdevtest/mods/jmodplugins
+cp build/libs/*.jmodplugin ../latestbuild/
 cd ..

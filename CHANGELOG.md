@@ -17,6 +17,7 @@ alpha1.3.1
 - Implemented FuelHandler for JMOD (needs some more work to compensate for MC(F)s wonky burnTime code )
 - jmods can now contain plugin code and vice versa
 - The Discoverer now also follows symbolic links. Penguins rejoice!
+- Switched json parsing (back) to GSON, now with regex based  comment stripping [Issue #38](https://github.com/SvenKayser/JMOD/issues/38)
 
 beta1.2.1 (no release)
 - Implemented proper support for ingredient based search for Shaped StringRecipes for NEI [Issue #31](https://github.com/SvenKayser/JMOD/issues/31)

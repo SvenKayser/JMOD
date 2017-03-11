@@ -106,7 +106,10 @@ public class JMODLoader {
 				continue;
 			}
 			
-			if(newPlugin.info.scriptingobjects != null) for(Map.Entry<String, Object> soentry : ((Map<String, Object>) newPlugin.info.scriptingobjects).entrySet()){
+			System.out.println("###jml " + newPlugin.info.scriptingobjects);
+			System.out.println("###jml " + newPlugin.info.scriptingobjects.getClass());
+			
+			if(newPlugin.info.scriptingobjects != null) for(Map.Entry<String, String> soentry : newPlugin.info.scriptingobjects.entrySet()){
 				JScript.addExtraScriptingObject(soentry.getKey(), newPlugin.info.archivebase + "." + (String) soentry.getValue());
 			}
 			

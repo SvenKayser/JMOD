@@ -71,6 +71,14 @@ public class LoaderUtil {
 		return rawjson;
 	}
 	
+	private static String stripComments(String rawjson){
+		System.out.println(rawjson);
+		String newjson = rawjson.replaceAll("\\/\\*.*\\*\\/",""); // strips all /* […] */
+		newjson = newjson.replaceAll("\\/\\/.*\\r", newjson); // strings all // until the end of the line
+		System.out.println(newjson);
+		return newjson;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public static JMODInfo parseModJson(String rawjson){
 		JMODInfo jmodinfo = null;
@@ -78,63 +86,33 @@ public class LoaderUtil {
 		try {
 			GsonBuilder builder = new GsonBuilder();
 			Gson gson = builder.create();
-			jmodinfo = gson.fromJson(rawjson, JMODInfo.class);
+			jmodinfo = gson.fromJson(stripComments(rawjson), JMODInfo.class);
 			
 			if(jmodinfo.authors.isEmpty()) {
 				jmodinfo.authors.add("John Doe (no author specified)");
 			}
 
 		} catch (JsonSyntaxException e){
-			JMOD.LOG.warn("[JMODLoader] Failed to parse	JSON - Message: {}, RawJson: {}", 
+			JMOD.LOG.warn("[JMODLoader parseModJson] Failed to parse JSON - Message: {}, RawJson: {}", 
 					e.getMessage(), rawjson);
 		}
 
 		return jmodinfo;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static JMODPluginInfo parsePluginJson(String rawjson){
 		JMODPluginInfo plugininfo = null;
 
-    try {
-			Object configdataraw = jsEngine.eval("Java.asJSONCompatible(" + rawjson + ")");
-			if(configdataraw instanceof Map){
-				Map<String,Object> configdata = (Map<String,Object>) configdataraw;
-				
-				plugininfo = new JMODPluginInfo();
-				
-				plugininfo.pluginid = (String) configdata.get("pluginid");
-				plugininfo.name = (String) configdata.get("name");
-				plugininfo.version = (String) configdata.get("version");
-				plugininfo.credits = (String) configdata.get("credits");
-				plugininfo.description = (String) configdata.get("description");
-				plugininfo.url = (String) configdata.get("url");
-				plugininfo.archivebase = (String) configdata.get("archivebase");
-				
-				
-				
-				if(configdata.get("scriptingobjects") != null && configdata.get("scriptingobjects") instanceof Map){
-					plugininfo.scriptingobjects = (Map<String,Object>) configdata.get("scriptingobjects");
-				} else {
-					plugininfo.scriptingobjects = null;
-				}
-				
-				if(configdata.get("classtransformers") != null && configdata.get("classtransformers") instanceof List){
-					plugininfo.classtransformers = (List<String>) configdata.get("classtransformers");
-				} else {
-					plugininfo.classtransformers = null;
-				}
-				
-				if(configdata.get("authors") != null && configdata.get("authors") instanceof List){
-					plugininfo.authors = (List<String>) configdata.get("authors");
-				} else {
-					plugininfo.authors = new ArrayList<String>();
-					plugininfo.authors.add("John Doe (no author specified)");
-				}
-				
+		try {
+			GsonBuilder builder = new GsonBuilder();
+			Gson gson = builder.create();
+			plugininfo = gson.fromJson(stripComments(rawjson), JMODPluginInfo.class);
+			if(plugininfo.authors.isEmpty()) {
+				plugininfo.authors.add("John Doe (no author specified)");
 			}
-		} catch (ScriptException e){
-			
+		} catch (JsonSyntaxException e){
+			JMOD.LOG.warn("[JMODLoader parsePluginJson] Failed to parse	JSON - Message: {}, RawJson: {}", 
+					e.getMessage(), rawjson);
 		}
 
 		return plugininfo;
