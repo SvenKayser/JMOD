@@ -27,8 +27,6 @@ public class JScript {
 	
 	public void evalScript(String script){
 		boolean retry = true;
-		JMOD.LOG.info("###evalScript " + script);
-		
 		if(JMOD.isServer()){
 			try {
 				jsEngine.eval(readScript(script));
@@ -117,18 +115,12 @@ public class JScript {
 			Class[] args = new Class[1];
 			args[0] = JMODRepresentation.class;
 			
-			for(Map.Entry<String, String> entry : extraScriptingObjects.entrySet()){
-				System.out.println("###asodry " + entry.getKey() + " " + entry.getValue());
-			}
+			
 			
 			for(Map.Entry<String, String> entry : extraScriptingObjects.entrySet()){
 				try {
-					System.out.println("###aso " + globalScope.getClass());
-					System.out.println("###aso " + entry.getKey() + " " + entry.getValue());
 					ModScriptObject	instance = (ModScriptObject) Class.forName(entry.getValue()).getDeclaredConstructor(args).newInstance(jmod);
-					System.out.println("###aso did");
 					((Map<String,Object>)globalScope).put(entry.getKey(), instance);
-					System.out.println("###aso did");
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					JMOD.LOG.warn("Failed to produce scripting object "+entry.getKey());

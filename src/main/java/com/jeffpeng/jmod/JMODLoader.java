@@ -3,6 +3,7 @@ package com.jeffpeng.jmod;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
+import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -45,39 +46,23 @@ public class JMODLoader {
 		return modList;
 	}
 	
-	protected static void discoverPlugins(){
+	protected static void discoverPluginsAndMods(){
 		if(JMOD.DEEPFORGE != null && JMOD.DEEPFORGE.isLocked()){
-			throw new RuntimeException("Cannot add any more mods at this point.");
+			throw new RuntimeException("Cannot discover any more plugins or mods at this point.");
 		}
 		try {
-			Files.walk(Paths.get(MODSDIRECTORY)).forEach(filePath -> {
-			    if(isPlugin(filePath) && !pluginQueue.contains(filePath)){
+			Files.walk(Paths.get(MODSDIRECTORY),FileVisitOption.FOLLOW_LINKS).forEach(filePath -> {
+			    if(isPluginOrMod(filePath) && !pluginQueue.contains(filePath)){
 			    	pluginQueue.add(filePath);
-			    	JMOD.LOG.info("[JMODLoader Plugins] discovered jmodplugin at " + filePath);
+			    	modQueue.add(filePath);
+			    	JMOD.LOG.info("[JMODLoader Discoverer] discovered jmod(plugin) at " + filePath);
 			    }
 			});
 		} catch (IOException e) {
-			JMOD.LOG.warn("There was a rather unexpected error while discovering plugins. Maybe you don't have rights over your mod directory?");
+			JMOD.LOG.warn("There was a rather unexpected error while discovering plugins and mods. Maybe you don't have rights over your mod directory?");
 			e.printStackTrace();
 		}
 		
-	}
-	
-	protected static void discoverMods(){
-		if(JMOD.DEEPFORGE != null && JMOD.DEEPFORGE.isLocked()){
-			throw new RuntimeException("Cannot add any more mods at this point.");
-		}
-		try {
-			Files.walk(Paths.get(MODSDIRECTORY)).forEach(filePath -> {
-			    if(isJmod(filePath) && !modQueue.contains(filePath)){
-			    	modQueue.add(filePath);
-			    	JMOD.LOG.info("[JMODLoader Mods] discovered jmod at " + filePath);
-			    }
-			});
-		} catch (IOException e) {
-			JMOD.LOG.warn("There was a rather unexpected error while discovering mods. Maybe you don't have rights over your mod directory?");
-			e.printStackTrace();
-		}
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -89,14 +74,12 @@ public class JMODLoader {
 		JMOD.LOG.info("Initializing " + pluginQueue.size() + " JMOD Plugins");
 		
 		for(Path entry : pluginQueue){
-			JMOD.LOG.info("[JMODLoader Plugins]  Initializing " + entry.toString());
-			
 			String rawjson = LoaderUtil.loadPluginJson(entry);
 			if(rawjson == null){
-				JMOD.LOG.warn("[JMODLoader Plugins] Failed to load plugin declaration from " + entry.toString() + ". This is an error of the mod's author. Skipping.");
+				JMOD.LOG.warn("[JMODLoader Plugins] Failed to load plugin declaration from " + entry.toString() + ". Probably not a plugin. Skipping.");
 				continue;
 			}
-			JMOD.LOG.info("loaded plugin declaration " + entry.toString());
+			JMOD.LOG.info("[JMODLoader Plugins] loaded plugin declaration " + entry.toString());
 			
 			JMODPluginContainer newPlugin = new JMODPluginContainer();
 			newPlugin.info = LoaderUtil.parsePluginJson(rawjson);
@@ -112,7 +95,7 @@ public class JMODLoader {
 				continue;
 			}
 			
-			JMOD.LOG.info("sanity " + entry.toString());
+			JMOD.LOG.info("[JMODLoader Plugins] " + entry.toString() + " passed sanity check.");
 			pluginids.add(newPlugin.info.pluginid);
 			
 			try {
@@ -157,15 +140,13 @@ public class JMODLoader {
 		JMOD.LOG.info("[JMODLoader Mods] Constructing " + modQueue.size() + " JMODs");
 		
 		for(Path entry : modQueue){
-			JMOD.LOG.info("Constructing " + entry.toString());
 			//bar.step(entry.getFileName().toString());
-			
 			String rawjson = LoaderUtil.loadModJson(entry);
 			if(rawjson == null){
-				JMOD.LOG.warn("[JMODLoader Mods] Failed to load mod declaration from " + entry.toString() + ". This is an error of the mod's author. Skipping.");
+				JMOD.LOG.warn("[JMODLoader Mods] Failed to load mod declaration from " + entry.toString() + ". Probably no jmod. Skipping.");
 				continue;
 			}
-			JMOD.LOG.info("loaded mod declaration " + entry.toString());
+			JMOD.LOG.info("[JMODLoader Mods] loaded mod declaration " + entry.toString());
 			
 			JMODInfo configdata = LoaderUtil.parseModJson(rawjson);
 			if(configdata == null){
@@ -181,7 +162,7 @@ public class JMODLoader {
 				continue;
 			}
 			
-			JMOD.LOG.info("sanity " + entry.toString());
+			JMOD.LOG.info("[JMODLoader Mods] " + entry.toString() + " passed sanity check.");
 			modids.add(configdata.modid);
 			
 			try {
@@ -216,15 +197,8 @@ public class JMODLoader {
 		}
 	}
 	
-	private static boolean isPlugin(Path path){
-		if(path.toString().endsWith(".jmodplugin")){
-			return true;
-		}
-		return false;
-	}
-	
-	private static boolean isJmod(Path path){
-		if(path.toString().endsWith(".jmod")){
+	private static boolean isPluginOrMod(Path path){
+		if(path.toString().endsWith(".jmodplugin") || path.toString().endsWith(".jmod")){
 			return true;
 		}
 		return false;

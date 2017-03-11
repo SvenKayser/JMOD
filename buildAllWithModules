@@ -1,5 +1,6 @@
 #!/bin/bash
 rm build/libs/*
+rm latestbuild/*
 echo "Building JMOD";
 ./gradlew build > /dev/null
 rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi
@@ -18,6 +19,5 @@ for ((i = 0; i != length; i++)); do
 	cd ..
 done
 
-cp build/libs/jmod*.jar ~/.minecraftdevtest/mods
-cp JMOD-*/build/libs/*.jmodplugin ~/.minecraftdevtest/mods/jmodplugins
-
+cp build/libs/jmod*.jar latestbuild/
+cp JMOD-*/build/libs/*.jmodplugin latestbuild/

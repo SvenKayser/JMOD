@@ -74,8 +74,7 @@ public class JMOD implements IFMLLoadingPlugin {
 		JMOD.classTransformers.add(JMODClassTransformer.class.getName());
 		
 		JMODObfuscationHelper.init();
-		JMODLoader.discoverMods();
-		JMODLoader.discoverPlugins();
+		JMODLoader.discoverPluginsAndMods();
 		JMODLoader.initPlugins();
 	}
 	

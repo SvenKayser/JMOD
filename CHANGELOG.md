@@ -15,6 +15,8 @@ alpha1.3.1
 - Implemented several hooks into plugins to perform specific actions (like patch tools, determine the repair value of a tool, etc) on their own merit
 - JMOD is now DEPENDENCY FREE (but the plugins ofc are not)
 - Implemented FuelHandler for JMOD (needs some more work to compensate for MC(F)s wonky burnTime code )
+- jmods can now contain plugin code and vice versa
+- The Discoverer now also follows symbolic links. Penguins rejoice!
 
 beta1.2.1 (no release)
 - Implemented proper support for ingredient based search for Shaped StringRecipes for NEI [Issue #31](https://github.com/SvenKayser/JMOD/issues/31)

@@ -132,7 +132,6 @@ public class JMODContainer implements ModContainer {
 
 	@Override
 	public boolean registerBus(EventBus bus, LoadController controller) {
-		JMOD.LOG.info("Injecting " + this.modId + " into the event bus");
 		this.eventBus = bus;
 		this.controller = controller;
 		eventBus.register(this);
