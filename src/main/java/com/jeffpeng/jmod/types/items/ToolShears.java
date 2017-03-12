@@ -3,6 +3,7 @@ package com.jeffpeng.jmod.types.items;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.interfaces.IItem;
 import com.jeffpeng.jmod.interfaces.ITool;
+import com.jeffpeng.jmod.primitives.BasicAction;
 import com.jeffpeng.jmod.descriptors.ToolDataDescriptor;
 
 import net.minecraft.creativetab.CreativeTabs;

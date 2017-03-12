@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd JMOD-$1
+cd plugins/JMOD-$1
 ./gradlew buildPlugin
-cp build/libs/*.jmodplugin ../latestbuild/
-cd ..
+cp build/libs/*.jmodplugin ../../latestbuild/
+cd ../..
