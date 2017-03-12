@@ -1,7 +1,5 @@
 package com.jeffpeng.jmod.interfaces;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.jeffpeng.jmod.JMOD;
@@ -15,7 +13,6 @@ import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
-import cpw.mods.fml.common.event.FMLStateEvent;
 
 @SuppressWarnings("deprecation")
 public interface IStagedObject extends Comparable<IStagedObject> {

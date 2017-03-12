@@ -45,7 +45,7 @@ public class RemoveChestLoot extends BasicAction {
 	
 	@Override
 	public int priority(){
-		return 5;
+		return Priorities.RemoveChestLoot;
 	}
 
 }

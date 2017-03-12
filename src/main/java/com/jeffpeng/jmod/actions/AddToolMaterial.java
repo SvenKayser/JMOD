@@ -37,7 +37,6 @@ public class AddToolMaterial extends BasicAction{
 	
 	public AddToolMaterial(JMODRepresentation owner, String name, int harvestLevel, int durability, float efficiency, float damage, int enchantability, String repairmaterial){
 		super(owner);
-		list.put(name,this);
 		this.name = name;
 		this.harvestLevel = harvestLevel;
 		this.durability = durability;
@@ -45,6 +44,7 @@ public class AddToolMaterial extends BasicAction{
 		this.damage = damage;
 		this.enchantability = enchantability;
 		this.repairmaterial = repairmaterial;
+		list.put(name,this);
 	}
 
 	@Override
@@ -80,6 +80,6 @@ public class AddToolMaterial extends BasicAction{
 	@Override
 	public int priority()
 	{
-		return 250;
+		return Priorities.AddToolMaterial;
 	}
 }

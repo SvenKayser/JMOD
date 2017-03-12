@@ -2,15 +2,41 @@ package com.jeffpeng.jmod.scripting;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
+import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
 
 import com.jeffpeng.jmod.JMODLoader;
 import com.jeffpeng.jmod.Lib;
-import com.jeffpeng.jmod.actions.*;
-import com.jeffpeng.jmod.descriptors.*;
+import com.jeffpeng.jmod.actions.AddArmorMaterial;
+import com.jeffpeng.jmod.actions.AddBlock;
+import com.jeffpeng.jmod.actions.AddBlockDrop;
+import com.jeffpeng.jmod.actions.AddChestLoot;
+import com.jeffpeng.jmod.actions.AddCreativeTab;
+import com.jeffpeng.jmod.actions.AddFluid;
+import com.jeffpeng.jmod.actions.AddItem;
+import com.jeffpeng.jmod.actions.AddOreDictionaryEntry;
+import com.jeffpeng.jmod.actions.AddOreGeneration;
+import com.jeffpeng.jmod.actions.AddShapedRecipe;
+import com.jeffpeng.jmod.actions.AddShapelessRecipe;
+import com.jeffpeng.jmod.actions.AddSmeltingRecipe;
+import com.jeffpeng.jmod.actions.AddStartingPlatform;
+import com.jeffpeng.jmod.actions.AddToolMaterial;
+import com.jeffpeng.jmod.actions.RemoveChestLoot;
+import com.jeffpeng.jmod.actions.RemoveOreDictionaryEntry;
+import com.jeffpeng.jmod.actions.RemoveRecipe;
+import com.jeffpeng.jmod.actions.RemoveSmeltingRecipe;
+import com.jeffpeng.jmod.actions.SetBlockProperties;
+import com.jeffpeng.jmod.descriptors.ArmorDataDescriptor;
+import com.jeffpeng.jmod.descriptors.ColorDescriptor;
+import com.jeffpeng.jmod.descriptors.FoodDataDescriptor;
+import com.jeffpeng.jmod.descriptors.ItemStackSubstituteDescriptor;
+import com.jeffpeng.jmod.descriptors.ToolDataDescriptor;
+import com.jeffpeng.jmod.descriptors.TooltipDescriptor;
 import com.jeffpeng.jmod.primitives.OwnedObject;
-import com.jeffpeng.jmod.scripting.mods.*;
+import com.jeffpeng.jmod.util.JSFunctionWrapper;
 import com.jeffpeng.jmod.validator.Validator;
-
+@SuppressWarnings("unchecked")
 public class ScriptObject extends OwnedObject {
 	
 	private JScript jscriptInstance;
@@ -22,20 +48,21 @@ public class ScriptObject extends OwnedObject {
 	
 	public Settings Settings = new Settings(owner);
 	public Global Global = new Global(owner);
-	public RotaryCraft RotaryCraft = new RotaryCraft(owner);
-	public Chisel Chisel = new Chisel(owner);
-	public Applecore Applecore = new Applecore(owner);
-	public Sync Sync = new Sync(owner);
-	public ExNihilo ExNihilo = new ExNihilo(owner);
 	
+	public World World = new World(owner);
+	public Players Players = new Players(owner);
+	public Game Game = new Game(owner);
+		
 	public void loadjs(String script){
 		jscriptInstance.evalScript(script);
+	}
+	
+	public void importJs(String script) {
 	}
 	
 	public  void log(String msg){
 		log.info(msg);
 	}
-	
 	
 	public void addShapelessRecipe(String result, Object ingredients){
 		new AddShapelessRecipe(owner,result, Lib.convertArray(ingredients,String[].class) );
@@ -53,13 +80,12 @@ public class ScriptObject extends OwnedObject {
 		new AddSmeltingRecipe(owner,result,ingredient);
 	}
 	
-	public  AddItem addItem(String name, String refClass,int stackSize,String creativeTab){
-		return new AddItem(owner, name,refClass,stackSize,creativeTab);
+	public  AddItem addItem(String refClass){
+		return new AddItem(owner, refClass);
 	}
 	
-	public  AddBlock addBlock(String name, String refClass, Float hardness, Float blastresistance,
-			String tool, int harvestlevel, String material, String tab){
-		return new AddBlock(owner,name,refClass,hardness,blastresistance,tool,harvestlevel,material,tab);
+	public  AddBlock addBlock(String refClass){
+		return new AddBlock(owner,refClass);
 	}
 	
 	public void testType(Object o){
@@ -69,11 +95,11 @@ public class ScriptObject extends OwnedObject {
 	
 	
 	public void addMetalIngot(String name){
-		config.metalingots.add(name);
+		((ArrayList<String>)config.get("metalingots")).add(name);
 	}
 	
 	public void addMetalBlock(String name){
-		config.metalblocks.add(name);
+		((ArrayList<String>)config.get("metalblocks")).add(name);
 	}
 	
 	public  AddToolMaterial addToolMaterial(String name,int harvestLevel, int durability, float efficiency, float damage, int enchantability, String repairmaterial){
@@ -92,33 +118,21 @@ public class ScriptObject extends OwnedObject {
 		new RemoveSmeltingRecipe(owner,result);
 	}
 	
-	public void hideFromNEI(String target){
-		if(owner.testForMod("NotEnoughItems")) new HideNEIItem(owner,target);
-	}
+
 	
 	public  TooltipDescriptor addToolTip(String[] target, String[] lines){
 		TooltipDescriptor newTooltip = new TooltipDescriptor(target,lines);
-		config.tooltips.add(newTooltip);
+		((ArrayList<TooltipDescriptor>)config.get("tooltips")).add(newTooltip);
 		return newTooltip;
 	}
 	
 	public  ItemStackSubstituteDescriptor itemStackSubstitute(String source, String target){
 		ItemStackSubstituteDescriptor newISD = new ItemStackSubstituteDescriptor(source,target);
-		config.itemstacksubstitutes.add(newISD);
+		((ArrayList<ItemStackSubstituteDescriptor>)config.get("itemstacksubstitutes")).add(newISD);
 		return newISD;
 	}
 	
-	public  AlloyDescriptor addAlloy(String result, String one, String two, int amount){
-		AlloyDescriptor newAD = new AlloyDescriptor(result,one,two,amount);
-		config.alloymap.add(newAD);
-		return newAD;
-	}
-	
-	public  AlloyDescriptor addAlloy(String result, String one, int amount){
-		AlloyDescriptor newAD = new AlloyDescriptor(result,one,amount);
-		config.alloymap.add(newAD);
-		return newAD;
-	}
+
 	
 	public void addOreDict(String is, String entry){
 		new AddOreDictionaryEntry(owner,is,entry);
@@ -137,12 +151,12 @@ public class ScriptObject extends OwnedObject {
 	}
 	
 	public  void dependency(String modid, String name){
-		config.moddependencies.put(modid, name);
+		((HashMap<String,String>)config.get("moddependencies")).put(modid, name);
 	}
 	
 	public  ColorDescriptor defineColor(String color, int red, int green, int blue){
 		ColorDescriptor newColor = new ColorDescriptor(red,green,blue);
-		config.colors.put(color, newColor);
+		((HashMap<String,ColorDescriptor>)config.get("colors")).put(color, newColor);
 		return newColor;
 	}
 	
@@ -164,7 +178,7 @@ public class ScriptObject extends OwnedObject {
 	
 	public AddBlockDrop addBlockDrop(String block, String itemstack, Integer chance, boolean stopeventchain, boolean playeronly){
 		AddBlockDrop newBDD = new AddBlockDrop(owner,block, itemstack,chance, stopeventchain,playeronly);
-		config.blockDrops.add(newBDD);
+		((ArrayList<AddBlockDrop>) config.get("blockDrops")).add(newBDD);
 		return newBDD;
 	}
 	
@@ -226,7 +240,14 @@ public class ScriptObject extends OwnedObject {
 			pattern.add(new String[]{null,mat,null});
 			pattern.add(new String[]{null,"stickWood",null});
 		} else
-		
+			
+		if(shape.equals("shears")){
+			pattern = new ArrayList<>();
+			pattern.add(new String[]{null, null, null});
+			pattern.add(new String[]{null, mat,  null});
+			pattern.add(new String[]{mat,  null, null});
+		} else
+			
 		if(shape.equals("hoe")){
 			pattern = new ArrayList<>();
 			pattern.add(new String[]{null,mat,mat});
@@ -279,10 +300,13 @@ public class ScriptObject extends OwnedObject {
 		return pattern;
 	}
 	
-	
-	
+
 	public  boolean isModLoaded(String modid){
 		return Validator.isValidator || JMODLoader.isModLoaded(modid);
+	}
+	
+	public  boolean isPluginLoaded(String pluginid){
+		return JMODLoader.isPluginLoaded(pluginid);
 	}
 	
 	public String getModId(){
@@ -291,6 +315,47 @@ public class ScriptObject extends OwnedObject {
 	
 	public int celcius(float c){	return Math.round(c + 273.15F);				}
 	public int fahrenheit(float f){	return Math.round((f + 459.67F) * (5/9));	}
+	
+	public ItemStack getItemStack(String id){
+		ItemStack is = lib.stringToItemStackOrFirstOreDict(id);
+		if(is == null) return null;
+		return is;
+	}
+	
+	public Block getBlock(String id){
+		ItemStack is = lib.stringToItemStackOrFirstOreDict(id);
+		if(is == null) return null;
+		Block block = Block.getBlockFromItem(is.getItem());
+		return block;		
+	}
+	
+	public int NONE   = Lib.SIDES.NONE;
+	public int BOTTOM = Lib.SIDES.BOTTOM; 
+	public int TOP    = Lib.SIDES.TOP;
+	public int NORTH  = Lib.SIDES.NORTH;
+	public int SOUTH  = Lib.SIDES.SOUTH;
+	public int WEST   = Lib.SIDES.WEST;
+	public int EAST   = Lib.SIDES.EAST;
+	public int SIDES  = Lib.SIDES.SIDES;
+	public int ALL    = Lib.SIDES.ALL;
+	
+	public void testObjectType(Object o){
+		owner.getLogger().info(getClass());
+	}
+	
+	public Object invoke(Object function){
+		JSFunctionWrapper jsfw = new JSFunctionWrapper(function,this);
+		return jsfw.invoke(null);
+	}
+	
+	public void displayWarningMessage(String title, String message){
+		lib.displayWarningMessage(title, message);
+	}
+	
+	public void displayErrorMessage(String title, String message){
+		lib.displayErrorMessage(title, message);
+	}
+	
 	
 	
 }

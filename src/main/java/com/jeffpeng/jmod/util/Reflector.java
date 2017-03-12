@@ -2,8 +2,6 @@ package com.jeffpeng.jmod.util;
 
 import java.lang.reflect.Field;
 
-import net.minecraft.block.Block;
-
 public class Reflector {
 	
 	
@@ -17,7 +15,7 @@ public class Reflector {
 	private Field[] declaredFields; 
 
 	private void init(){
-		 deobfuscated = (Block.class.getCanonicalName() == "net.minecraft.block.Block");
+		 deobfuscated = false;//(Block.class.getCanonicalName() == "net.minecraft.block.Block");
 
 	}
 	

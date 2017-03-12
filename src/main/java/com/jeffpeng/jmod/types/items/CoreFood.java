@@ -2,9 +2,12 @@ package com.jeffpeng.jmod.types.items;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
@@ -16,6 +19,7 @@ import com.jeffpeng.jmod.Lib;
 import com.jeffpeng.jmod.descriptors.BuffDescriptor;
 import com.jeffpeng.jmod.descriptors.FoodDataDescriptor;
 import com.jeffpeng.jmod.interfaces.IItem;
+import com.jeffpeng.jmod.primitives.BasicAction;
 
 public class CoreFood extends ItemFood implements IItem {
 	
@@ -23,12 +27,17 @@ public class CoreFood extends ItemFood implements IItem {
 	private String internalName;
 	protected List<BuffDescriptor> buffs = new ArrayList<>();
 	private JMODRepresentation owner;
+	private int burnTime = 0;
+	protected Optional<ItemStack> containerItemStack = Optional.empty();
+
 
 	public CoreFood(JMODRepresentation owner, FoodDataDescriptor desc) {
 		super(desc.hunger, desc.saturation, desc.wolffood);
 		this.owner = owner;
 		if(desc.alwaysEdible) this.setAlwaysEdible();
 		buffs = desc.buffdata;
+		
+		containerItemStack = desc.containerItemStack;
 	}
 
 	
@@ -36,6 +45,7 @@ public class CoreFood extends ItemFood implements IItem {
 		return this.internalName;
 	}
 	
+	@Override
 	protected void onFoodEaten(ItemStack is, World world, EntityPlayer ep)
     {
         if (!world.isRemote)
@@ -44,6 +54,19 @@ public class CoreFood extends ItemFood implements IItem {
        				ep.addPotionEffect(new PotionEffect(buff.getBuff().getId(), buff.duration, buff.level));
         	}
     }
+	
+	@Override
+	public ItemStack onEaten(ItemStack stack, World world, EntityPlayer player) {
+		ItemStack superItemStack = super.onEaten(stack, world, player);
+		
+		if(containerItemStack.isPresent() && stack.stackSize >= 0) {
+			player.inventory.addItemStackToInventory(new ItemStack(containerItemStack.get().getItem()));
+		} else if (containerItemStack.isPresent() && stack.stackSize == 0)  {
+			return new ItemStack(containerItemStack.get().getItem());
+		} 
+			
+		return superItemStack;
+	}
 	
 	@Override
 	public Item setTextureName(String texname){
@@ -60,6 +83,22 @@ public class CoreFood extends ItemFood implements IItem {
 	@Override
 	public JMODRepresentation getOwner() {
 		return owner;
+	}
+	
+	@Override
+	public void processSettings(BasicAction settings) {
+		if(settings.hasSetting("burntime"))		this.burnTime	 = settings.getInt("burntime") & 15;
+		
+	}
+	
+	@Override 
+	public int getBurnTime(){
+		return this.burnTime;
+	}
+	
+	@Override
+	public void setBurnTime(int bt){
+		this.burnTime = bt;
 	}
 
 }

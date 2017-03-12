@@ -1,6 +1,6 @@
 package com.jeffpeng.jmod.interfaces;
 
-public interface IBlock extends IOwned{
+public interface IBlock extends IOwned, IFurnaceFuel{
 	public String getName();
 	default public String getPrefix(){
 		return getOwner().getModId();
