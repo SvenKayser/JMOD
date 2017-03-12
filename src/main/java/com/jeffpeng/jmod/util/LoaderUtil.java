@@ -8,16 +8,13 @@ import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
 import org.apache.commons.io.IOUtils;
 
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-
 import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.primitives.JMODInfo;
 import com.jeffpeng.jmod.primitives.JMODPluginInfo;
@@ -87,6 +84,7 @@ public class LoaderUtil {
 			GsonBuilder builder = new GsonBuilder();
 			Gson gson = builder.create();
 			jmodinfo = gson.fromJson(stripComments(rawjson), JMODInfo.class);
+			jmodinfo = gson.fromJson(rawjson, JMODInfo.class);
 			
 			if(jmodinfo.authors.isEmpty()) {
 				jmodinfo.authors.add("John Doe (no author specified)");
@@ -137,7 +135,6 @@ public class LoaderUtil {
 		if(info.version == null){
 			JMOD.LOG.warn("[JMODLoader Plugins] The plugin " + info.name + " has no version. Assuming \"v1\". This should be fixed. This is an error of the mod author.");
 		}
-		
 		return true;
 	}
 	

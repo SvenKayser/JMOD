@@ -5,6 +5,7 @@ echo "Building JMOD";
 ./gradlew build > /dev/null
 rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi
 cp build/libs/jmod*.jar libs
+cd plugins
 
 subs=($(ls . | grep JMOD-))
 length=${#subs[@]}
@@ -18,6 +19,7 @@ for ((i = 0; i != length; i++)); do
 	rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi
 	cd ..
 done
+cd ..
 
 cp build/libs/jmod*.jar latestbuild/
-cp JMOD-*/build/libs/*.jmodplugin latestbuild/
+cp plugins/JMOD-*/build/libs/*.jmodplugin latestbuild/

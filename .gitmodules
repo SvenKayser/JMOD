@@ -1,30 +1,45 @@
 [submodule "JMOD-ExNihilo"]
-	path = JMOD-ExNihilo
+	path = plugins/JMOD-ExNihilo
 	url = https://github.com/SvenKayser/JMOD-ExNihilo
 [submodule "JMOD-RotaryCraft"]
-	path = JMOD-RotaryCraft
+	path =  plugins/JMOD-RotaryCraft
 	url = https://github.com/SvenKayser/JMOD-RotaryCraft
 [submodule "JMOD-Sync"]
-	path = JMOD-Sync
+	path = plugins/JMOD-Sync
 	url = https://github.com/SvenKayser/JMOD-Sync
 [submodule "JMOD-VanillaIngotWorks"]
-	path = JMOD-VanillaIngotWorks
+	path = plugins/JMOD-VanillaIngotWorks
 	url = https://github.com/SvenKayser/JMOD-VanillaIngotWorks
 [submodule "JMOD-HungerOverhaul"]
-	path = JMOD-HungerOverhaul
+	path = plugins/JMOD-HungerOverhaul
 	url = https://github.com/SvenKayser/JMOD-HungerOverhaul.git
 [submodule "JMOD-enderutilities"]
-	path = JMOD-enderutilities
+	path = plugins/JMOD-enderutilities
 	url = https://github.com/SvenKayser/JMOD-enderutilities.git
 [submodule "JMOD-NEI"]
-	path = JMOD-NEI
+	path = plugins/JMOD-NEI
 	url = https://github.com/SvenKayser/JMOD-NEI.git
 [submodule "JMOD-Decocraft"]
-	path = JMOD-Decocraft
+	path = plugins/JMOD-Decocraft
 	url = https://github.com/SvenKayser/JMOD-Decocraft.git
 [submodule "JMOD-Chisel"]
-	path = JMOD-Chisel
+	path = plugins/JMOD-Chisel
 	url = https://github.com/SvenKayser/JMOD-Chisel
 [submodule "JMOD-applecore"]
-	path = JMOD-applecore
+	path = plugins/JMOD-applecore
 	url = https://github.com/SvenKayser/JMOD-applecore
+[submodule "JMOD-AMT2"]
+	path = plugins/JMOD-AMT2
+	url = https://github.com/SvenKayser/JMOD-AMT2
+[submodule "JMOD-GardenStuff"]
+	path = plugins/JMOD-GardenStuff
+	url = https://github.com/SvenKayser/JMOD-GardenStuff
+[submodule "JMOD-Igniter"]
+	path = plugins/JMOD-Igniter
+	url = https://github.com/SvenKayser/JMOD-Igniter
+[submodule "JMOD-ImmersiveEngineering"]
+	path = plugins/JMOD-ImmersiveEngineering
+	url = https://github.com/SvenKayser/JMOD-ImmersiveEngineering
+[submodule "JMOD-Railcraft"]
+	path = plugins/JMOD-Railcraft
+	url = https://github.com/SvenKayser/JMOD-Railcraft
