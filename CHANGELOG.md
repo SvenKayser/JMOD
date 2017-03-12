@@ -1,5 +1,9 @@
 Changelog
 
+beta1.2.2 (LTS release)
+- fixed comparision of ItemStacks by oreDict membership. Fixes (among others) [Issue #41](https://github.com/SvenKayser/JMOD/issues/41)
+- Switched json parsing (back) to GSON, now with regex based  comment stripping [Issue #38](https://github.com/SvenKayser/JMOD/issues/38)
+
 beta1.2.1 (LTS release)
 - Implemented proper support for ingredient based search for Shaped StringRecipes for NEI [Issue #31](https://github.com/SvenKayser/JMOD/issues/31)
 - fixed RoC blast furnace handler not executing [Issue #32](https://github.com/SvenKayser/JMOD/issues/32)
