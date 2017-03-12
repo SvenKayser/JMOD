@@ -1,6 +1,6 @@
 #!/bin/bash
 nano -w /tmp/commitmsg
-
+cd plugins
 subs=($(ls . | grep JMOD-))
 length=${#subs[@]}
 for ((i = 0; i != length; i++)); do
@@ -11,7 +11,7 @@ for ((i = 0; i != length; i++)); do
 	git push origin
 	cd ..
 done
-
+cd ..
 echo "Committing JMOD";
 git add .
 git commit -F /tmp/commitmsg

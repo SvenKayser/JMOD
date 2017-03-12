@@ -18,6 +18,7 @@ buildscript {
 apply plugin: 'forge'
 
 
+
 version = "1.7.10-alpha1.3.1"
 group= "com.jeffpeng.jmod" 
 archivesBaseName = "jmod"
@@ -38,6 +39,15 @@ jar {
 		attributes 'Main-Class': 'com.jeffpeng.jmod.validator.Validator'
 	}
 	
+}
+
+task deobfJar(type: Jar, dependsOn: 'jar') {
+    from "build/source/main"
+    classifier "dev"
+}
+
+artifacts {
+    archives deobfJar
 }
 
 repositories {
@@ -152,7 +162,15 @@ task coreJar(type: Jar, dependsOn: reobf){
 		}
 	doFirst {
 		from(project.ext.jarFile){
-			includes.addAll(["assets/**","com/jeffpeng/jmod/**","com/cricketcraft/**","jmod/API/**","META-INF/**","LICENSE**"])
+			includes.addAll(["assets/**",
+							 "com/jeffpeng/jmod/**",
+							 "com/cricketcraft/**",
+							 "com/jaquadro/**",
+							 "mods/defeatedcrow/**",
+							 "defeatedcrow/**",
+							 "jmod/API/**",
+							 "META-INF/**",
+							 "LICENSE**"])
 		}
 	}
 }

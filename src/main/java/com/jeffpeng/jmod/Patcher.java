@@ -1,12 +1,9 @@
 package com.jeffpeng.jmod;
 
 import java.util.Optional;
-
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-
-
 import org.apache.logging.log4j.Logger;
 
 import com.jeffpeng.jmod.actions.AddArmorMaterial;
@@ -46,8 +43,6 @@ public class Patcher {
 	 * Patches tools to use any added ToolMaterials
 	 */
 	public void patchTools() {
-		LOG.debug("Patching Tools - Begaining");
-
 		StreamSupport.stream(GameData.getItemRegistry().typeSafeIterable().spliterator(), true)
 				.filter(this::isItemUnpatchable) 
 				.filter(this::isItemToolOrLike) 
@@ -66,6 +61,7 @@ public class Patcher {
 	private boolean isItemUnpatchable(Item item) {
 		return !item.getClass().getCanonicalName().contains("Reika.RotaryCraft");
 	}
+
 
 	private boolean isItemToolOrLike(Item item) {
 		return (item instanceof ItemTool || 

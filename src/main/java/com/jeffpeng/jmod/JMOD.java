@@ -119,7 +119,8 @@ public class JMOD implements IFMLLoadingPlugin {
 	
 	
 	public void on(FMLLoadCompleteEvent event){
-		
+		Patcher.getInstance().patchTools();
+		Patcher.getInstance().patchArmor();
 	}
 	
 	public void on(FMLServerStartedEvent event){}

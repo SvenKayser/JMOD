@@ -49,7 +49,6 @@ public class ScriptObject extends OwnedObject {
 	public Settings Settings = new Settings(owner);
 	public Global Global = new Global(owner);
 	
-	
 	public World World = new World(owner);
 	public Players Players = new Players(owner);
 	public Game Game = new Game(owner);
@@ -58,10 +57,12 @@ public class ScriptObject extends OwnedObject {
 		jscriptInstance.evalScript(script);
 	}
 	
+	public void importJs(String script) {
+	}
+	
 	public  void log(String msg){
 		log.info(msg);
 	}
-	
 	
 	public void addShapelessRecipe(String result, Object ingredients){
 		new AddShapelessRecipe(owner,result, Lib.convertArray(ingredients,String[].class) );
