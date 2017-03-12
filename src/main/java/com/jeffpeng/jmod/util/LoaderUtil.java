@@ -76,7 +76,6 @@ public class LoaderUtil {
 		return newjson;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static JMODInfo parseModJson(String rawjson){
 		JMODInfo jmodinfo = null;
 		
