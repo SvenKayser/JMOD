@@ -54,7 +54,6 @@ public class LoaderUtil {
 		return rawjson;
 	}
 	
-
 	public static String loadPluginJson(Path entry){
 		
 		String rawjson = null;
@@ -67,12 +66,10 @@ public class LoaderUtil {
 		
 		return rawjson;
 	}
-	
+
 	private static String stripComments(String rawjson){
-		System.out.println(rawjson);
 		String newjson = rawjson.replaceAll("\\/\\*.*\\*\\/",""); // strips all /* […] */
 		newjson = newjson.replaceAll("\\/\\/.*\\r", newjson); // strings all // until the end of the line
-		System.out.println(newjson);
 		return newjson;
 	}
 	
