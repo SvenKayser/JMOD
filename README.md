@@ -1,4 +1,4 @@
-### The Javascript MOD Loader (JMOD) for Minecraft 1.7.10 / MinecraftForge 10.13.4.1558
+# The Javascript MOD Loader (JMOD) for Minecraft 1.7.10 / MinecraftForge 10.13.4.1558
 
 JMOD let's you define simple mods without the hassle of writing setting up a Java development environment and compiling your mods each time you want to try a change. While you don't need to learn Java do write mods with JMOD, you need some basic understanding of JavaScript, however the emphasis definitely is on "basic".
 
@@ -11,6 +11,17 @@ If you desire a feature for JMOD please let me know and I will see if it is poss
 Reteo invested a lot of time [documenting JMOD](https://github.com/SvenKayser/JMOD/blob/indev/Documentation/JMOD.pdf). Please understand that do tue the quite frequent code fluctuations and no frozen API this documentation might not always reflect the latest version. This is not reteos fault - but mine ;-)
 
 If you interested in maintaining a plugin or adding a plugin to support your mod please let me know.
+
+##UberCredits
+
+-The amazing reteo for not only taking care of the documentation, but also for being the driving creative force behind many things JMOD can and will do
+-nmarshall23 for his valuable contributions and a couple of nice mod integrations (now known as "plugins")
+
+### Credits
+-Reika for sharing his mod sources. I learned a lot from them
+-The MinecraftForge guys for their amazing ModLoader/Modding API that's the groundwork for countless mods, so it is for JMOD
+-The entire [Survival Industry](https://github.com/reteo/Survival-Industry) crew for a couple of man-years of testing SurvivalIndustry - and with it JMOD and it's precursors
+-Generally everybody sharing source and giving advice related to modding
 
 ##FAQ
 
