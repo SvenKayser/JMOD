@@ -2,6 +2,7 @@ package com.jeffpeng.jmod.types.items;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemPickaxe;
+import net.minecraft.item.ItemStack;
 
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.descriptors.ToolDataDescriptor;
@@ -42,8 +43,16 @@ public class ToolPickaxe extends ItemPickaxe implements ITool, IItem {
 	@Override
 	public void processSettings(BasicAction settings) {
 		if(settings.hasSetting("burntime"))		this.burnTime	 = settings.getInt("burntime");
-		
+		if(settings.hasSetting("remainsincraftinggrid")) this.containerItemSticksInCraftingGrid = settings.getBoolean("remainsincraftinggrid");
 	}
+	
+	private boolean containerItemSticksInCraftingGrid = false;
+	
+	@Override
+	public boolean doesContainerItemLeaveCraftingGrid(ItemStack is)
+    {
+        return !containerItemSticksInCraftingGrid;
+    }
 	
 	@Override 
 	public int getBurnTime(){

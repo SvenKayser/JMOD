@@ -28,6 +28,7 @@ import com.jeffpeng.jmod.actions.RemoveOreDictionaryEntry;
 import com.jeffpeng.jmod.actions.RemoveRecipe;
 import com.jeffpeng.jmod.actions.RemoveSmeltingRecipe;
 import com.jeffpeng.jmod.actions.SetBlockProperties;
+import com.jeffpeng.jmod.actions.SetItemProperties;
 import com.jeffpeng.jmod.descriptors.ArmorDataDescriptor;
 import com.jeffpeng.jmod.descriptors.ColorDescriptor;
 import com.jeffpeng.jmod.descriptors.FoodDataDescriptor;
@@ -154,6 +155,10 @@ public class ScriptObject extends OwnedObject {
 	
 	public  SetBlockProperties setBlockProperties(String item){
 		return new SetBlockProperties(owner, item);
+	}
+	
+	public  SetItemProperties setItemProperties(String item){
+		return new SetItemProperties(owner,item);
 	}
 	
 	public  void dependency(String modid, String name){

@@ -106,7 +106,16 @@ public class CoreBucket extends ItemBucket implements IItem{
 		if(settings.hasSetting("fluidlist"))    	this.fluidList 		= (Map<String, String>) settings.getObject("fluidlist");
 		if(settings.hasSetting("fluidlistmode"))    this.fluidListMode 	= settings.getBoolean("fluidlistmode");
 		if(settings.hasSetting("size"))				this.bucketsize		= settings.getInt("size");
+		if(settings.hasSetting("remainsincraftinggrid")) this.containerItemSticksInCraftingGrid = settings.getBoolean("remainsincraftinggrid");
 	}
+	
+	private boolean containerItemSticksInCraftingGrid = false;
+	
+	@Override
+	public boolean doesContainerItemLeaveCraftingGrid(ItemStack is)
+    {
+        return !containerItemSticksInCraftingGrid;
+    }
 	
 	@Override
 	public void on(FMLEvent event){

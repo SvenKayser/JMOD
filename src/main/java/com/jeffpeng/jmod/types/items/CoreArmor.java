@@ -22,7 +22,6 @@ public class CoreArmor extends ItemArmor implements IArmor {
 	private JMODRepresentation owner;
 	private int burnTime = 0;
 	
-	
 	public CoreArmor(JMODRepresentation owner, String mat,String armorType){
 		super(ItemArmor.ArmorMaterial.valueOf(mat),2,translateArmorType(armorType));
 		this.owner = owner;
@@ -104,8 +103,17 @@ public class CoreArmor extends ItemArmor implements IArmor {
 	@Override
 	public void processSettings(BasicAction settings) {
 		if(settings.hasSetting("burntime"))		this.burnTime	 = settings.getInt("burntime");
-		
+		if(settings.hasSetting("remainsincraftinggrid")) this.containerItemSticksInCraftingGrid = settings.getBoolean("remainsincraftinggrid");
 	}
+	
+	private boolean containerItemSticksInCraftingGrid = false;
+	
+	@Override
+	public boolean doesContainerItemLeaveCraftingGrid(ItemStack is)
+    {
+        return !containerItemSticksInCraftingGrid;
+    }
+	
 	
 	@Override 
 	public int getBurnTime(){
@@ -116,5 +124,9 @@ public class CoreArmor extends ItemArmor implements IArmor {
 	public void setBurnTime(int bt){
 		this.burnTime = bt;
 	}
+	
+	
+	
+	
 
 }

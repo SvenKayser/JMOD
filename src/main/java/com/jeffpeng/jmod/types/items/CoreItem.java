@@ -4,6 +4,7 @@ import java.util.Map;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.interfaces.IItem;
@@ -50,8 +51,16 @@ public class CoreItem extends Item implements IItem {
 	@Override
 	public void processSettings(BasicAction settings) {
 		if(settings.hasSetting("burntime"))		this.burnTime	 = settings.getInt("burntime");
-		
+		if(settings.hasSetting("remainsincraftinggrid")) this.containerItemSticksInCraftingGrid = settings.getBoolean("remainsincraftinggrid");
 	}
+	
+	private boolean containerItemSticksInCraftingGrid = false;
+	
+	@Override
+	public boolean doesContainerItemLeaveCraftingGrid(ItemStack is)
+    {
+        return !this.containerItemSticksInCraftingGrid;
+    }
 	
 	@Override 
 	public int getBurnTime(){

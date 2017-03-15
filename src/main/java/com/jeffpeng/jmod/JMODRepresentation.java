@@ -21,6 +21,7 @@ import com.jeffpeng.jmod.actions.RemoveChestLoot;
 import com.jeffpeng.jmod.actions.RemoveRecipe;
 import com.jeffpeng.jmod.actions.RemoveSmeltingRecipe;
 import com.jeffpeng.jmod.actions.SetBlockProperties;
+import com.jeffpeng.jmod.actions.SetItemProperties;
 import com.jeffpeng.jmod.crafting.AnvilHandler;
 import com.jeffpeng.jmod.crafting.DropHandler;
 import com.jeffpeng.jmod.crafting.FuelHandler;
@@ -164,6 +165,7 @@ public class JMODRepresentation implements IEventObject {
 	
 	public void on(FMLModIdMappingEvent event){
 		IExecutableObject.execute(SetBlockProperties.class,		stageables);
+		IExecutableObject.execute(SetItemProperties.class,		stageables);
 	}
 
 	protected void setContainer(JMODContainer container) {
