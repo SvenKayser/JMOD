@@ -1,7 +1,8 @@
 package com.jeffpeng.jmod.actions;
 
 public class Priorities {
-	public static final int AddBlock = 200;
+	public static final int AddFluid = 210;
+	public static final int AddBlock = 210;
 	public static final int AddItem = 200;
 	public static final int AddToolMaterial = 250;
 	public static final int AddArmorMaterial = 250;

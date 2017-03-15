@@ -2,4 +2,6 @@
 rm build/libs/*
 ./gradlew build
 cp build/libs/jmod-*.jar latestbuild/
+cp build/libs/jmod-*.jar libs/
+
 #cp ~/mcdev/Survival-Industry-dev/Documents\ and\ Notes/Resource\ Packs/Survival\ Industry ~/.minecraftdevtest/resourcepacks -R

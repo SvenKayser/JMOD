@@ -103,7 +103,7 @@ public class CoreArmor extends ItemArmor implements IArmor {
 
 	@Override
 	public void processSettings(BasicAction settings) {
-		if(settings.hasSetting("burntime"))		this.burnTime	 = settings.getInt("burntime") & 15;
+		if(settings.hasSetting("burntime"))		this.burnTime	 = settings.getInt("burntime");
 		
 	}
 	

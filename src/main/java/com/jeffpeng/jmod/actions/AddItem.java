@@ -129,20 +129,50 @@ public class AddItem extends BasicAction{
 		}
 
 		instance.register();
+		if(instance instanceof IItem){
+			((IItem)instance).on(event);
+			return true;
+		}
 		return true;
+	}
+	
+	@Override 
+	public boolean on(FMLInitializationEvent event){
+		if(instance instanceof IItem){
+			((IItem)instance).on(event);
+			return true;
+		}
+		return false;
+	}
+	
+	@Override 
+	public boolean on(FMLPostInitializationEvent event){
+		if(instance instanceof IItem){
+			((IItem)instance).on(event);
+			return true;
+		}
+		return false;
 	}
 	
 	@Override
 	public boolean on(FMLLoadCompleteEvent event){
 		instance.setRecipes();
+		boolean tabbed = false;
+		
 		if(!JMOD.isServer() && getString("tab") != null){
 			CreativeTabs tabInstance = Lib.getCreativeTabByName(getString("tab"));
 			if(tabInstance != null && instance != null){
 				((Item )instance).setCreativeTab(tabInstance);
-				return true;
+				tabbed = true;
 			}
 		}
-		return false;
+		
+		if(instance instanceof IItem){
+			((IItem)instance).on(event);
+			tabbed = true;
+		}
+		
+		return tabbed;
 	}
 
 	@Override

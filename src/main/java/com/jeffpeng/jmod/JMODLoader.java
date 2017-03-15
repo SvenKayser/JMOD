@@ -65,7 +65,6 @@ public class JMODLoader {
 		
 	}
 	
-	@SuppressWarnings("unchecked")
 	protected static void initPlugins(){
 		if(JMOD.DEEPFORGE != null &&JMOD.DEEPFORGE.isLocked()){
 			throw new RuntimeException("Cannot add any more plugins at this point.");
@@ -105,10 +104,6 @@ public class JMODLoader {
 				e.printStackTrace();
 				continue;
 			}
-			
-			System.out.println("###jml " + newPlugin.info.scriptingobjects);
-			System.out.println("###jml " + newPlugin.info.scriptingobjects.getClass());
-			
 			if(newPlugin.info.scriptingobjects != null) for(Map.Entry<String, String> soentry : newPlugin.info.scriptingobjects.entrySet()){
 				JScript.addExtraScriptingObject(soentry.getKey(), newPlugin.info.archivebase + "." + (String) soentry.getValue());
 			}
@@ -195,7 +190,6 @@ public class JMODLoader {
 	
 	protected static void runScripts(){
 		for(Map.Entry<String,JMODContainer> entry : modList.entrySet()){
-			JMOD.LOG.info("'###rsc " + entry.getValue().getModId());
 			entry.getValue().getMod().runScripts();
 		}
 	}

@@ -41,7 +41,7 @@ public class ToolHoe extends ItemHoe implements ITool, IItem {
 	
 	@Override
 	public void processSettings(BasicAction settings) {
-		if(settings.hasSetting("burntime"))		this.burnTime	 = settings.getInt("burntime") & 15;
+		if(settings.hasSetting("burntime"))		this.burnTime	 = settings.getInt("burntime");
 		
 	}
 	

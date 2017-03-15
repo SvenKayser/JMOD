@@ -3,6 +3,7 @@ package com.jeffpeng.jmod.scripting;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
@@ -36,6 +37,11 @@ import com.jeffpeng.jmod.descriptors.TooltipDescriptor;
 import com.jeffpeng.jmod.primitives.OwnedObject;
 import com.jeffpeng.jmod.util.JSFunctionWrapper;
 import com.jeffpeng.jmod.validator.Validator;
+import com.jeffpeng.jmod.scripting.domains.Settings;
+import com.jeffpeng.jmod.scripting.domains.World;
+import com.jeffpeng.jmod.scripting.domains.Game;
+import com.jeffpeng.jmod.scripting.domains.Players;
+
 @SuppressWarnings("unchecked")
 public class ScriptObject extends OwnedObject {
 	
@@ -329,15 +335,19 @@ public class ScriptObject extends OwnedObject {
 		return block;		
 	}
 	
-	public int NONE   = Lib.SIDES.NONE;
-	public int BOTTOM = Lib.SIDES.BOTTOM; 
-	public int TOP    = Lib.SIDES.TOP;
-	public int NORTH  = Lib.SIDES.NORTH;
-	public int SOUTH  = Lib.SIDES.SOUTH;
-	public int WEST   = Lib.SIDES.WEST;
-	public int EAST   = Lib.SIDES.EAST;
-	public int SIDES  = Lib.SIDES.SIDES;
-	public int ALL    = Lib.SIDES.ALL;
+	public final int DIRECTION_NONE   = Lib.SIDES.NONE;
+	public final int DIRECTION_BOTTOM = Lib.SIDES.BOTTOM; 
+	public final int DIRECTION_TOP    = Lib.SIDES.TOP;
+	public final int DIRECTION_NORTH  = Lib.SIDES.NORTH;
+	public final int DIRECTION_SOUTH  = Lib.SIDES.SOUTH;
+	public final int DIRECTION_WEST   = Lib.SIDES.WEST;
+	public final int DIRECTION_EAST   = Lib.SIDES.EAST;
+	public final int DIRECTION_SIDES  = Lib.SIDES.SIDES;
+	public final int DIRECTION_ALL    = Lib.SIDES.ALL;
+	
+	public final boolean LISTMODE_ALL_EXCEPT 	= Lib.LISTMODE.ALL_EXCEPT;
+	public final boolean LISTMODE_NONE_EXCEPT 	= Lib.LISTMODE.NONE_EXCEPT;
+	
 	
 	public void testObjectType(Object o){
 		owner.getLogger().info(getClass());

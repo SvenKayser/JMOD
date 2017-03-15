@@ -146,16 +146,11 @@ public class JMOD implements IFMLLoadingPlugin {
 	}
 	
 	public static void addExtraClassTransforer(String classTransformer){
-		JMOD.LOG.warn("###aect" + classTransformers.size());
-		JMOD.LOG.warn("###aect" + classTransformer);
 		JMOD.classTransformers.add(classTransformer);
-		JMOD.LOG.warn("###aect" + classTransformers.size());
 	}
 	
 	@Override
 	public String[] getASMTransformerClass() {
-		JMOD.LOG.warn("###gatc" + classTransformers.size());
-		
 		return classTransformers.toArray(new String[classTransformers.size()]);
 	}
 

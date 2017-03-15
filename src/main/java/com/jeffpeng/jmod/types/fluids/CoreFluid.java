@@ -102,7 +102,7 @@ public class CoreFluid extends Fluid {
 		
 		Block block = world.getBlock(position.blockX, position.blockY, position.blockZ);
 		
-		if (block.equals(fluidBlock))
+		if (block.equals(fluidBlock) && event.entityPlayer.getCurrentEquippedItem().getItem() == Items.bucket)
 		{
 			world.setBlockToAir(position.blockX, position.blockY, position.blockZ);
 			event.result = new ItemStack(bucket);

@@ -30,6 +30,7 @@ import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.ItemTool;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
@@ -334,7 +335,6 @@ public class Lib extends OwnedObject {
 			if(is2 instanceof String) return is1.equals(is2);
 		}
 		if(is1 instanceof ItemStack){
-
 			if(is2 instanceof ItemStack) return belongToSameOreDictEntry((ItemStack)is1,(ItemStack)is2);
 			if(is2 instanceof String){
 				
@@ -601,6 +601,16 @@ public class Lib extends OwnedObject {
 		}
 	}
 	
+	public static ForgeDirection getForgeDirectionFromMOPSide(int side){
+		if(side == 0) return ForgeDirection.DOWN;
+		if(side == 1) return ForgeDirection.UP;
+		if(side == 2) return ForgeDirection.EAST;
+		if(side == 3) return ForgeDirection.WEST;
+		if(side == 4) return ForgeDirection.NORTH;
+		if(side == 5) return ForgeDirection.SOUTH;
+		return null;
+	}
+	
 	
 
 	// TODO: There must be a more elegant solution to this.
@@ -616,6 +626,11 @@ public class Lib extends OwnedObject {
 		public static final int EAST   = 1 << 5;	// 100000
 		public static final int SIDES  = 60; 		// 111100		
 		public static final int ALL    = 63; 		// 111111
+	}
+	
+	public static class LISTMODE{
+		public static final boolean ALL_EXCEPT 	= true;
+		public static final boolean NONE_EXCEPT = false;
 	}
 	
 	

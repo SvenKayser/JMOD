@@ -19,6 +19,7 @@ public class PlayerData {
 	
 	private static Map<String,PlayerData> playerdatacache = new HashMap<>();
 	private Map<String,String> values = new HashMap<>();
+	@SuppressWarnings("unused")
 	private static SimpleNetworkWrapper snw = NetworkRegistry.INSTANCE.newSimpleChannel("JMODPlayerData");
 	
 	public static void purge(){
@@ -89,6 +90,7 @@ public class PlayerData {
 		
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public static class ValueResponse implements IMessageHandler {
 
 		@Override

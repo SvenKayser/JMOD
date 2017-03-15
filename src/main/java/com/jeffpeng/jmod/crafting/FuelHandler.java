@@ -3,15 +3,13 @@ package com.jeffpeng.jmod.crafting;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.jeffpeng.jmod.JMODRepresentation;
-import com.jeffpeng.jmod.interfaces.IFurnaceFuel;
-import com.jeffpeng.jmod.interfaces.IItem;
-import com.jeffpeng.jmod.primitives.OwnedObject;
-import com.jeffpeng.jmod.types.blocks.CoreBlock;
-
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+
+import com.jeffpeng.jmod.interfaces.IFurnaceFuel;
+import com.jeffpeng.jmod.interfaces.IItem;
+
 import cpw.mods.fml.common.IFuelHandler;
 
 public class FuelHandler implements IFuelHandler {
