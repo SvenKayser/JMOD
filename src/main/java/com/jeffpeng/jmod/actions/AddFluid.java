@@ -37,5 +37,10 @@ public class AddFluid extends BasicAction{
 		if(hasBucket) fluid.bucketize();
 		
 	}
+	
+	@Override
+	public int priority(){
+		return Priorities.AddFluid;
+	}
 
 }

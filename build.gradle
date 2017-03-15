@@ -42,14 +42,14 @@ jar {
 	
 }
 
-task deobfJar(type: Jar, dependsOn: 'jar') {
+/*task deobfJar(type: Jar, dependsOn: 'jar') {
     from "build/source/main"
     classifier "dev"
-}
+}*/
 
-artifacts {
+/*artifacts {
     archives deobfJar
-}
+}*/
 
 repositories {
 	maven {

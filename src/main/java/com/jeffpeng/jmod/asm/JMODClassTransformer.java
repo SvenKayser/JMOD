@@ -41,7 +41,6 @@ public class JMODClassTransformer implements IClassTransformer{
 		ClassReader cR = new ClassReader(basicClass);
 		cR.accept(cN, 0);
 		MethodNode mN = cN.methods.get(1);
-		JMOD.LOG.info("pbs method "+mN.name+" "+mN.desc);
 
 		Iterator<AbstractInsnNode> iIterator = mN.instructions.iterator();
 		while (iIterator.hasNext()) {

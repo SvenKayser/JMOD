@@ -16,6 +16,10 @@ alpha1.3.1
 - Implemented FuelHandler for JMOD (needs some more work to compensate for MC(F)s wonky burnTime code )
 - jmods can now contain plugin code and vice versa
 - The Discoverer now also follows symbolic links. Penguins rejoice!
+- Adjusted execution priorities to make sure Fluids are created before items (like buckets)
+- Implemented generic buckets (CoreBucket)
+- R.I.P. ItemWoodenBucket
+- CoreBuckets now work with
 
 beta1.2.2 (LTS release)
 - fixed comparision of ItemStacks by oreDict membership. Fixes (among others) [Issue #41](https://github.com/SvenKayser/JMOD/issues/41)
@@ -24,7 +28,6 @@ beta1.2.2 (LTS release)
 beta1.2.1 (LTS release)
 - Implemented proper support for ingredient based search for Shaped StringRecipes for NEI [Issue #31](https://github.com/SvenKayser/JMOD/issues/31)
 - fixed RoC blast furnace handler not executing [Issue #32](https://github.com/SvenKayser/JMOD/issues/32)
-
 
 beta1.2.0 (LTS until Mar 31st 2017)
 - Added support for RotaryCraft PulseJetFurnace and Compactor
