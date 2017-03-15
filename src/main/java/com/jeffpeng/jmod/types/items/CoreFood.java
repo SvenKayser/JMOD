@@ -86,8 +86,16 @@ public class CoreFood extends ItemFood implements IItem {
 	@Override
 	public void processSettings(BasicAction settings) {
 		if(settings.hasSetting("burntime"))		this.burnTime	 = settings.getInt("burntime");
-		
+		if(settings.hasSetting("remainsincraftinggrid")) this.containerItemSticksInCraftingGrid = settings.getBoolean("remainsincraftinggrid");
 	}
+	
+	private boolean containerItemSticksInCraftingGrid = false;
+	
+	@Override
+	public boolean doesContainerItemLeaveCraftingGrid(ItemStack is)
+    {
+        return !containerItemSticksInCraftingGrid;
+    }
 	
 	@Override 
 	public int getBurnTime(){

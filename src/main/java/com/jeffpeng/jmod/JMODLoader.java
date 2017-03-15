@@ -13,10 +13,12 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.launchwrapper.LaunchClassLoader;
+import net.minecraftforge.common.MinecraftForge;
 
 import com.jeffpeng.jmod.primitives.JMODInfo;
 import com.jeffpeng.jmod.primitives.ModCreationException;
 import com.jeffpeng.jmod.scripting.JScript;
+import com.jeffpeng.jmod.types.items.CoreBucket.FluidHandler;
 import com.jeffpeng.jmod.util.LoaderUtil;
 import com.jeffpeng.jmod.util.Reflector;
 
@@ -125,7 +127,12 @@ public class JMODLoader {
 			
 			pluginList.put(newPlugin.info.pluginid,newPlugin);
 			
+			
 		}
+	}
+	
+	protected static void registerPluginsToMCFEventBus(){
+		pluginList.forEach((k,v) -> MinecraftForge.EVENT_BUS.register(v));
 	}
 	
 	protected static void constructMods(){

@@ -84,6 +84,7 @@ public class JMOD implements IFMLLoadingPlugin {
 	
 	public void on(FMLConstructionEvent event) {
 		if(event.getSide().isServer()) isServer = true;
+		JMODLoader.registerPluginsToMCFEventBus();
 		BlacklistCraftingResults.init();
 		BlacklistCraftingResults.getInstance().blacklistDomain("RotaryCraft");
 		DEEPFORGE = new ForgeDeepInterface();

@@ -6,8 +6,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
+import net.minecraftforge.fluids.Fluid;
 
 import com.jeffpeng.jmod.interfaces.IEventObject;
+import com.jeffpeng.jmod.types.items.CoreBucket;
 
 import cpw.mods.fml.common.event.FMLConstructionEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -28,27 +30,6 @@ public class JMODPlugin implements IEventObject{
 	
 	public ItemStack getRepairItemStack(Item item){
 		return null;
-	}
-	
-	public Float getRepairAmount(Item item){
-		return null;
-	}
-	
-	public boolean isTool(Item item){
-		return false;
-	}
-	
-	public void addBuffs(Map<String,Potion> buffMap){
-		
-	}
-	
-	public boolean patchTool(Item item, String itemname){
-		return false;
-	}
-	
-	
-	public boolean updateToolMaterial(Item item, ToolMaterial toolmat){
-		return false;
 	}
 	
 	@Override
@@ -95,47 +76,5 @@ public class JMODPlugin implements IEventObject{
 		
 	}
 	
-	public static boolean isToolCycle(Item item){
-		for(Map.Entry<String, JMODPluginContainer> entry : JMODLoader.getPluginList().entrySet()){
-			if(entry.getValue().getInstance().isTool(item)) return true;
-		}
-		return false;
-	}
-	
-	public static Float getRepairAmountCycle(Item item){
-		for(Map.Entry<String, JMODPluginContainer> entry : JMODLoader.getPluginList().entrySet()){
-			Float f = entry.getValue().getInstance().getRepairAmount(item);
-			if(f != null) return f;
-		}
-		return null;
-	}
-	
-	public static ItemStack getRepairItemStackCycle(Item item){
-		for(Map.Entry<String, JMODPluginContainer> entry : JMODLoader.getPluginList().entrySet()){
-			ItemStack is = entry.getValue().getInstance().getRepairItemStack(item);
-			if(is != null) return is;
-		}
-		return null;
-	}
-	
-	public static void addBuffsCycle(Map<String,Potion> buffMap){
-		for(Map.Entry<String, JMODPluginContainer> entry : JMODLoader.getPluginList().entrySet()){
-			entry.getValue().getInstance().addBuffs(buffMap);
-		}
-	}
-	
-	public static boolean patchToolCycle(Item item,String itemname){
-		for(Map.Entry<String, JMODPluginContainer> entry : JMODLoader.getPluginList().entrySet()){
-			if(entry.getValue().getInstance().patchTool(item,itemname)) return true;
-		}
-		return false;
-	}
-	
-	public static boolean updateToolMaterialCycle(Item item,ToolMaterial toolmat){
-		for(Map.Entry<String, JMODPluginContainer> entry : JMODLoader.getPluginList().entrySet()){
-			if(entry.getValue().getInstance().updateToolMaterial(item,toolmat)) return true;
-		}
-		return false;
-	}
-	
+
 }

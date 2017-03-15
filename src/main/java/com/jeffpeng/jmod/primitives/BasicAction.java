@@ -41,16 +41,16 @@ public class BasicAction extends OwnedObject implements IExecutableObject {
 	}
 	
 	public BasicAction set(String name, Object o){
-		settingObjects.put(name, o);
+		settingObjects.put(name.toLowerCase(), o);
 		return this;
 	}
 	
 	public Object getObject(String name){
-		return settingObjects.get(name);
+		return settingObjects.get(name.toLowerCase());
 	}
 	
 	public String getString(String name){
-		Object o = settingObjects.get(name);
+		Object o = settingObjects.get(name.toLowerCase());
 		if(o instanceof String){
 			return (String) o;
 		}
@@ -58,7 +58,7 @@ public class BasicAction extends OwnedObject implements IExecutableObject {
 	}
 	
 	public Float getFloat(String name){
-		Object o = settingObjects.get(name);
+		Object o = settingObjects.get(name.toLowerCase());
 		if(o instanceof Double){
 			return ((Double)o).floatValue();
 		}
@@ -72,7 +72,7 @@ public class BasicAction extends OwnedObject implements IExecutableObject {
 	}
 	
 	public Double getDouble(String name){
-		Object o = settingObjects.get(name);
+		Object o = settingObjects.get(name.toLowerCase());
 		if(o instanceof Double){
 			return ((Double)o);
 		}
@@ -86,7 +86,7 @@ public class BasicAction extends OwnedObject implements IExecutableObject {
 	}
 	
 	public Integer getInt(String name){
-		Object o = settingObjects.get(name);
+		Object o = settingObjects.get(name.toLowerCase());
 		if(o instanceof Integer){
 			return (Integer) o;
 		}
@@ -97,7 +97,7 @@ public class BasicAction extends OwnedObject implements IExecutableObject {
 	}
 	
 	public Boolean getBoolean(String name){
-		Object o = settingObjects.get(name);
+		Object o = settingObjects.get(name.toLowerCase());
 		if(o instanceof Boolean){
 			return (Boolean) o;
 		}
@@ -109,7 +109,7 @@ public class BasicAction extends OwnedObject implements IExecutableObject {
 	}
 	
 	public boolean hasSetting(String name){
-		return settingObjects.containsKey(name);
+		return settingObjects.containsKey(name.toLowerCase());
 	}
 	
 	public Map<String,Object> getSettingObjects(){

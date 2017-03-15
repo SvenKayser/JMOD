@@ -28,6 +28,7 @@ import net.minecraftforge.fluids.IFluidHandler;
 import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.Lib;
+import com.jeffpeng.jmod.forgeevents.JMODRegisterFilledCoreBucketEvent;
 import com.jeffpeng.jmod.interfaces.IItem;
 import com.jeffpeng.jmod.primitives.BasicAction;
 
@@ -105,7 +106,16 @@ public class CoreBucket extends ItemBucket implements IItem{
 		if(settings.hasSetting("fluidlist"))    	this.fluidList 		= (Map<String, String>) settings.getObject("fluidlist");
 		if(settings.hasSetting("fluidlistmode"))    this.fluidListMode 	= settings.getBoolean("fluidlistmode");
 		if(settings.hasSetting("size"))				this.bucketsize		= settings.getInt("size");
+		if(settings.hasSetting("remainsincraftinggrid")) this.containerItemSticksInCraftingGrid = settings.getBoolean("remainsincraftinggrid");
 	}
+	
+	private boolean containerItemSticksInCraftingGrid = false;
+	
+	@Override
+	public boolean doesContainerItemLeaveCraftingGrid(ItemStack is)
+    {
+        return !containerItemSticksInCraftingGrid;
+    }
 	
 	@Override
 	public void on(FMLEvent event){
@@ -133,6 +143,7 @@ public class CoreBucket extends ItemBucket implements IItem{
 				newbucket.setTextureName(getPrefix() + ":" + getName() + "_"+( entry.getKey().replace(" ", "_") ));
 				newbucket.register();
 				children.put(fluidsCounter,newbucket);
+				MinecraftForge.EVENT_BUS.post(new JMODRegisterFilledCoreBucketEvent(this,newbucket,entry.getValue(),this.bucketsize));
 			}
 		}
 		

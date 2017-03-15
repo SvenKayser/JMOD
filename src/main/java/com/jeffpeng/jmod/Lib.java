@@ -30,6 +30,7 @@ import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.ItemTool;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -37,6 +38,9 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import com.jeffpeng.jmod.descriptors.ItemStackSubstituteDescriptor;
+import com.jeffpeng.jmod.forgeevents.JMODGetRepairAmountEvent;
+import com.jeffpeng.jmod.forgeevents.JMODGetRepairItemStackEvent;
+import com.jeffpeng.jmod.forgeevents.JMODPatchToolEvent;
 import com.jeffpeng.jmod.primitives.OwnedObject;
 import com.jeffpeng.jmod.registry.BlockMaterialRegistry;
 import com.jeffpeng.jmod.util.Reflector;
@@ -291,8 +295,12 @@ public class Lib extends OwnedObject {
 	}
 	
 	public static ItemStack getRepairItemStack(Item item){
-		ItemStack returnstack = JMODPlugin.getRepairItemStackCycle(item);
-		if(returnstack != null) return returnstack; else
+		JMODGetRepairItemStackEvent event = new JMODGetRepairItemStackEvent(item);
+		ItemStack returnstack = null;
+		if(MinecraftForge.EVENT_BUS.post(event)){
+			returnstack = event.getRepairItemStack();
+			if(returnstack != null) return event.getRepairItemStack();
+		}
 		if(item instanceof ItemTool) 	returnstack = ToolMaterial.valueOf(((ItemTool)item).getToolMaterialName()).getRepairItemStack(); else
 		if(item instanceof ItemHoe) 	returnstack = ToolMaterial.valueOf(((ItemHoe)item).getToolMaterialName()).getRepairItemStack(); else 
 		if(item instanceof ItemSword) returnstack = ToolMaterial.valueOf(((ItemSword)item).getToolMaterialName()).getRepairItemStack(); 
@@ -300,8 +308,10 @@ public class Lib extends OwnedObject {
 	}
 	
 	public static Float getRepairAmount(Item item){
-		Float fa = JMODPlugin.getRepairAmountCycle(item);
-		if(fa!=null) return fa;
+		JMODGetRepairAmountEvent event = new JMODGetRepairAmountEvent(item);
+		MinecraftForge.EVENT_BUS.post(event);
+		Float fa = event.getRepairAmount();
+		if(fa!=0F) return fa;
 		
 		if(item instanceof ItemPickaxe || item instanceof ItemAxe) return 1F/3F; else
 		if(item instanceof ItemHoe || item instanceof ItemSword) return 1F/2F; else
@@ -535,7 +545,7 @@ public class Lib extends OwnedObject {
 		
 		for (String itemname : allItems) {
 			Item item = gamereg.getObject(itemname);
-			if(JMODPlugin.patchToolCycle(item,itemname)) continue;
+			if(MinecraftForge.EVENT_BUS.post(new JMODPatchToolEvent(item,itemname))) continue;
 
 			
 			if (item instanceof ItemTool || item instanceof ItemHoe || item instanceof ItemSword) {

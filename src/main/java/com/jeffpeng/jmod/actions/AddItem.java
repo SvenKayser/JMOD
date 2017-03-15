@@ -140,8 +140,24 @@ public class AddItem extends BasicAction{
 	public boolean on(FMLInitializationEvent event){
 		if(instance instanceof IItem){
 			((IItem)instance).on(event);
-			return true;
 		}
+
+		if(hasSetting("container")){
+			String container = getString("container");
+			if(container.equals("self")) ((Item)instance).setContainerItem((Item)instance);
+			else {
+				ItemStack is = lib.stringToItemStackOrFirstOreDict(container);
+				if(is != null){
+					((Item)instance).setContainerItem(is.getItem());
+				}
+			}
+			
+			
+		}
+		
+		
+		
+		
 		return false;
 	}
 	

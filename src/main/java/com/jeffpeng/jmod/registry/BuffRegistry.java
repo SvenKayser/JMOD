@@ -4,8 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.potion.Potion;
+import net.minecraftforge.common.MinecraftForge;
 
 import com.jeffpeng.jmod.JMODPlugin;
+import com.jeffpeng.jmod.forgeevents.JMODAddBuffsEvent;
 
 public class BuffRegistry {
 	
@@ -40,7 +42,8 @@ public class BuffRegistry {
 		buffMap.put("healthBoost", Potion.field_76434_w);
 		buffMap.put("absorption", Potion.field_76444_x);
 		buffMap.put("saturation", Potion.field_76443_y);
-		JMODPlugin.addBuffsCycle(buffMap);
+		MinecraftForge.EVENT_BUS.post(new JMODAddBuffsEvent(buffMap));
+		
 	}
 	
 	public void registerBuff(){

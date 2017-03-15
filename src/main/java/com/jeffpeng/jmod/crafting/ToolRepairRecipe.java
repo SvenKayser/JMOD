@@ -11,10 +11,11 @@ import net.minecraft.item.ItemSword;
 import net.minecraft.item.ItemTool;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 
-import com.jeffpeng.jmod.JMODPlugin;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.Lib;
+import com.jeffpeng.jmod.forgeevents.JMODIsToolEvent;
 
 public class ToolRepairRecipe implements IRecipe {
 	
@@ -43,7 +44,7 @@ public class ToolRepairRecipe implements IRecipe {
 			if(is == null) continue;
 			Item item = is.getItem();
 			items++;
-			if(item instanceof ItemTool || item instanceof ItemHoe || item instanceof ItemSword || JMODPlugin.isToolCycle(item)){
+			if(item instanceof ItemTool || item instanceof ItemHoe || item instanceof ItemSword || MinecraftForge.EVENT_BUS.post(new JMODIsToolEvent(item))){
 				tools++;
 				
 				tool = is;
@@ -75,7 +76,7 @@ public class ToolRepairRecipe implements IRecipe {
 			ItemStack is = ic.getStackInSlot(c);
 			if(is == null) continue;
 			Item item = is.getItem();
-			if(item instanceof ItemTool || item instanceof ItemHoe || item instanceof ItemSword || JMODPlugin.isToolCycle(item)){
+			if(item instanceof ItemTool || item instanceof ItemHoe || item instanceof ItemSword || MinecraftForge.EVENT_BUS.post(new JMODIsToolEvent(item))){
 				tool = is;
 			}
 		}
