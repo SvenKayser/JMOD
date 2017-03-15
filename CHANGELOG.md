@@ -19,7 +19,8 @@ alpha1.3.1
 - Adjusted execution priorities to make sure Fluids are created before items (like buckets)
 - Implemented generic buckets (CoreBucket)
 - R.I.P. ItemWoodenBucket
-- CoreBuckets now work with
+- CoreBuckets now work with IFLuidHandler TileEntities
+- Now uses MCF'S EventBus to let Plugins do their jobs
 
 beta1.2.2 (LTS release)
 - fixed comparision of ItemStacks by oreDict membership. Fixes (among others) [Issue #41](https://github.com/SvenKayser/JMOD/issues/41)

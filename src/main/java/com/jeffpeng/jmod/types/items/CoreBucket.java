@@ -28,6 +28,7 @@ import net.minecraftforge.fluids.IFluidHandler;
 import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.Lib;
+import com.jeffpeng.jmod.forgeevents.JMODRegisterFilledCoreBucketEvent;
 import com.jeffpeng.jmod.interfaces.IItem;
 import com.jeffpeng.jmod.primitives.BasicAction;
 
@@ -133,6 +134,7 @@ public class CoreBucket extends ItemBucket implements IItem{
 				newbucket.setTextureName(getPrefix() + ":" + getName() + "_"+( entry.getKey().replace(" ", "_") ));
 				newbucket.register();
 				children.put(fluidsCounter,newbucket);
+				MinecraftForge.EVENT_BUS.post(new JMODRegisterFilledCoreBucketEvent(this,newbucket,entry.getValue(),this.bucketsize));
 			}
 		}
 		

@@ -4,10 +4,12 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+
 import org.apache.logging.log4j.Logger;
 
 import com.jeffpeng.jmod.actions.AddArmorMaterial;
 import com.jeffpeng.jmod.actions.AddToolMaterial;
+import com.jeffpeng.jmod.forgeevents.JMODUpdateToolMaterialEvent;
 import com.jeffpeng.jmod.util.Reflector;
 
 import cpw.mods.fml.common.registry.GameData;
@@ -21,6 +23,7 @@ import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.ItemTool;
+import net.minecraftforge.common.MinecraftForge;
 
 public class Patcher {
 	
@@ -128,7 +131,7 @@ public class Patcher {
 	 */
 
 	private void updateToolMaterial(Item item, ToolMaterial toolmat) {
-		if(JMODPlugin.updateToolMaterialCycle(item,toolmat)) return;
+		if(MinecraftForge.EVENT_BUS.post(new JMODUpdateToolMaterialEvent(item,toolmat))) return;
 		if (item instanceof ItemTool) {
 			
 		item.setMaxDamage(toolmat.getMaxUses());
