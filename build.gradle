@@ -20,7 +20,7 @@ apply plugin: 'forge'
 
 
 
-version = "1.7.10-alpha1.3.1"
+version = "1.7.10-1.4.0RC1"
 group= "com.jeffpeng.jmod" 
 archivesBaseName = "jmod"
 sourceCompatibility = 1.8
