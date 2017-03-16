@@ -73,10 +73,6 @@ public class JMODRepresentation implements IEventObject {
 	}
 	
 	private void initConfig(){
-		
-		
-		//public List<AlloyDescriptor> alloymap								= new ArrayList<>();
-
 		config.put("moddependencies", 			new HashMap<String,String>());
 		config.put("armormaterials", 			new HashMap<String,AddArmorMaterial>());
 		config.put("metalblocks", 				new ArrayList<String>());
@@ -92,8 +88,7 @@ public class JMODRepresentation implements IEventObject {
 		config.put("showBlockHarvestLevels", 	false);
 		config.put("anvilRepairModifier", 		1.1F);
 		config.put("craftingGridRepairModifier",0.9F);
-		
-		JMODLoader.getPluginList().forEach((k,p) -> p.getInstance().initConfig(config));
+		JMOD.BUS.post(new JMODInitConfigEvent(config));
 	}
 
 	public JMODRepresentation(JMODInfo modinfo, boolean zipmod) {
