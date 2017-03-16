@@ -12,7 +12,7 @@ Reteo invested a lot of time [documenting JMOD](https://github.com/SvenKayser/JM
 
 If you interested in maintaining a plugin or adding a plugin to support your mod please let me know.
 
-##UberCredits
+## UberCredits
 
 - The amazing reteo for not only taking care of the documentation, but also for being the driving creative force behind many things JMOD can and will do
 - nmarshall23 for his valuable contributions and a couple of nice mod integrations (now known as "plugins")
@@ -23,7 +23,7 @@ If you interested in maintaining a plugin or adding a plugin to support your mod
 - The entire [Survival Industry](https://github.com/reteo/Survival-Industry) crew for a couple of man-years of testing SurvivalIndustry - and with it JMOD and it's precursors
 - Generally everybody sharing source and giving advice related to modding
 
-##FAQ
+## FAQ
 
 #### I want to contribute. How can I do that?
 Fork the repo and submit pull requests if you deem them worth it. If the code is good and useful, I'll accept it. I'd also gladly give away maintainership for some of the plugins.
