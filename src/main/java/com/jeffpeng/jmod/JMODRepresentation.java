@@ -29,6 +29,7 @@ import com.jeffpeng.jmod.crafting.ToolRepairRecipe;
 import com.jeffpeng.jmod.descriptors.ColorDescriptor;
 import com.jeffpeng.jmod.descriptors.ItemStackSubstituteDescriptor;
 import com.jeffpeng.jmod.descriptors.TooltipDescriptor;
+import com.jeffpeng.jmod.forgeevents.JMODInitConfigEvent;
 import com.jeffpeng.jmod.interfaces.IEventObject;
 import com.jeffpeng.jmod.interfaces.IItem;
 import com.jeffpeng.jmod.interfaces.IBlock;
@@ -92,11 +93,7 @@ public class JMODRepresentation implements IEventObject {
 		config.put("anvilRepairModifier", 		1.1F);
 		config.put("craftingGridRepairModifier",0.9F);
 		
-		for(Map.Entry<String, JMODPluginContainer> jpc : JMODLoader.getPluginList().entrySet()){
-			jpc.getValue().getInstance().initConfig(config);
-		}
-		
-		
+		JMODLoader.getPluginList().forEach((k,p) -> p.getInstance().initConfig(config));
 	}
 
 	public JMODRepresentation(JMODInfo modinfo, boolean zipmod) {
@@ -111,7 +108,6 @@ public class JMODRepresentation implements IEventObject {
 	public void runScripts() {
 		log.info("Scripts for " + this.getModId());
 		script = new JScript(instance);
-		log.info("Scripts for " + this.getModId());
 		for (String entry : modinfo.scripts) {
 			script.evalScript(entry);
 		}

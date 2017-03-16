@@ -13,6 +13,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
+import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.Lib;
 import com.jeffpeng.jmod.forgeevents.JMODIsToolEvent;
@@ -44,7 +45,7 @@ public class ToolRepairRecipe implements IRecipe {
 			if(is == null) continue;
 			Item item = is.getItem();
 			items++;
-			if(item instanceof ItemTool || item instanceof ItemHoe || item instanceof ItemSword || MinecraftForge.EVENT_BUS.post(new JMODIsToolEvent(item))){
+			if(item instanceof ItemTool || item instanceof ItemHoe || item instanceof ItemSword || JMOD.BUS.post(new JMODIsToolEvent(item))){
 				tools++;
 				
 				tool = is;

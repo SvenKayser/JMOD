@@ -7,12 +7,11 @@ alpha1.3.1
 - Implemented support for Redstone Power on Dynamic Blocks
 - Implemented first step of the EventSystem
 - Introduction of ISettingsReceiver and ISettingsProcessor, part of the syntax rewrite
-- Implemented Plugin System (WIP)
-- Started singeling out mod related code into plugins
+- Implemented Plugin System
+- JMOD is now DEPENDENCY FREE (but the plugins ofc are not)
 - Implemented ASM Transformer loading from plugins
 - revamped internal mod configuration (to allow plugins to add their own config)
 - Implemented several hooks into plugins to perform specific actions (like patch tools, determine the repair value of a tool, etc) on their own merit
-- JMOD is now DEPENDENCY FREE (but the plugins ofc are not)
 - Implemented FuelHandler for JMOD (needs some more work to compensate for MC(F)s wonky burnTime code )
 - jmods can now contain plugin code and vice versa
 - The Discoverer now also follows symbolic links. Penguins rejoice!
@@ -24,6 +23,10 @@ alpha1.3.1
 - Items can now have a "container" and decide leave their container in the crafting grid after crafting
 - Items can now contain them"self" to allow for "crafting tools" like HarvestCraft does a lot of
 - Introduced the Action "SetItemProperties" to adjust the values: stackSize, container and durability
+- stringToItemStackOrFirstOreDict now supports oredictvalues with a stacksize modifier (for example "ingotCopper@16")
+
+alpha1.3.0 (off-commit)
+- Lots and lots of groundwork for later changes, including the upcoming EventAPI
 
 beta1.2.2 (LTS release)
 - fixed comparision of ItemStacks by oreDict membership. Fixes (among others) [Issue #41](https://github.com/SvenKayser/JMOD/issues/41)

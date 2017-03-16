@@ -24,14 +24,6 @@ public class JMODPlugin implements IEventObject{
 	public JMODPlugin(JMODPluginContainer container){
 	}
 	
-	public void initConfig(Map<String,Object> config){
-		
-	}
-	
-	public ItemStack getRepairItemStack(Item item){
-		return null;
-	}
-	
 	@Override
 	public void on(String trigger, Object callback) {
 		// TODO Auto-generated method stub
@@ -73,6 +65,11 @@ public class JMODPlugin implements IEventObject{
 	}
 	
 	public void on(FMLModIdMappingEvent event){
+		
+	}
+
+	public void initConfig(Map<String, Object> config) {
+		// TODO Auto-generated method stub
 		
 	}
 	

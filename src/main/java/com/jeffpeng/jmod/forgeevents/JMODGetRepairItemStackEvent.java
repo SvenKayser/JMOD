@@ -4,7 +4,7 @@ package com.jeffpeng.jmod.forgeevents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public class JMODGetRepairItemStackEvent extends JMODCancelableEvent {
+public class JMODGetRepairItemStackEvent extends JMODCancelableForgeEvent {
 	private ItemStack ris;
 	private Item item;
 	
