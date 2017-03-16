@@ -131,7 +131,7 @@ public class Patcher {
 	 */
 
 	private void updateToolMaterial(Item item, ToolMaterial toolmat) {
-		if(MinecraftForge.EVENT_BUS.post(new JMODUpdateToolMaterialEvent(item,toolmat))) return;
+		if(JMOD.BUS.post(new JMODUpdateToolMaterialEvent(item,toolmat))) return;
 		if (item instanceof ItemTool) {
 			
 		item.setMaxDamage(toolmat.getMaxUses());

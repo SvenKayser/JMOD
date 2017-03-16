@@ -31,8 +31,11 @@ public class JMODClassTransformer implements IClassTransformer{
 			return patchContainerRepair2(basicClass);
 		if (name.equalsIgnoreCase(JMODObfuscationHelper.get("net.minecraft.block.BlockSapling")))
 			return patchBlockSapling(basicClass);
+		
 		return basicClass;
 	}
+	
+	
 	
 	private byte[] patchBlockSapling(byte[] basicClass){
 		JMOD.LOG.info("PatchBlockSapling");
@@ -122,9 +125,6 @@ public class JMODClassTransformer implements IClassTransformer{
 					
 					if(iNode.getOpcode() == Opcodes.INVOKESPECIAL){
 						MethodInsnNode mNode = (MethodInsnNode)iNode;
-						
-						System.out.println(mNode.name + " " + mNode.desc);
-						
 						if(mNode.name.equals("initializeLoader")){
 							InsnList inject = new InsnList();
 							inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC,"com/jeffpeng/jmod/JMOD","getInstance","()Lcom/jeffpeng/jmod/JMOD;",false));

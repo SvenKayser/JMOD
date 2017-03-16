@@ -31,6 +31,7 @@ import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
+import cpw.mods.fml.common.eventhandler.EventBus;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 
@@ -56,6 +57,7 @@ public class JMOD implements IFMLLoadingPlugin {
 	public static final String VERSION = "@VERSION@";
 	public static final String NAME = "JMOD";
 	public static final String ARCHIVEBASE ="com.jeffpeng.jmod";
+	public static final EventBus BUS = new EventBus(); 
 	public static final GlobalConfig GLOBALCONFIG = new GlobalConfig();
 	private static boolean isServer = false;
 	private static boolean devversion = ("@devversion@".equals("true"));
@@ -84,7 +86,7 @@ public class JMOD implements IFMLLoadingPlugin {
 	
 	public void on(FMLConstructionEvent event) {
 		if(event.getSide().isServer()) isServer = true;
-		JMODLoader.registerPluginsToMCFEventBus();
+		JMODLoader.registerPluginsToEventBus();
 		BlacklistCraftingResults.init();
 		BlacklistCraftingResults.getInstance().blacklistDomain("RotaryCraft");
 		DEEPFORGE = new ForgeDeepInterface();

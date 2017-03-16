@@ -4,7 +4,7 @@ import net.minecraftforge.fluids.Fluid;
 
 import com.jeffpeng.jmod.types.items.CoreBucket;
 
-public class JMODRegisterFilledCoreBucketEvent extends JMODEvent {
+public class JMODRegisterFilledCoreBucketEvent extends JMODForgeEvent {
 	
 	public CoreBucket empty;
 	public CoreBucket filled;

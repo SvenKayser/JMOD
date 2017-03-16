@@ -2,7 +2,7 @@ package com.jeffpeng.jmod.forgeevents;
 
 import net.minecraft.item.Item;
 
-public class JMODGetRepairAmountEvent extends JMODEvent {
+public class JMODGetRepairAmountEvent extends JMODForgeEvent {
 	
 	private Item item;
 	private Float repairamount = 0F;

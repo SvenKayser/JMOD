@@ -40,6 +40,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import com.jeffpeng.jmod.descriptors.ItemStackSubstituteDescriptor;
 import com.jeffpeng.jmod.forgeevents.JMODGetRepairAmountEvent;
 import com.jeffpeng.jmod.forgeevents.JMODGetRepairItemStackEvent;
+import com.jeffpeng.jmod.forgeevents.JMODHideItemStackEvent;
 import com.jeffpeng.jmod.forgeevents.JMODPatchToolEvent;
 import com.jeffpeng.jmod.primitives.OwnedObject;
 import com.jeffpeng.jmod.registry.BlockMaterialRegistry;
@@ -165,10 +166,20 @@ public class Lib extends OwnedObject {
 		Object is = stringToItemStackImpl(inputstring,jmod);
 		if(is instanceof ItemStack) return (ItemStack)is;
 		else {
+			int amount = 1;
+			if(inputstring.contains("@")) {
+				String[] splits = inputstring.split("@");
+				amount = Integer.parseInt(splits[1]);
+				inputstring = splits[0];
+			}
+			
+			
 			if(OreDictionary.doesOreNameExist((String)is)){
 				List<ItemStack> orelist = OreDictionary.getOres((String) is);
 				if(orelist.size() > 0){
-					return orelist.get(0);
+					ItemStack returnstack = orelist.get(0); 
+					returnstack.stackSize = amount;
+					return returnstack;
 				}
 			}
 		}
@@ -297,7 +308,7 @@ public class Lib extends OwnedObject {
 	public static ItemStack getRepairItemStack(Item item){
 		JMODGetRepairItemStackEvent event = new JMODGetRepairItemStackEvent(item);
 		ItemStack returnstack = null;
-		if(MinecraftForge.EVENT_BUS.post(event)){
+		if(JMOD.BUS.post(event)){
 			returnstack = event.getRepairItemStack();
 			if(returnstack != null) return event.getRepairItemStack();
 		}
@@ -309,7 +320,7 @@ public class Lib extends OwnedObject {
 	
 	public static Float getRepairAmount(Item item){
 		JMODGetRepairAmountEvent event = new JMODGetRepairAmountEvent(item);
-		MinecraftForge.EVENT_BUS.post(event);
+		JMOD.BUS.post(event);
 		Float fa = event.getRepairAmount();
 		if(fa!=0F) return fa;
 		
@@ -532,6 +543,10 @@ public class Lib extends OwnedObject {
 			}
 		}
 	}
+	
+	public static void hideItemStack(ItemStack is){
+		JMOD.BUS.post(new JMODHideItemStackEvent(is));
+	}
 
 
 	public static void patchTools() {
@@ -545,7 +560,7 @@ public class Lib extends OwnedObject {
 		
 		for (String itemname : allItems) {
 			Item item = gamereg.getObject(itemname);
-			if(MinecraftForge.EVENT_BUS.post(new JMODPatchToolEvent(item,itemname))) continue;
+			if(JMOD.BUS.post(new JMODPatchToolEvent(item,itemname))) continue;
 
 			
 			if (item instanceof ItemTool || item instanceof ItemHoe || item instanceof ItemSword) {

@@ -131,8 +131,8 @@ public class JMODLoader {
 		}
 	}
 	
-	protected static void registerPluginsToMCFEventBus(){
-		pluginList.forEach((k,v) -> MinecraftForge.EVENT_BUS.register(v));
+	protected static void registerPluginsToEventBus(){
+		pluginList.forEach((k,v) -> JMOD.BUS.register(v.getInstance()));
 	}
 	
 	protected static void constructMods(){

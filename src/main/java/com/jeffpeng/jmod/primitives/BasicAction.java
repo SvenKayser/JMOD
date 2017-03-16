@@ -51,6 +51,7 @@ public class BasicAction extends OwnedObject implements IExecutableObject {
 	
 	public String getString(String name){
 		Object o = settingObjects.get(name.toLowerCase());
+		if(o == null) return null;
 		if(o instanceof String){
 			return (String) o;
 		}

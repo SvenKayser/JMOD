@@ -4,7 +4,7 @@ import java.util.Map;
 
 import net.minecraft.potion.Potion;
 
-public class JMODAddBuffsEvent extends JMODEvent {
+public class JMODAddBuffsEvent extends JMODForgeEvent {
 	public Map<String,Potion> buffMap;
 	
 	public JMODAddBuffsEvent(Map<String,Potion> buffMap){
