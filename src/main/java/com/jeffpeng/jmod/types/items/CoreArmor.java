@@ -1,14 +1,16 @@
 package com.jeffpeng.jmod.types.items;
 
+import java.util.Map;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 
-import com.jeffpeng.jmod.Config;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.descriptors.ColorDescriptor;
 import com.jeffpeng.jmod.interfaces.IArmor;
+import com.jeffpeng.jmod.primitives.BasicAction;
 
 public class CoreArmor extends ItemArmor implements IArmor {
 	
@@ -16,9 +18,9 @@ public class CoreArmor extends ItemArmor implements IArmor {
 	public CreativeTabs creativetab;
 	private String matName;
 	private String armorType;
-	private Config config;
+	private Map<String,Object> config;
 	private JMODRepresentation owner;
-	
+	private int burnTime = 0;
 	
 	public CoreArmor(JMODRepresentation owner, String mat,String armorType){
 		super(ItemArmor.ArmorMaterial.valueOf(mat),2,translateArmorType(armorType));
@@ -79,9 +81,10 @@ public class CoreArmor extends ItemArmor implements IArmor {
 		return true;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override 
 	public int getColor(ItemStack is){
-		ColorDescriptor armorColor = config.colors.get(matName);
+		ColorDescriptor armorColor = ((Map<String,ColorDescriptor>)config.get("colors")).get(matName);
 		int color = armorColor.red*256*256 + armorColor.green*256 + armorColor.blue;
 		return color;
 	}
@@ -96,5 +99,34 @@ public class CoreArmor extends ItemArmor implements IArmor {
 	public JMODRepresentation getOwner() {
 		return owner;
 	}
+
+	@Override
+	public void processSettings(BasicAction settings) {
+		if(settings.hasSetting("burntime"))		this.burnTime	 = settings.getInt("burntime");
+		if(settings.hasSetting("remainsincraftinggrid")) this.containerItemSticksInCraftingGrid = settings.getBoolean("remainsincraftinggrid");
+	}
+	
+	private boolean containerItemSticksInCraftingGrid = false;
+	
+	@Override
+	public boolean doesContainerItemLeaveCraftingGrid(ItemStack is)
+    {
+        return !containerItemSticksInCraftingGrid;
+    }
+	
+	
+	@Override 
+	public int getBurnTime(){
+		return this.burnTime;
+	}
+	
+	@Override
+	public void setBurnTime(int bt){
+		this.burnTime = bt;
+	}
+	
+	
+	
+	
 
 }

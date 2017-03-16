@@ -1,9 +1,10 @@
 package com.jeffpeng.jmod.interfaces;
 
+import cpw.mods.fml.common.event.FMLEvent;
 import net.minecraft.item.Item;
 
 
-public interface IItem extends IOwned{
+public interface IItem extends IOwned, ISettingsProcessor, IFurnaceFuel{
 	
 	
 	
@@ -22,8 +23,12 @@ public interface IItem extends IOwned{
 	default public void register(){
 		getOwner().registerItem(this);
 	}
+	
+	default public void on(FMLEvent event){
+		
+	}
+	
 	default public void setRecipes(){
 		
 	}
-
 }

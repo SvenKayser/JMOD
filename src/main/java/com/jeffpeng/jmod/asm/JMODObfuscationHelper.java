@@ -27,6 +27,7 @@ public class JMODObfuscationHelper {
 		
 		list.put("net.minecraft.inventory.ContainerRepair$2", "zw");
 		list.put("net.minecraft.block.BlockSapling", "anj");
+		list.put("net.minecraft.client.multiplayer.ServerList", "bjp");
 	}
 	
 	public static boolean isDeobf(){

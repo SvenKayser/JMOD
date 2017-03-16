@@ -1,15 +1,12 @@
 package com.jeffpeng.jmod.actions;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.EnumHelper;
-import net.minecraftforge.oredict.OreDictionary;
 
-import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.primitives.BasicAction;
 import com.jeffpeng.jmod.util.Reflector;
@@ -34,12 +31,11 @@ public class AddArmorMaterial extends BasicAction {
 	public int bootsfactor;
 	public String repairmaterial;
 	public ItemStack repairstack;
-	private ArmorMaterial armormat;
+	public ArmorMaterial armormat;
 	private int[] factors;
 	
 	public AddArmorMaterial(JMODRepresentation owner, String name, int reductionbase, int helmetfactor, int chestfactor,int legginsfactor,int bootsfactor,int enchantability,String repairmaterial){
 		super(owner);
-		list.put(name,this);
 		this.name = name;
 		this.reductionbase = reductionbase;
 		this.helmetfactor = helmetfactor;
@@ -48,14 +44,16 @@ public class AddArmorMaterial extends BasicAction {
 		this.bootsfactor = bootsfactor;
 		this.repairmaterial = repairmaterial;
 		this.valid = true;
+		list.put(name,this);
 	}
 
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean on(FMLPreInitializationEvent event){
 		factors = new int[]{helmetfactor,chestfactor,legginsfactor,bootsfactor};
 		armormat = EnumHelper.addArmorMaterial(name, reductionbase, factors, enchantability);
-		config.armormaterials.put(name,this);
+		((Map<String,AddArmorMaterial>) config.get("armormaterials")).put(name,this);
 		return true;
 	}
 	
@@ -72,6 +70,6 @@ public class AddArmorMaterial extends BasicAction {
 	@Override
 	public int priority()
 	{
-		return 250;
+		return Priorities.AddArmorMaterial;
 	}
 }

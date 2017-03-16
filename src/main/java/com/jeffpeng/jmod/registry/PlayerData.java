@@ -17,10 +17,9 @@ import net.minecraft.entity.player.EntityPlayer;
 
 public class PlayerData {
 	
-	private EntityPlayer player;
-	private JMODRepresentation jmod;
 	private static Map<String,PlayerData> playerdatacache = new HashMap<>();
 	private Map<String,String> values = new HashMap<>();
+	@SuppressWarnings("unused")
 	private static SimpleNetworkWrapper snw = NetworkRegistry.INSTANCE.newSimpleChannel("JMODPlayerData");
 	
 	public static void purge(){
@@ -40,8 +39,6 @@ public class PlayerData {
 	}
 	
 	public PlayerData(EntityPlayer player, JMODRepresentation jmod){
-		this.player = player;
-		this.jmod = jmod;
 		
 	}
 	
@@ -75,13 +72,7 @@ public class PlayerData {
 	
 	public static class ValueToClient implements IMessage {
 		
-		private EntityPlayer player;
-		private JMODRepresentation jmod;
-		private String value;
-		
 		public ValueToClient(JMODRepresentation jmod, String value){
-			this.jmod = jmod;
-			this.value = value;
 			
 		}
 
@@ -99,6 +90,7 @@ public class PlayerData {
 		
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public static class ValueResponse implements IMessageHandler {
 
 		@Override

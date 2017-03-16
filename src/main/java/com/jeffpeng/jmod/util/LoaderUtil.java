@@ -5,25 +5,23 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 
 import org.apache.commons.io.IOUtils;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.primitives.JMODInfo;
+import com.jeffpeng.jmod.primitives.JMODPluginInfo;
 
 public class LoaderUtil {
 	
 	public static final ScriptEngineManager jsManager = new ScriptEngineManager(null);
-	private static ScriptEngine jsEngine = jsManager.getEngineByName("nashorn");
-	
-    
 	
 	public static String readFile(Path from, String file) throws IOException{
 		String retstr = "";
@@ -56,57 +54,84 @@ public class LoaderUtil {
 		return rawjson;
 	}
 	
-	@SuppressWarnings("unchecked")
+	public static String loadPluginJson(Path entry){
+		
+		String rawjson = null;
+		
+		try{
+			rawjson = LoaderUtil.readFile(entry, "plugin.json");
+		} catch (IOException e){
+			
+		}
+		
+		return rawjson;
+	}
+
+	private static String stripComments(String rawjson){
+		String newjson = rawjson.replaceAll("\\/\\*.*\\*\\/",""); // strips all /* […] */
+		newjson = newjson.replaceAll("\\/\\/.*\\r", newjson); // strings all // until the end of the line
+		return newjson;
+	}
+	
 	public static JMODInfo parseModJson(String rawjson){
 		JMODInfo jmodinfo = null;
 		
 		try {
-			Object configdataraw = jsEngine.eval("Java.asJSONCompatible(" + rawjson + ")");
-			if(configdataraw instanceof Map){
-				Map<String,Object> configdata = (Map<String,Object>) configdataraw;
-				
-				jmodinfo = new JMODInfo();
-				
-				jmodinfo.modid = (String) configdata.get("modid");
-				jmodinfo.name = (String) configdata.get("name");
-				jmodinfo.version = (String) configdata.get("version");
-				jmodinfo.credits = (String) configdata.get("credits");
-				jmodinfo.logo = (String) configdata.get("logo");
-				jmodinfo.description = (String) configdata.get("description");
-				jmodinfo.url = (String) configdata.get("url");
-				
-				
-				if(configdata.get("authors") != null && configdata.get("authors") instanceof List){
-					jmodinfo.authors = (List<String>) configdata.get("authors");
-				} else {
-					jmodinfo.authors = new ArrayList<String>();
-					jmodinfo.authors.add("John Doe (no author specified)");
-				}
-				
-				
-				if(configdata.get("scripts") != null && configdata.get("scripts") instanceof List){
-					jmodinfo.scripts = (List<String>) configdata.get("scripts");
-				} else {
-					jmodinfo.scripts = new ArrayList<String>();
-				}
-						
-				
-				
-				
-			}
-		} catch (ScriptException e){
+			GsonBuilder builder = new GsonBuilder();
+			Gson gson = builder.create();
+			jmodinfo = gson.fromJson(stripComments(rawjson), JMODInfo.class);
+			jmodinfo = gson.fromJson(rawjson, JMODInfo.class);
 			
+			if(jmodinfo.authors.isEmpty()) {
+				jmodinfo.authors.add("John Doe (no author specified)");
+			}
+
+		} catch (JsonSyntaxException e){
+			JMOD.LOG.warn("[JMODLoader parseModJson] Failed to parse JSON - Message: {}, RawJson: {}", 
+					e.getMessage(), rawjson);
+		}
+
+		return jmodinfo;
+	}
+	
+	public static JMODPluginInfo parsePluginJson(String rawjson){
+		JMODPluginInfo plugininfo = null;
+
+		try {
+			GsonBuilder builder = new GsonBuilder();
+			Gson gson = builder.create();
+			plugininfo = gson.fromJson(stripComments(rawjson), JMODPluginInfo.class);
+			if(plugininfo.authors.isEmpty()) {
+				plugininfo.authors.add("John Doe (no author specified)");
+			}
+		} catch (JsonSyntaxException e){
+			JMOD.LOG.warn("[JMODLoader parsePluginJson] Failed to parse	JSON - Message: {}, RawJson: {}", 
+					e.getMessage(), rawjson);
+		}
+
+		return plugininfo;
+	}
+	
+	public static boolean pluginInfoDataSanity(JMODPluginInfo info,String entry){
+		if(info.pluginid == null){
+			JMOD.LOG.warn("[JMODLoader Plugins] The plugin " + entry + " has no modid. That won't work. This is an error of the mod author. Skipping.");
+			return false;
 		}
 		
+		if(info.archivebase == null){
+			JMOD.LOG.warn("[JMODLoader Plugins] The plugin " + entry + " has no archivebase. That won't work. This is an error of the mod author. Skipping.");
+			return false;
+		}
 		
+		if(info.name == null){
+			JMOD.LOG.warn("[JMODLoader Plugins] The plugin" + info.pluginid + " has no name. Assuming it's the same as the plugin id. It's ugly tho. This is an error of the mod author.");
+			info.name = info.pluginid;
+		}
 		
-		
-		
-		
-		
-		
-		
-		return jmodinfo;
+		if(info.version == null){
+			JMOD.LOG.warn("[JMODLoader Plugins] The plugin " + info.name + " has no version. Assuming \"v1\". This should be fixed. This is an error of the mod author.");
+		}
+		return true;
 	}
 	
 	public static boolean infoDataSanity(JMODInfo info,String entry){
@@ -129,7 +154,7 @@ public class LoaderUtil {
 		if(info.version == null){
 			JMOD.LOG.warn("[JMODLoader] The jmod " + info.name + " has no version. Assuming \"v1\". This should be fixed. This is an error of the mod author.");
 		}
+    
 		return true;
-		
 	}
 }

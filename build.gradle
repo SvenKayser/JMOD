@@ -18,7 +18,9 @@ buildscript {
 apply plugin: 'forge'
 
 
-version = "1.7.10-beta1.2.1"
+
+
+version = "1.7.10-alpha1.3.1"
 group= "com.jeffpeng.jmod" 
 archivesBaseName = "jmod"
 sourceCompatibility = 1.8
@@ -32,19 +34,36 @@ minecraft {
 }
 
 jar {
-		manifest {
-			attributes 'FMLAT': 'jmod_at.cfg'
-			attributes 'FMLCorePlugin': 'com.jeffpeng.jmod.JMOD','FMLCorePluginContainsFMLMod': 'false'
-			attributes 'Main-Class': 'com.jeffpeng.jmod.validator.Validator'
-		}
-		
-		classifier = 'complete'
+	manifest {
+		attributes 'FMLAT': 'jmod_at.cfg'
+		attributes 'FMLCorePlugin': 'com.jeffpeng.jmod.JMOD','FMLCorePluginContainsFMLMod': 'false'
+		attributes 'Main-Class': 'com.jeffpeng.jmod.validator.Validator'
+	}
+	
 }
+
+/*task deobfJar(type: Jar, dependsOn: 'jar') {
+    from "build/source/main"
+    classifier "dev"
+}*/
+
+/*artifacts {
+    archives deobfJar
+}*/
 
 repositories {
 	maven {
 		url "http://www.ryanliptak.com/maven/"
 	}
+	
+	maven {
+        url 'http://maven.tterrag.com/'
+    }
+    
+    maven {
+        name = "chickenbones"
+        url = "http://chickenbones.net/maven/"
+    }
 }
 
 dependencies {
@@ -52,6 +71,10 @@ dependencies {
 	
 	compile "applecore:AppleCore:1.7.10-1.3.1+171.f62ad:api"
 	
+	compile "exnihilo:Ex-Nihilo:1.38-49:deobf"
+	
+	compile "codechicken:CodeChickenLib:1.7.10-1.1.1.104:dev"
+		
     // you may put jars on which you depend on in ./libs
     // or you may define them like so..
     //compile "some.group:artifact:version:classifier"
@@ -72,22 +95,19 @@ sourceSets {
     main {
         java {
             srcDirs += 'src/api/java'
-            srcDirs += 'src/main/java/'
         }
         
         resources {
             srcDir "src/main/resources/"
-            
-            
         }
     }
     
-    pluginIgniter {
+/*    pluginIgniter {
     	java {
     		srcDirs += 'src/main/java/jmodplugins/igniter'
     	}
     }
-    
+  */  
     
 }
 
@@ -143,7 +163,15 @@ task coreJar(type: Jar, dependsOn: reobf){
 		}
 	doFirst {
 		from(project.ext.jarFile){
-			includes.addAll(["assets/**","com/jeffpeng/jmod/**","com/cricketcraft/**","jmod/API/**","META-INF/**","LICENSE**"])
+			includes.addAll(["assets/**",
+							 "com/jeffpeng/jmod/**",
+							 "com/cricketcraft/**",
+							 "com/jaquadro/**",
+							 "mods/defeatedcrow/**",
+							 "defeatedcrow/**",
+							 "jmod/API/**",
+							 "META-INF/**",
+							 "LICENSE**"])
 		}
 	}
 }

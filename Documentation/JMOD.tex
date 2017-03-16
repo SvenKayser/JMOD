@@ -724,7 +724,7 @@ The blast resistance of a block determines how likely the block will survive an 
 You can add drops to existing blocks, in case you want to add a specific type of item that drops from a block (such as redstone or diamonds).
 
 \begin{description}
-\item[Command:] \texttt{addSmeltingRecipe(``block id name'', ``item id name'', chance, exclusive, playeronly)}
+\item[Command:] \texttt{AddBlockDrop(``block id name'', ``item id name'', chance, exclusive, playeronly)}
 \begin{description}
 \item [block id name:] This is the ID of the block to break.
 \item [item id name:] This is the ID of the item that you want to drop from the block.
@@ -934,7 +934,7 @@ For item output, you have the following method.  Note that the chance is a float
 For fluids, you have the following method.  
 
 \begin{description}
-\item[Method:] \texttt{.addOutput(``output'', chance)}
+\item[Method:] \texttt{.addFluidOutput(``output'', chance)}
 \begin{description}
 \item [output:] The fluid ID of what we want to output.  Like with item, the @ and a number can give an amount, which is measured in millibuckets.
 \item [chance:] The chance, in percentage form, that the item will be extracted from the ingredient.
@@ -989,13 +989,15 @@ The rock melter is the opposite of the drying bed.  Where the drying bed dries o
 \item [input:] The item ID of the item that goes into the rock melter.
 \item [output:] The fluid name of the output of the rock melter.
 \item [temperature:] The temperature (in Celcius) needed for the rock melter to work.  This number is an integer, do not use decimals.
-\item [power:] The power (in Watts) required by the rock melter.  This number can include decimals.
+\item [power:] The power (in Joules) required by the rock melter.  This number can include decimals.
 \end{description}
 \end{description}
+
+NOTE: "Joules" is a total amount of energy.  "Watts" are a measure of joules per second.  So, if you're providing 1KW of energy, and 10,000 joules are required, then the recipe will be done in roughly 10 seconds.
 
 \subsubsection{Liquefaction Machine Recipes}
 
-The liquefaction machine mixes a liquid into a solid, making a different solid.  For example, if you add a mud block, then you can add a recipe for this machine to combine water and a dirt block to make your mud block
+The liquefaction machine mixes a liquid into a solid, making a different solid.  For example, if you add a mud block, then you can add a recipe for this machine to combine water and a dirt block to make your mud block.
 
 \begin{description}
 \item[Command:] \texttt{RotaryCraft.addLiquefactionRecipe(``input'', ``output'', ``liquid input'', time)}
@@ -1003,7 +1005,7 @@ The liquefaction machine mixes a liquid into a solid, making a different solid. 
 \item [input:] The item ID of the item that goes into the liquifaction machine.
 \item [output:] The item ID of the output of the liquifaction machine.
 \item [liquid input:] The name of the liquid that goes into the liquifaction machine.
-\item [time:] The amount of time required by the liquifaction machine.  This number is an integer, do not use decimals.
+\item [time:] The amount of time (in ticks) required by the liquifaction machine.  This number is an integer, do not use decimals.
 \end{description}
 \end{description}
 

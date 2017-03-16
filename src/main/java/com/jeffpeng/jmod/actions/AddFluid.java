@@ -8,7 +8,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 public class AddFluid extends BasicAction{
 	
-	private String fluidName;
 	private CoreFluid fluid;
 	private boolean hasBucket = false;
 	
@@ -37,6 +36,11 @@ public class AddFluid extends BasicAction{
 		fluid.register();
 		if(hasBucket) fluid.bucketize();
 		
+	}
+	
+	@Override
+	public int priority(){
+		return Priorities.AddFluid;
 	}
 
 }

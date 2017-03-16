@@ -56,7 +56,8 @@ public class AddSmeltingRecipe extends BasicAction {
 	
 	@Override
 	public int priority(){
-		return 10;
+		return Priorities.AddSmeltingRecipe;
+
 	}
 
 }

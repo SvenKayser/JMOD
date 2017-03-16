@@ -1,5 +1,6 @@
 package com.jeffpeng.jmod.types.items;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -15,60 +16,62 @@ import com.jeffpeng.jmod.Lib;
 import com.jeffpeng.jmod.descriptors.ItemStackSubstituteDescriptor;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-
+@SuppressWarnings("unchecked")
 public class IngotGeneric extends CoreItem {
 
 	public IIcon[] icons;
-
 	public IngotGeneric(JMODRepresentation owner) {
 		super(owner);
-		icons = new IIcon[config.metalingots.size()];
+		
+		icons = new IIcon[((ArrayList<String>)config.get("metalingots")).size()];
 
 		this.setHasSubtypes(true);
 
-		for (Integer c = 0; c < config.metalingots.size(); c++) {
-			config.itemstacksubstitutes.add(new ItemStackSubstituteDescriptor(getPrefix() + ":" + Lib.ingotyfy(config.metalingots.get(c)), getPrefix() + ":ingotGeneric:" + c.toString()));
+		for (Integer c = 0; c < ((ArrayList<String>)config.get("metalingots")).size(); c++) {
+			((List<ItemStackSubstituteDescriptor>)config.get("itemstacksubstitutes")).add(
+					new ItemStackSubstituteDescriptor(getPrefix() + ":" + Lib.ingotyfy(((ArrayList<String>)config.get("metalingots")).get(c)), 
+					getPrefix() + ":ingotGeneric:" + c.toString()));
 		}
 	}
 
 	@Override
 	public void registerIcons(IIconRegister reg) {
-		for (int c = 0; c < config.metalingots.size(); c++) {
-			this.icons[c] = reg.registerIcon(getPrefix() + ":" + Lib.ingotyfy(config.metalingots.get(c)));
+		for (int c = 0; c < ((ArrayList<String>)config.get("metalingots")).size(); c++) {
+			this.icons[c] = reg.registerIcon(getPrefix() + ":" + Lib.ingotyfy(((ArrayList<String>)config.get("metalingots")).get(c)));
 		}
 	}
 
 	@Override
 	public IIcon getIconFromDamage(int meta) {
-		if(meta >= config.metalingots.size())
+		if(meta >= ((ArrayList<String>)config.get("metalingots")).size())
 		{
 			return this.icons[0];
 		}
 		return this.icons[meta];
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"rawtypes" })
 	@Override
 	public void getSubItems(Item item, CreativeTabs tab, List itemList) {
-		for (int c = 0; c < config.metalingots.size(); c++) itemList.add(new ItemStack(item, 1, c));
+		for (int c = 0; c < ((ArrayList<String>)config.get("metalingots")).size(); c++) itemList.add(new ItemStack(item, 1, c));
 	}
 
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
 		int meta = stack.getItemDamage();
-		if(meta >= config.metalingots.size()) return "!invalid!";
+		if(meta >= ((ArrayList<String>)config.get("metalingots")).size()) return "!invalid!";
 		
-		return "item." + owner.getModId() + "." + Lib.ingotyfy(config.metalingots.get(meta));
+		return "item." + owner.getModId() + "." + Lib.ingotyfy(((ArrayList<String>)config.get("metalingots")).get(meta));
 	}
 
 	@Override
 	public void register() {
 		super.register();
-		for (int c = 0; c < config.metalingots.size(); c++) {
+		for (int c = 0; c < ((ArrayList<String>)config.get("metalingots")).size(); c++) {
 			ItemStack itemstack = new ItemStack(this, 9, c);
-			GameRegistry.addRecipe(new ShapelessOreRecipe(itemstack, Lib.blockyfy(config.metalingots.get(c))));
+			GameRegistry.addRecipe(new ShapelessOreRecipe(itemstack, Lib.blockyfy(((ArrayList<String>)config.get("metalingots")).get(c))));
 			itemstack.stackSize = 1;
-			OreDictionary.registerOre(Lib.ingotyfy(config.metalingots.get(c)), itemstack);
+			OreDictionary.registerOre(Lib.ingotyfy(((ArrayList<String>)config.get("metalingots")).get(c)), itemstack);
 		}
 
 	}

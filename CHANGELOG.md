@@ -1,9 +1,40 @@
 Changelog
 
+alpha1.3.1
+- Implemented Basic and "Dynamic" blocks
+- Implemented support for RotaryCraft SurrogateBedrock on Dynamic Blocks
+- Implemented support for ReactorCrafy NeutronShield on Dynamic Blocks
+- Implemented support for Redstone Power on Dynamic Blocks
+- Implemented first step of the EventSystem
+- Introduction of ISettingsReceiver and ISettingsProcessor, part of the syntax rewrite
+- Implemented Plugin System
+- JMOD is now DEPENDENCY FREE (but the plugins ofc are not)
+- Implemented ASM Transformer loading from plugins
+- revamped internal mod configuration (to allow plugins to add their own config)
+- Implemented several hooks into plugins to perform specific actions (like patch tools, determine the repair value of a tool, etc) on their own merit
+- Implemented FuelHandler for JMOD (needs some more work to compensate for MC(F)s wonky burnTime code )
+- jmods can now contain plugin code and vice versa
+- The Discoverer now also follows symbolic links. Penguins rejoice!
+- Adjusted execution priorities to make sure Fluids are created before items (like buckets)
+- Implemented generic buckets (CoreBucket)
+- R.I.P. ItemWoodenBucket
+- CoreBuckets now work with IFLuidHandler TileEntities
+- Now uses MCF'S EventBus to let Plugins do their jobs
+- Items can now have a "container" and decide leave their container in the crafting grid after crafting
+- Items can now contain them"self" to allow for "crafting tools" like HarvestCraft does a lot of
+- Introduced the Action "SetItemProperties" to adjust the values: stackSize, container and durability
+- stringToItemStackOrFirstOreDict now supports oredictvalues with a stacksize modifier (for example "ingotCopper@16")
+
+alpha1.3.0 (off-commit)
+- Lots and lots of groundwork for later changes, including the upcoming EventAPI
+
+beta1.2.2 (LTS release)
+- fixed comparision of ItemStacks by oreDict membership. Fixes (among others) [Issue #41](https://github.com/SvenKayser/JMOD/issues/41)
+- Switched json parsing (back) to GSON, now with regex based  comment stripping [Issue #38](https://github.com/SvenKayser/JMOD/issues/38)
+
 beta1.2.1 (LTS release)
 - Implemented proper support for ingredient based search for Shaped StringRecipes for NEI [Issue #31](https://github.com/SvenKayser/JMOD/issues/31)
 - fixed RoC blast furnace handler not executing [Issue #32](https://github.com/SvenKayser/JMOD/issues/32)
-
 
 beta1.2.0 (LTS until Mar 31st 2017)
 - Added support for RotaryCraft PulseJetFurnace and Compactor

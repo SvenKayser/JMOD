@@ -1,0 +1,8 @@
+{
+  "modid": "ToolMaterialFix",
+  "name": "Tool Material Fix",
+  "description" : "A test to see that harvest levels can be modified",
+  "version" :    "1.0",
+  "scripts" : ["main.js"],
+  "authors" : ["nmarshall"]
+}

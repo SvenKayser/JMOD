@@ -11,7 +11,6 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 
-import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.primitives.OwnedObject;
 
@@ -197,6 +196,10 @@ public class StringListRecipe extends OwnedObject implements IRecipe {
 	@Override
 	public ItemStack getRecipeOutput() {
 		if(!valid) return null; else return this.result;
+	}
+	
+	public ItemStack getRecipeOutputProxy(){
+		return getRecipeOutput();
 	}
 	
 	public boolean fits(int x, int y){

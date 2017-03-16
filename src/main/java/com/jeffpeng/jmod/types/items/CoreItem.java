@@ -1,18 +1,22 @@
 package com.jeffpeng.jmod.types.items;
 
+import java.util.Map;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
-import com.jeffpeng.jmod.Config;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.interfaces.IItem;
+import com.jeffpeng.jmod.primitives.BasicAction;
 
 public class CoreItem extends Item implements IItem {
 	
 	public CreativeTabs creativetab;
 	private String internalName;
 	protected JMODRepresentation owner;
-	protected Config config;
+	protected Map<String,Object> config;
+	private int burnTime = 0;
 	
 	public CoreItem(JMODRepresentation owner){
 		this.owner = owner;
@@ -42,6 +46,30 @@ public class CoreItem extends Item implements IItem {
 	public Item setTextureName(String texname){
 		super.setTextureName(texname);
 		return this;
+	}
+	
+	@Override
+	public void processSettings(BasicAction settings) {
+		if(settings.hasSetting("burntime"))		this.burnTime	 = settings.getInt("burntime");
+		if(settings.hasSetting("remainsincraftinggrid")) this.containerItemSticksInCraftingGrid = settings.getBoolean("remainsincraftinggrid");
+	}
+	
+	private boolean containerItemSticksInCraftingGrid = false;
+	
+	@Override
+	public boolean doesContainerItemLeaveCraftingGrid(ItemStack is)
+    {
+        return !this.containerItemSticksInCraftingGrid;
+    }
+	
+	@Override 
+	public int getBurnTime(){
+		return this.burnTime;
+	}
+	
+	@Override
+	public void setBurnTime(int bt){
+		this.burnTime = bt;
 	}
 
 }
