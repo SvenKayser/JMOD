@@ -44,6 +44,11 @@ public class ToolSword extends ItemSword implements ITool, IItem {
 		return owner;
 	}
 	
+	@Override 
+	public boolean hasOwner(){
+		return owner != null;
+	}
+	
 	@Override
 	public void processSettings(BasicAction settings) {
 		if(settings.hasSetting("burntime"))		this.burnTime	 = settings.getInt("burntime");

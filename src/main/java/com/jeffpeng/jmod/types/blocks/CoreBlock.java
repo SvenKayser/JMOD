@@ -88,6 +88,11 @@ public class CoreBlock extends Block implements IBlock, ISettingsProcessor {
 	public JMODRepresentation getOwner() {
 		return owner;
 	}
+	
+	@Override 
+	public boolean hasOwner(){
+		return owner != null;
+	}
 
 	@Override
 	public void processSettings(BasicAction settings) {

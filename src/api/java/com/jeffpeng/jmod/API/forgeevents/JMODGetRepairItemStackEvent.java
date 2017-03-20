@@ -1,5 +1,5 @@
 
-package com.jeffpeng.jmod.forgeevents;
+package com.jeffpeng.jmod.API.forgeevents;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -15,6 +15,10 @@ public class JMODGetRepairItemStackEvent extends JMODCancelableForgeEvent {
 	
 	public ItemStack getRepairItemStack(){
 		return ris;
+	}
+	
+	public Item getItem(){
+		return item;
 	}
 	
 	public JMODGetRepairItemStackEvent(Item item){

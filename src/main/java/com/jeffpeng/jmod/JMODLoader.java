@@ -13,42 +13,58 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.launchwrapper.LaunchClassLoader;
-import net.minecraftforge.common.MinecraftForge;
 
+import com.jeffpeng.jmod.API.JMODAPI;
+import com.jeffpeng.jmod.interfaces.IJMODLoader;
 import com.jeffpeng.jmod.primitives.JMODInfo;
 import com.jeffpeng.jmod.primitives.ModCreationException;
 import com.jeffpeng.jmod.scripting.JScript;
-import com.jeffpeng.jmod.types.items.CoreBucket.FluidHandler;
 import com.jeffpeng.jmod.util.LoaderUtil;
 import com.jeffpeng.jmod.util.Reflector;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
 
-public class JMODLoader {
+public class JMODLoader implements IJMODLoader {
 	
-	private static LaunchClassLoader lcl = (LaunchClassLoader) new Reflector((FMLLaunchHandler) new Reflector(null,FMLLaunchHandler.class).get("INSTANCE"),FMLLaunchHandler.class).get("classLoader");
+	private static final LaunchClassLoader lcl = (LaunchClassLoader) new Reflector((FMLLaunchHandler) new Reflector(null,FMLLaunchHandler.class).get("INSTANCE"),FMLLaunchHandler.class).get("classLoader");
 	// ^ Yes, that happened.
 	private static boolean FMLModsDiscovered = false;
-	private static List<Path> modQueue = new ArrayList<>();
-	private static List<Path> pluginQueue = new ArrayList<>();
-	private static Map<String,JMODContainer> modList = new HashMap<String,JMODContainer>();
-	private static final String MODSDIRECTORY = "mods";
-	private static List<String> modids = new ArrayList<>();
-	private static List<String> pluginids = new ArrayList<>();
+	private List<Path> modQueue = new ArrayList<>();
+	private List<Path> pluginQueue = new ArrayList<>();
+	private Map<String,JMODContainer> modList = new HashMap<String,JMODContainer>();
+	private final String MODSDIRECTORY = "mods";
+	private List<String> modids = new ArrayList<>();
+	private List<String> pluginids = new ArrayList<>();
 	private static Object fmllock = new Object();
-	private static Map<String,JMODPluginContainer> pluginList = new HashMap<>();
+	private Map<String,JMODPluginContainer> pluginList = new HashMap<>();
+	private static JMODLoader instance;
 	
-	public static Map<String,JMODPluginContainer> getPluginList(){
+	protected static JMODLoader get(){
+		if(instance == null){
+			instance = new JMODLoader();
+			JMODAPI.LOADER = instance;
+		}
+		return instance;
+	}
+	
+	private JMODLoader(){
+//		int a = 2;
+//		List<ItemStack> islist = null;
+//		CreativeTabs b = CreativeTabs.tabCombat;
+//		JMOD.BUS.post(new JMODManageCreativeTabList(b,islist));
+	}
+	
+	public Map<String,JMODPluginContainer> getPluginList(){
 		return pluginList;
 	}
 	
 	
-	public static Map<String,JMODContainer> getModList(){
+	public Map<String,JMODContainer> getModList(){
 		return modList;
 	}
 	
-	protected static void discoverPluginsAndMods(){
+	protected void discoverPluginsAndMods(){
 		if(JMOD.DEEPFORGE != null && JMOD.DEEPFORGE.isLocked()){
 			throw new RuntimeException("Cannot discover any more plugins or mods at this point.");
 		}
@@ -67,7 +83,7 @@ public class JMODLoader {
 		
 	}
 	
-	protected static void initPlugins(){
+	protected void initPlugins(){
 		if(JMOD.DEEPFORGE != null &&JMOD.DEEPFORGE.isLocked()){
 			throw new RuntimeException("Cannot add any more plugins at this point.");
 		}
@@ -131,11 +147,11 @@ public class JMODLoader {
 		}
 	}
 	
-	protected static void registerPluginsToEventBus(){
+	protected void registerPluginsToEventBus(){
 		pluginList.forEach((k,v) -> JMOD.BUS.register(v.getInstance()));
 	}
 	
-	protected static void constructMods(){
+	protected void constructMods(){
 		if(JMOD.DEEPFORGE != null &&JMOD.DEEPFORGE.isLocked()){
 			throw new RuntimeException("Cannot add any more mods at this point.");
 		}
@@ -187,7 +203,7 @@ public class JMODLoader {
 
 	}
 	
-	protected static void inject(){
+	protected void inject(){
 		for(Map.Entry<String,JMODContainer> entry : modList.entrySet()){
 			JMOD.DEEPFORGE.addMod(entry.getValue());
 			JMOD.LOG.info("[JMODLoader] successfully injected jmod \"" + entry.getKey()+"\"");
@@ -195,24 +211,25 @@ public class JMODLoader {
 		JMOD.DEEPFORGE.lockDown();
 	}
 	
-	protected static void runScripts(){
+	protected void runScripts(){
 		for(Map.Entry<String,JMODContainer> entry : modList.entrySet()){
 			entry.getValue().getMod().runScripts();
 		}
 	}
 	
-	private static boolean isPluginOrMod(Path path){
+	private boolean isPluginOrMod(Path path){
 		if(path.toString().endsWith(".jmodplugin") || path.toString().endsWith(".jmod")){
 			return true;
 		}
 		return false;
 	}
 	
-	public static JMODRepresentation getMod(String modid){
+	public JMODRepresentation getMod(String modid){
 		return modList.get(modid).getMod();
 	}
 	
-	public static JMODContainer getModContainer(String modid){
+	@Override
+	public JMODContainer getModContainer(String modid){
 		return modList.get(modid);
 	}
 	
@@ -224,11 +241,13 @@ public class JMODLoader {
 		}
 	}
 	
-	public static boolean isPluginLoaded(String pluginid){
+	@Override
+	public boolean isPluginLoaded(String pluginid){
 		return pluginList.containsKey(pluginid);
 	}
 	
-	public static boolean isModLoaded(String modid){
+	@Override
+	public boolean isModLoaded(String modid){
 		if(FMLModsDiscovered)	return Loader.isModLoaded(modid);
 		
 		synchronized (fmllock) {

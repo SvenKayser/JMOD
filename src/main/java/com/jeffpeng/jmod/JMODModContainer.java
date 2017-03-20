@@ -57,42 +57,42 @@ public class JMODModContainer extends DummyModContainer {
 	public void on(FMLStateEvent event){
 		if(event instanceof FMLConstructionEvent){
 			JMOD.getInstance().on((FMLConstructionEvent) event);
-			for(Map.Entry<String, JMODPluginContainer> jmodplugin : JMODLoader.getPluginList().entrySet()){
+			for(Map.Entry<String, JMODPluginContainer> jmodplugin : JMOD.LOADER.getPluginList().entrySet()){
 				jmodplugin.getValue().getInstance().on((FMLConstructionEvent) event);
 			}
 		} else
 		
 		if(event instanceof FMLPreInitializationEvent){
 			JMOD.getInstance().on((FMLPreInitializationEvent) event);
-			for(Map.Entry<String, JMODPluginContainer> jmodplugin : JMODLoader.getPluginList().entrySet()){
+			for(Map.Entry<String, JMODPluginContainer> jmodplugin : JMOD.LOADER.getPluginList().entrySet()){
 				jmodplugin.getValue().getInstance().on((FMLPreInitializationEvent) event);
 			}
 		} else
 			
 		if(event instanceof FMLInitializationEvent){
 			JMOD.getInstance().on((FMLInitializationEvent) event);
-			for(Map.Entry<String, JMODPluginContainer> jmodplugin : JMODLoader.getPluginList().entrySet()){
+			for(Map.Entry<String, JMODPluginContainer> jmodplugin : JMOD.LOADER.getPluginList().entrySet()){
 				jmodplugin.getValue().getInstance().on((FMLInitializationEvent) event);
 			}
 		} else		
 			
 		if(event instanceof FMLPostInitializationEvent){
 			JMOD.getInstance().on((FMLPostInitializationEvent) event);
-			for(Map.Entry<String, JMODPluginContainer> jmodplugin : JMODLoader.getPluginList().entrySet()){
+			for(Map.Entry<String, JMODPluginContainer> jmodplugin : JMOD.LOADER.getPluginList().entrySet()){
 				jmodplugin.getValue().getInstance().on((FMLPostInitializationEvent) event);
 			}
 		} else
 			
 		if(event instanceof FMLLoadCompleteEvent){
 			JMOD.getInstance().on((FMLLoadCompleteEvent) event);
-			for(Map.Entry<String, JMODPluginContainer> jmodplugin : JMODLoader.getPluginList().entrySet()){
+			for(Map.Entry<String, JMODPluginContainer> jmodplugin : JMOD.LOADER.getPluginList().entrySet()){
 				jmodplugin.getValue().getInstance().on((FMLLoadCompleteEvent) event);
 			}
 		} else
 			
 		if(event instanceof FMLServerStartedEvent){
 			JMOD.getInstance().on((FMLServerStartedEvent) event);
-			for(Map.Entry<String, JMODPluginContainer> jmodplugin : JMODLoader.getPluginList().entrySet()){
+			for(Map.Entry<String, JMODPluginContainer> jmodplugin : JMOD.LOADER.getPluginList().entrySet()){
 				jmodplugin.getValue().getInstance().on((FMLServerStartedEvent) event);
 			}
 		} 

@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.EnumHelper;
 
 import com.jeffpeng.jmod.JMODRepresentation;
+import com.jeffpeng.jmod.descriptors.ItemStackDescriptor;
 import com.jeffpeng.jmod.primitives.BasicAction;
 import com.jeffpeng.jmod.util.Reflector;
 
@@ -29,12 +30,16 @@ public class AddArmorMaterial extends BasicAction {
 	public int chestfactor;
 	public int legginsfactor;
 	public int bootsfactor;
-	public String repairmaterial;
+	public ItemStackDescriptor repairmaterial;
 	public ItemStack repairstack;
 	public ArmorMaterial armormat;
 	private int[] factors;
 	
 	public AddArmorMaterial(JMODRepresentation owner, String name, int reductionbase, int helmetfactor, int chestfactor,int legginsfactor,int bootsfactor,int enchantability,String repairmaterial){
+		this(owner,name,reductionbase,helmetfactor,chestfactor,legginsfactor,bootsfactor,enchantability,new ItemStackDescriptor(owner, repairmaterial));
+	}
+	
+	public AddArmorMaterial(JMODRepresentation owner, String name, int reductionbase, int helmetfactor, int chestfactor,int legginsfactor,int bootsfactor,int enchantability,ItemStackDescriptor repairmaterial){
 		super(owner);
 		this.name = name;
 		this.reductionbase = reductionbase;
@@ -62,7 +67,7 @@ public class AddArmorMaterial extends BasicAction {
 
 		log.info("[armor material patcher] Patching ArmorMaterial " + armormat.name());
 		new Reflector(armormat).set(5, reductionbase).set(6, factors).set(7, enchantability);
-		repairstack = lib.stringToItemStackOrFirstOreDict(repairmaterial);
+		repairstack = repairmaterial.toItemStack();
 		if(repairstack == null)	log.warn("[armor material patcher] the repairmaterial " + repairmaterial + " is unknown. " + armormat.name() + " will not be repairable.");
 		return true;
 	}

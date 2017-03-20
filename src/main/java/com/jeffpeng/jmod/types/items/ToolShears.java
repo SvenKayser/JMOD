@@ -69,6 +69,11 @@ public class ToolShears extends ItemShears implements ITool, IItem{
 	public JMODRepresentation getOwner() {
 		return owner;
 	}
+	
+	@Override 
+	public boolean hasOwner(){
+		return owner != null;
+	}
 
 	@Override
 	public String getName() {

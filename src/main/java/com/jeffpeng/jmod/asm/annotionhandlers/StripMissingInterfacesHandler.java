@@ -6,7 +6,7 @@ import java.util.Map;
 import org.objectweb.asm.tree.ClassNode;
 
 import com.jeffpeng.jmod.annotations.StripMissingInterfaces;
-import com.jeffpeng.jmod.asm.ASMUtil;
+import com.jeffpeng.jmod.asm.JAH;
 import com.jeffpeng.jmod.interfaces.IAnnotationHandler;
 
 public class StripMissingInterfacesHandler implements IAnnotationHandler {
@@ -25,6 +25,6 @@ public class StripMissingInterfacesHandler implements IAnnotationHandler {
 
 	@Override
 	public String[] getAnnotationDescriptors() {
-		return new String[]{ASMUtil.getDescriptor(StripMissingInterfaces.class)};
+		return new String[]{JAH.getDescriptor(StripMissingInterfaces.class)};
 	}
 }

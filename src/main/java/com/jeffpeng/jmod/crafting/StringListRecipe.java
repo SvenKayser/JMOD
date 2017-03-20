@@ -12,6 +12,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 
 import com.jeffpeng.jmod.JMODRepresentation;
+import com.jeffpeng.jmod.descriptors.ItemStackDescriptor;
 import com.jeffpeng.jmod.primitives.OwnedObject;
 
 public class StringListRecipe extends OwnedObject implements IRecipe {
@@ -32,24 +33,6 @@ public class StringListRecipe extends OwnedObject implements IRecipe {
 	private Map<String,Boolean> containsIngredientCache = new HashMap<>(); 
 	
 	public boolean isValid(){return this.valid;}
-	
-	private void processResult(String result){
-		resultname = result;
-		Object is = lib.stringToItemStack(result);
-		if(is instanceof ItemStack){
-			this.result = (ItemStack)is;
-			valid = true;
-		} else if(is instanceof String){
-			ItemStack firstEntry = lib.getFirstOreDictMatch((String) is);
-			if(firstEntry != null){
-				this.result = firstEntry;
-				valid = true;
-			} else valid = false;
-		}
-		
-		if(valid == false) log.warn("Cannot resolve " + result); else log.info ("Registered StringListRecipe for " + result);
-		
-	}
 	
 	private boolean lineEmpty(String[] line){
 		boolean empty = true;
@@ -120,13 +103,31 @@ public class StringListRecipe extends OwnedObject implements IRecipe {
 		this.mirroredXAxis = set;
 	}
 	
-	
-	
-	public StringListRecipe(JMODRepresentation jmod, String result, List<String[]> rawShape){
+	public StringListRecipe(JMODRepresentation jmod, ItemStack result, List<String[]> rawShape){
 		super(jmod);
 		this.originalShape = new ArrayList<String[]>(rawShape);
 		//this.resultString = result;
-		processResult(result);
+		valid = result != null;
+		if(valid){
+			this.result = result;
+			cropAndTransport(rawShape);
+		}
+		
+		valid = sanityCheck();
+
+		if(valid)
+		{
+			StringListRecipe.recipeList.add(this);
+		} 
+		
+	}
+	
+	public StringListRecipe(JMODRepresentation jmod, ItemStackDescriptor result, List<String[]> rawShape){
+		super(jmod);
+		this.originalShape = new ArrayList<String[]>(rawShape);
+		//this.resultString = result;
+		this.result = result.toItemStack();
+		valid = this.result != null;
 		if(valid){
 			cropAndTransport(rawShape);
 		}
@@ -138,6 +139,8 @@ public class StringListRecipe extends OwnedObject implements IRecipe {
 			StringListRecipe.recipeList.add(this);
 		} 
 	}
+	
+	
 	
 	private boolean matchAgainstOffset(int w, int h,InventoryCrafting inv,boolean mirrorx, boolean mirrory){
 		int invheight = inv.getSizeInventory()/inv.inventoryWidth;
@@ -189,7 +192,6 @@ public class StringListRecipe extends OwnedObject implements IRecipe {
 
 	@Override
 	public int getRecipeSize() {
-		// TODO Auto-generated method stub
 		return this.size;
 	}
 

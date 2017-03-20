@@ -18,18 +18,19 @@ import net.minecraft.util.StatCollector;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
 import com.jeffpeng.jmod.JMODRepresentation;
-import com.jeffpeng.jmod.Lib;
+import com.jeffpeng.jmod.descriptors.ItemStackDescriptor;
 import com.jeffpeng.jmod.descriptors.TooltipDescriptor;
+import com.jeffpeng.jmod.primitives.OwnedObject;
 import com.jeffpeng.jmod.util.Reflector;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 @SuppressWarnings("unchecked")
-public class ToolTipper {
+public class ToolTipper extends OwnedObject {
 	
 	private JMODRepresentation jmod;
 	private Map<String,Object> config;
-	private Lib lib;
+	
 	
 
 	
@@ -38,20 +39,11 @@ public class ToolTipper {
 
 	
 	public ToolTipper(JMODRepresentation jmod){
-		this.jmod = jmod;
-		this.config = jmod.getConfig();
-		this.lib = jmod.getLib();
+		super(jmod);
 		
-		
-		for(TooltipDescriptor entry : (ArrayList<TooltipDescriptor>)config.get("tooltips")){
-			for(String target : entry.target){
-				Object is = lib.stringToItemStack(target);
-				if(is instanceof ItemStack){
-					tooltips.put((ItemStack) is, entry.lines);
-				}
-			}
-			
-		}
+		for(TooltipDescriptor entry : (ArrayList<TooltipDescriptor>)config.get("tooltips"))
+			for(ItemStackDescriptor target : entry.target)
+				target.getItemStackList().forEach((v) -> tooltips.put(v, entry.lines));
 	}
 	
 	@SubscribeEvent

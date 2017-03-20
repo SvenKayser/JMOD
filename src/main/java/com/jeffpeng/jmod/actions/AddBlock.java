@@ -8,6 +8,8 @@ import net.minecraft.item.ItemStack;
 import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.Lib;
+import com.jeffpeng.jmod.descriptors.ItemStackDescriptor;
+import com.jeffpeng.jmod.interfaces.ICreationAction;
 import com.jeffpeng.jmod.interfaces.ISettingsProcessor;
 import com.jeffpeng.jmod.primitives.BasicAction;
 import com.jeffpeng.jmod.types.blocks.CoreBlock;
@@ -16,7 +18,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 
-public class AddBlock extends BasicAction{
+public class AddBlock extends BasicAction implements ICreationAction{
 	private static int blockcounter = 0;
 	private static final String QUALIFIEDCLASSNAMEBASE = "com.jeffpeng.jmod.types.blocks.";
 
@@ -41,6 +43,20 @@ public class AddBlock extends BasicAction{
 		this.set("opacity",null);
 		
 		this.valid = true;
+	}
+	
+	public ItemStackDescriptor getItemStackDescriptor(){
+		return new ItemStackDescriptor(owner,this);
+	}
+	
+	@Override
+	public String getName() {
+		return getString("name");
+	}
+
+	@Override
+	public String getDomain() {
+		return owner.getModId();
 	}
 
 	@Override
@@ -117,4 +133,6 @@ public class AddBlock extends BasicAction{
 	public int priority(){
 		return Priorities.AddBlock;
 	}
+
+
 }

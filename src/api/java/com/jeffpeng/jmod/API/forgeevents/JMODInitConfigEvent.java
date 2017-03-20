@@ -1,4 +1,4 @@
-package com.jeffpeng.jmod.forgeevents;
+package com.jeffpeng.jmod.API.forgeevents;
 
 import java.util.Map;
 

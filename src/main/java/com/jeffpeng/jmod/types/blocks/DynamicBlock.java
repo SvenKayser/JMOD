@@ -3,9 +3,9 @@ package com.jeffpeng.jmod.types.blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.world.IBlockAccess;
 
+import com.jeffpeng.jmod.Defines.Sides;
 import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.JMODRepresentation;
-import com.jeffpeng.jmod.Lib.SIDES;
 import com.jeffpeng.jmod.primitives.BasicAction;
 
 
@@ -13,7 +13,7 @@ public class DynamicBlock extends CoreBlock{
 	
 	private int power = 0;
 	private boolean powered = false;
-	private int poweredSides = SIDES.NONE;
+	private int poweredSides = Sides.NONE;
 
 	public DynamicBlock(JMODRepresentation owner, Material mat) {
 		super(owner, mat);

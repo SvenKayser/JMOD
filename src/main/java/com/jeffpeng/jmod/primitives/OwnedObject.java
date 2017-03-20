@@ -23,6 +23,8 @@ public class OwnedObject implements IEventObject, IOwned {
 		this.log = owner.getLogger();
 	}
 	
+
+	
 	public JMODRepresentation getOwner(){
 		return owner;
 	}
@@ -36,6 +38,11 @@ public class OwnedObject implements IEventObject, IOwned {
 	public boolean fire(String trigger) {
 		return false;
 		
+	}
+	
+	@Override
+	public boolean hasOwner(){
+		return this.owner != null;
 	}
 
 }

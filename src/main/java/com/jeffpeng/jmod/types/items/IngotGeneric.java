@@ -13,7 +13,6 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.Lib;
-import com.jeffpeng.jmod.descriptors.ItemStackSubstituteDescriptor;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 @SuppressWarnings("unchecked")
@@ -26,12 +25,6 @@ public class IngotGeneric extends CoreItem {
 		icons = new IIcon[((ArrayList<String>)config.get("metalingots")).size()];
 
 		this.setHasSubtypes(true);
-
-		for (Integer c = 0; c < ((ArrayList<String>)config.get("metalingots")).size(); c++) {
-			((List<ItemStackSubstituteDescriptor>)config.get("itemstacksubstitutes")).add(
-					new ItemStackSubstituteDescriptor(getPrefix() + ":" + Lib.ingotyfy(((ArrayList<String>)config.get("metalingots")).get(c)), 
-					getPrefix() + ":ingotGeneric:" + c.toString()));
-		}
 	}
 
 	@Override

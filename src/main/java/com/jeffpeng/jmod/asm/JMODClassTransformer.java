@@ -31,14 +31,40 @@ public class JMODClassTransformer implements IClassTransformer{
 			return patchContainerRepair2(basicClass);
 		if (name.equalsIgnoreCase(JMODObfuscationHelper.get("net.minecraft.block.BlockSapling")))
 			return patchBlockSapling(basicClass);
-		
+		if (name.equalsIgnoreCase(JMODObfuscationHelper.get("net.minecraft.creativetab.CreativeTabs")))
+			return patchCreativeTabs(basicClass);
 		return basicClass;
 	}
 	
-	
+	private byte[] patchCreativeTabs(byte[] basicClass){
+		JMOD.LOG.info("[JMOD ASM] patchCreativeTabs");
+		ClassNode cN = new ClassNode();
+		ClassReader cR = new ClassReader(basicClass);
+		cR.accept(cN, 0);
+		Iterator<MethodNode> methods = cN.methods.iterator();
+		while (methods.hasNext()) {
+			MethodNode mN = methods.next();
+			if(mN.desc.equals("(Ljava/util/List;)V")){
+				InsnList inject = new InsnList();
+				
+				inject.add(JAH.GETSTATIC("com.jeffpeng.jmod.JMOD",	"BUS",	"cpw.mods.fml.common.eventhandler.EventBus"));	
+				inject.add(JAH.NEW("com.jeffpeng.jmod.API.forgeevents.JMODManageCreativeTabListEvent"));
+				inject.add(JAH.DUP());
+				inject.add(JAH.ALOAD(0));
+				inject.add(JAH.ALOAD(1));
+				inject.add(JAH.INVOKESPECIAL("com.jeffpeng.jmod.API.forgeevents.JMODManageCreativeTabListEvent", "<init>", "net.minecraft.creativetab.CreativeTabs","java.util.List"));
+				inject.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL,"cpw/mods/fml/common/eventhandler/EventBus","post","(Lcpw/mods/fml/common/eventhandler/Event;)Z",false));
+				mN.instructions.insert(mN.instructions.getLast().getPrevious().getPrevious(),inject);
+			}
+		}
+		ClassWriter cW = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+		cN.accept(cW);
+		System.out.println("[JMOD ASM] Patched net.minecraft.creativetab.CreativeTabs");
+		System.out.println("[JMOD ASM] Injects code to post a JMODManageCreativeTabListEvent, allowing to manipulate creative tabs");
+		return cW.toByteArray();
+	}
 	
 	private byte[] patchBlockSapling(byte[] basicClass){
-		JMOD.LOG.info("PatchBlockSapling");
 		AbstractInsnNode iNode;
 		ClassNode cN = new ClassNode();
 		ClassReader cR = new ClassReader(basicClass);
@@ -64,6 +90,7 @@ public class JMODClassTransformer implements IClassTransformer{
 		
 		ClassWriter cW = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 		cN.accept(cW);
+		System.out.println("[JMOD ASM] Patched cpw.mods.fml.common.Loader");
 		return cW.toByteArray();
 	}
 	
@@ -118,7 +145,7 @@ public class JMODClassTransformer implements IClassTransformer{
 						MethodInsnNode mNode = (MethodInsnNode)iNode;
 						if(mNode.desc.equals("(Lcpw/mods/fml/common/ModClassLoader;Lcpw/mods/fml/common/discovery/ModDiscoverer;)V")){
 							InsnList inject = new InsnList();
-							inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC,"com/jeffpeng/jmod/JMODLoader","markFMLModsDiscovered","()V",false));
+							inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC,"com/jeffpeng/jmod/JMODLoader","markFMLModsDiscovered","()V",false));							
 							mN.instructions.insertBefore(mNode, inject);
 						}
 					}
@@ -138,8 +165,8 @@ public class JMODClassTransformer implements IClassTransformer{
 		}
 		ClassWriter cW = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
 		cN.accept(cW);
-		System.out.println("[JMOD ASM] [JMODClassTransformer] cpw.mods.fml.common.Loader");
-		System.out.println("[JMOD ASM] [JMODClassTransformer] This provides hooks for the JMOD Loading process.");
+		System.out.println("[JMOD ASM] Patched cpw.mods.fml.common.Loader");
+		System.out.println("[JMOD ASM] This provides hooks for the JMOD Loading process.");
 		
 		return cW.toByteArray();
 	}

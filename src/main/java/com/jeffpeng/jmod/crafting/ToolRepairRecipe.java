@@ -16,7 +16,7 @@ import net.minecraftforge.common.MinecraftForge;
 import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.Lib;
-import com.jeffpeng.jmod.forgeevents.JMODIsToolEvent;
+import com.jeffpeng.jmod.API.forgeevents.JMODIsToolEvent;
 
 public class ToolRepairRecipe implements IRecipe {
 	

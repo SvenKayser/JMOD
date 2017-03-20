@@ -64,6 +64,11 @@ public class ToolPickaxe extends ItemPickaxe implements ITool, IItem {
 		return owner;
 	}
 	
+	@Override 
+	public boolean hasOwner(){
+		return owner != null;
+	}
+	
 	@Override
 	public void setBurnTime(int bt){
 		this.burnTime = bt;

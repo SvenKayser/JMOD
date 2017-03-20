@@ -160,6 +160,11 @@ public class CoreFluidBlock extends BlockFluidClassic implements IBlock {
 		return owner;
 	}
 	
+	@Override 
+	public boolean hasOwner(){
+		return owner != null;
+	}
+	
 	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
 		if(world.isRemote) return;

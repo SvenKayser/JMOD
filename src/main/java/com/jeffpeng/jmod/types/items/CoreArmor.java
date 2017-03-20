@@ -99,6 +99,11 @@ public class CoreArmor extends ItemArmor implements IArmor {
 	public JMODRepresentation getOwner() {
 		return owner;
 	}
+	
+	@Override 
+	public boolean hasOwner(){
+		return owner != null;
+	}
 
 	@Override
 	public void processSettings(BasicAction settings) {

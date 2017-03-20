@@ -5,14 +5,14 @@ import java.util.Map;
 import org.objectweb.asm.tree.ClassNode;
 
 import com.jeffpeng.jmod.annotations.InjectInterface;
-import com.jeffpeng.jmod.asm.ASMUtil;
+import com.jeffpeng.jmod.asm.JAH;
 import com.jeffpeng.jmod.interfaces.IAnnotationHandler;
 
 public class InjectInterfaceHandler implements IAnnotationHandler {
 
 	@Override
 	public String[] getAnnotationDescriptors() {
-		return new String[]{ASMUtil.getDescriptor(InjectInterface.class)};
+		return new String[]{JAH.getDescriptor(InjectInterface.class)};
 	}
 
 	@Override

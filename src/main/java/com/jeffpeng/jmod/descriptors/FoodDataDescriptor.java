@@ -39,20 +39,16 @@ public class FoodDataDescriptor extends OwnedObject{
 	}
 	
 	public FoodDataDescriptor containerItem(String itemStr) {
-		Object stack = lib.stringToItemStack(itemStr);
-		if(stack instanceof ItemStack) {
-			this.containerItemStack = Optional.ofNullable( (ItemStack) stack);
-		}
-		
+		return containerItem(new ItemStackDescriptor(owner,itemStr));
+	}
+	
+	public FoodDataDescriptor containerItem(ItemStackDescriptor itemStr) {
+		this.containerItemStack = Optional.ofNullable(itemStr.toItemStack());
 		return this;
 	}
 	
 	public FoodDataDescriptor bowlContainer() {
-		Object stack = lib.stringToItemStack("minecraft:bowl");
-		if(stack instanceof ItemStack) {
-			this.containerItemStack = Optional.ofNullable( (ItemStack) stack);
-		}
-		
+		this.containerItemStack = Optional.ofNullable(new ItemStackDescriptor(owner,"minecraft","bowl").toItemStack());
 		return this;
 	}
 }

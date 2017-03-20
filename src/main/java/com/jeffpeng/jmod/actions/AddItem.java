@@ -1,8 +1,12 @@
 package com.jeffpeng.jmod.actions;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 import org.apache.logging.log4j.Level;
 
@@ -12,8 +16,10 @@ import com.jeffpeng.jmod.Lib;
 import com.jeffpeng.jmod.descriptors.ArmorDataDescriptor;
 import com.jeffpeng.jmod.descriptors.ColorDescriptor;
 import com.jeffpeng.jmod.descriptors.FoodDataDescriptor;
+import com.jeffpeng.jmod.descriptors.ItemStackDescriptor;
 import com.jeffpeng.jmod.descriptors.ToolDataDescriptor;
 import com.jeffpeng.jmod.interfaces.IArmor;
+import com.jeffpeng.jmod.interfaces.ICreationAction;
 import com.jeffpeng.jmod.interfaces.IItem;
 import com.jeffpeng.jmod.interfaces.IItemColor;
 import com.jeffpeng.jmod.interfaces.ISettingsProcessor;
@@ -27,12 +33,13 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 @SuppressWarnings("unused")
-public class AddItem extends BasicAction{
+public class AddItem extends BasicAction implements ICreationAction {
 	private static int itemcounter = 0;
 	private static final String QUALIFIEDCLASSNAMEBASE = "com.jeffpeng.jmod.types.items.";
 	
+	
 	private String refClass;
-	private IItem instance; 
+	private IItem instance;
 
 	public AddItem(JMODRepresentation owner, String refClass){
 		super(owner);
@@ -41,6 +48,21 @@ public class AddItem extends BasicAction{
 		set("stacksize",1);
 		set("tab",null);
 	}
+	
+	public ItemStackDescriptor getItemStackDescriptor(){
+		return new ItemStackDescriptor(owner,this);
+	}
+	
+	@Override
+	public String getName() {
+		return getString("name");
+	}
+
+	@Override
+	public String getDomain() {
+		return owner.getModId();
+	}
+	
 	
 	@SuppressWarnings("rawtypes")
 	@Override
@@ -140,33 +162,30 @@ public class AddItem extends BasicAction{
 	public boolean on(FMLInitializationEvent event){
 		if(instance instanceof IItem){
 			((IItem)instance).on(event);
+			return true;
 		}
-
-		if(hasSetting("container")){
-			String container = getString("container");
-			if(container.equals("self")) ((Item)instance).setContainerItem((Item)instance);
-			else {
-				ItemStack is = lib.stringToItemStackOrFirstOreDict(container);
-				if(is != null){
-					((Item)instance).setContainerItem(is.getItem());
-				}
-			}
-			
-			
-		}
-		
-		
-		
 		
 		return false;
 	}
 	
 	@Override 
 	public boolean on(FMLPostInitializationEvent event){
+		if(hasSetting("container")){
+			ItemStackDescriptor container = getItemStackDescriptor("container");
+			if(container != null){
+				if(container.getName().equals("self")) ((Item)instance).setContainerItem((Item)instance);
+				else {
+					((Item)instance).setContainerItem(container.toItem());
+				}
+				
+			}
+		}
+		
 		if(instance instanceof IItem){
 			((IItem)instance).on(event);
 			return true;
 		}
+		
 		return false;
 	}
 	

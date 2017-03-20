@@ -10,6 +10,7 @@ import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.jeffpeng.jmod.API.JMODAPI;
 import com.jeffpeng.jmod.asm.JMODAnnotationParser;
 import com.jeffpeng.jmod.asm.JMODClassTransformer;
 import com.jeffpeng.jmod.asm.JMODObfuscationHelper;
@@ -17,10 +18,13 @@ import com.jeffpeng.jmod.asm.annotionhandlers.InjectInterfaceHandler;
 import com.jeffpeng.jmod.asm.annotionhandlers.StripMissingInterfacesHandler;
 import com.jeffpeng.jmod.crafting.BlacklistCraftingResults;
 import com.jeffpeng.jmod.crafting.ToolUnbreaker;
+import com.jeffpeng.jmod.descriptors.ItemStackDescriptor;
 import com.jeffpeng.jmod.interfaces.IAnnotationHandler;
 import com.jeffpeng.jmod.primitives.ModScriptObject;
 import com.jeffpeng.jmod.registry.BlockMaterialRegistry;
+import com.jeffpeng.jmod.util.CreativeTabEntryManager;
 import com.jeffpeng.jmod.util.ForgeDeepInterface;
+import com.jeffpeng.jmod.util.MiscHandlers;
 import com.jeffpeng.jmod.util.ModId;
 
 import cpw.mods.fml.common.ProgressManager;
@@ -49,16 +53,18 @@ public class JMOD implements IFMLLoadingPlugin {
 	
 	
 	public static Map<String,Class<? extends ModScriptObject>> modScriptList = new HashMap<>(); 
-	
-	public static final Logger LOG = LogManager.getLogger("JMOD");
 
-	
 	public static final String MODID = "jmod";
 	public static final String VERSION = "@VERSION@";
 	public static final String NAME = "JMOD";
 	public static final String ARCHIVEBASE ="com.jeffpeng.jmod";
+	
+	public static final Logger LOG = LogManager.getLogger("JMOD");
+	public static final JMODLoader LOADER = JMODLoader.get();
 	public static final EventBus BUS = new EventBus(); 
 	public static final GlobalConfig GLOBALCONFIG = new GlobalConfig();
+	public static final CreativeTabEntryManager CREATIVETABMANAGER = new CreativeTabEntryManager();
+
 	private static boolean isServer = false;
 	private static boolean devversion = ("@devversion@".equals("true"));
 	protected JMODModContainer modcontainer;
@@ -72,12 +78,15 @@ public class JMOD implements IFMLLoadingPlugin {
 
 	public JMOD() {
 		instance = this;
+		JMODAPI.BUS = BUS;
 		JMOD.classTransformers.add(JMODAnnotationParser.class.getName());
 		JMOD.classTransformers.add(JMODClassTransformer.class.getName());
 		
 		JMODObfuscationHelper.init();
-		JMODLoader.discoverPluginsAndMods();
-		JMODLoader.initPlugins();
+		JMOD.LOADER.discoverPluginsAndMods();
+		JMOD.LOADER.initPlugins();
+		
+		JMODLoader.markFMLModsDiscovered();
 	}
 	
 	public void forgeLoaderHook(){
@@ -86,17 +95,17 @@ public class JMOD implements IFMLLoadingPlugin {
 	
 	public void on(FMLConstructionEvent event) {
 		if(event.getSide().isServer()) isServer = true;
-		JMODLoader.registerPluginsToEventBus();
+		JMOD.LOADER.registerPluginsToEventBus();
 		BlacklistCraftingResults.init();
 		BlacklistCraftingResults.getInstance().blacklistDomain("RotaryCraft");
 		DEEPFORGE = new ForgeDeepInterface();
-		JMODLoader.constructMods();
-		JMODLoader.inject();
-		JMODLoader.runScripts();
+		JMOD.LOADER.constructMods();
+		JMOD.LOADER.inject();
+		JMOD.LOADER.runScripts();
 		ModId.init();
 
-		ProgressBar bar = ProgressManager.push("Initializing JMODs", JMODLoader.getModList().size());
-		for(Map.Entry<String,JMODContainer> entry : JMODLoader.getModList().entrySet()){
+		ProgressBar bar = ProgressManager.push("Initializing JMODs", JMOD.LOADER.getModList().size());
+		for(Map.Entry<String,JMODContainer> entry : JMOD.LOADER.getModList().entrySet()){
 			bar.step(entry.getValue().getName());
 			entry.getValue().getMod().on(event);
 			modcontainer.meta.description += "\n    §f"+entry.getValue().getName()+"   §b"+entry.getValue().getVersion();
@@ -106,11 +115,15 @@ public class JMOD implements IFMLLoadingPlugin {
 
 	
 	public void on(FMLPreInitializationEvent event) {
+		BUS.register(CREATIVETABMANAGER);
 		Lib.blockMaterialRegistry = new BlockMaterialRegistry();
 	}
 
 	
 	public void on(FMLInitializationEvent event) {
+		ItemStackDescriptor.markReady();
+		MinecraftForge.EVENT_BUS.register(new MiscHandlers());
+		
 		if(GLOBALCONFIG.preventToolBreaking) 	MinecraftForge.EVENT_BUS.register(new ToolUnbreaker());
 	}
 

@@ -3,23 +3,23 @@ package com.jeffpeng.jmod.crafting;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+import org.apache.logging.log4j.Logger;
+
 import com.jeffpeng.jmod.JMOD;
-import com.jeffpeng.jmod.Lib;
 import com.jeffpeng.jmod.API.Blacklist;
 import com.jeffpeng.jmod.API.Blacklist.ICraftingBlacklist;
+import com.jeffpeng.jmod.descriptors.ItemStackDescriptor;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameData;
 
 public class BlacklistCraftingResults implements ICraftingBlacklist {
 	
-	public static final String blacklistmessage = " is blacklisted as a crafting result. This was probably done by the author of the mod this item/block belongs to. Please respect his or her choice.";
+	public static final String blacklistmessage = " is blacklisted as a crafting result. This was probably done by the author of the mod this item/block belongs to. Please respect the authors choice to do so.";
 	
 	private static class BlacklistEntry{
 		
@@ -97,7 +97,7 @@ public class BlacklistCraftingResults implements ICraftingBlacklist {
 
 	@Override
 	public void blacklist(String output) {
-		blacklist(Lib.stringToItemStackNoOreDictImpl(output, null));
+		blacklist(new ItemStackDescriptor(null,output).toItemStack());
 	}
 
 	@Override

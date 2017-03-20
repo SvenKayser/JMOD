@@ -10,8 +10,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
-import org.apache.logging.log4j.Logger;
-
+import javax.script.Bindings;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -21,8 +20,8 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
-import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemHoe;
 import net.minecraft.item.ItemPickaxe;
@@ -30,18 +29,18 @@ import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.ItemTool;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
-import com.jeffpeng.jmod.descriptors.ItemStackSubstituteDescriptor;
-import com.jeffpeng.jmod.forgeevents.JMODGetRepairAmountEvent;
-import com.jeffpeng.jmod.forgeevents.JMODGetRepairItemStackEvent;
-import com.jeffpeng.jmod.forgeevents.JMODHideItemStackEvent;
-import com.jeffpeng.jmod.forgeevents.JMODPatchToolEvent;
+import com.jeffpeng.jmod.API.forgeevents.JMODGetRepairAmountEvent;
+import com.jeffpeng.jmod.API.forgeevents.JMODGetRepairItemStackEvent;
+import com.jeffpeng.jmod.API.forgeevents.JMODHideItemStackEvent;
+import com.jeffpeng.jmod.API.forgeevents.JMODPatchToolEvent;
 import com.jeffpeng.jmod.primitives.OwnedObject;
 import com.jeffpeng.jmod.registry.BlockMaterialRegistry;
 import com.jeffpeng.jmod.util.Reflector;
@@ -107,6 +106,7 @@ public class Lib extends OwnedObject {
 		}
 	}
 	
+	@Deprecated
 	public static int itemStackSizeFromString(String inputstring){
 		if(inputstring.contains("@")) {
 			String[] splits = inputstring.split("@");
@@ -114,27 +114,19 @@ public class Lib extends OwnedObject {
 		} else return 1;
 	}
 	
-	public static boolean itemStackIsBlockImpl(ItemStack input){
+	public static boolean itemStackIsBlock(ItemStack input){
 		if(input == null || input.getItem() == null || Block.getBlockFromItem(input.getItem()) == Blocks.air) return false;
 		return true;
 	}
 	
-	public boolean itemStackIsBlock(ItemStack input){
-		return itemStackIsBlockImpl(input);
-	}
-	
-	public static Block getBlockFromItemStackImpl(ItemStack input){
+	public static Block getBlockFromItemStack(ItemStack input){
 		if(input == null || input.getItem() == null) return null;
 		Block ret = Block.getBlockFromItem(input.getItem());
 		if(ret == Blocks.air) return null;
 		return ret;
 	}
 	
-	public Block getBlockFromItemStack(ItemStack input){
-		return getBlockFromItemStackImpl(input);
-	}
-	
-	
+	@Deprecated
 	public ItemStack[] stringToItemStackArray(String inputstring){
 		Object is = stringToItemStack(inputstring);
 		if(is instanceof ItemStack){
@@ -161,9 +153,10 @@ public class Lib extends OwnedObject {
 		return retstack;
 	}
 	
-	public static ItemStack stringToItemStackOrFirstOreDictImpl(String inputstring, JMODRepresentation jmod){
+	@Deprecated
+	public static ItemStack stringToItemStackOrFirstOreDict(String inputstring){
 		if(inputstring == null) return null;
-		Object is = stringToItemStackImpl(inputstring,jmod);
+		Object is = stringToItemStack(inputstring);
 		if(is instanceof ItemStack) return (ItemStack)is;
 		else {
 			int amount = 1;
@@ -186,24 +179,16 @@ public class Lib extends OwnedObject {
 		return null;
 	}
 	
-	public ItemStack stringToItemStackOrFirstOreDict(String inputstring){		return stringToItemStackOrFirstOreDictImpl(inputstring,owner);	}
-	
-	public static ItemStack stringToItemStackNoOreDictImpl(String inputstring){	return stringToItemStackNoOreDictImpl(inputstring,null);		}
-	
-	public static ItemStack stringToItemStackNoOreDictImpl(String inputstring, JMODRepresentation jmod){
+	@Deprecated
+	public static ItemStack stringToItemStackNoOreDict(String inputstring){
 		if(inputstring == null) return null;
-		Object is = stringToItemStackImpl(inputstring,jmod);
+		Object is = stringToItemStack(inputstring);
 		if(is instanceof ItemStack) return (ItemStack)is;
 		else return null;
 	}
 	
-	public ItemStack stringToItemStackNoOreDict(String inputstring){
-		return stringToItemStackNoOreDictImpl(inputstring,owner);
-	}
-	
-	 
-	
-	public static Object stringToItemStackImpl(String inputstring, JMODRepresentation jmod) {
+	@Deprecated
+	public static Object stringToItemStack(String inputstring) {
 		if(inputstring == null){
 			//jmod.getLogger().warn("[ItemStackString parser] Received a null string");
 			return null;
@@ -215,14 +200,7 @@ public class Lib extends OwnedObject {
 			inputstring = splits[0];
 		}
 		
-		String name;
-		
-		if(jmod == null){
-			name = inputstring;
-		} else {
-			name = substituteItemStackName(inputstring,jmod);
-		}
-		
+		String name = inputstring;
 		
 		if (name.contains(":")) {
 			String[] splits = name.split(":");
@@ -242,10 +220,6 @@ public class Lib extends OwnedObject {
 	}
 	
 
-	public Object stringToItemStack(String inputstring) {
-		return stringToItemStackImpl(inputstring,owner);
-	}
-
 	/**
 	 * Looks for inputstring ItemStack
 	 * <p>
@@ -254,6 +228,7 @@ public class Lib extends OwnedObject {
 	 * @param inputstring the Item to lookup
 	 * @return an Optional<ItemStack> if the inputstring is a valid Item. 
 	 */
+	@Deprecated
 	public Optional<ItemStack> stringToMaybeItemStackNoOreDic(String inputstring) {
 		return Optional.ofNullable(stringToItemStackNoOreDict(inputstring));
 	}
@@ -263,35 +238,9 @@ public class Lib extends OwnedObject {
 	 * @param inputstring the Item to lookup
 	 * @return an Optional<Object> is an ItemStack or String
 	 */
+	@Deprecated
 	public Optional<Object> stringToMaybeItemStack(String inputstring) {
 		return Optional.ofNullable(stringToItemStack(inputstring));
-	}
-	
-	public static String substituteItemStackName(String name, JMODRepresentation jmod) {
-		@SuppressWarnings("unchecked")
-		List<ItemStackSubstituteDescriptor> iss = (ArrayList<ItemStackSubstituteDescriptor>)jmod.getConfig().get("itemstacksubstitutes");
-		Logger log = jmod.getLogger();
-		boolean changed = true;
-		String toSub = name;
-		int iterations = 0;
-		int i;
-		if(iss.size() > 0) while(changed){
-			changed = false;
-			for(i = 0;i<iss.size();i++){
-				
-				if(iss.get(i).source.equals(toSub)){
-					toSub = iss.get(i).target;
-					changed = true;
-				}
-				
-			}
-			iterations++;
-			if(iterations>iss.size()){
-				log.warn("The substituteable itemStack " + name + " undergoes a circular chain of substitutions. This doesn't work, hence the original itemStack was returned. Please check your config!");
-				return name;
-			}
-		}
-		return toSub;
 	}
 	
 	public static boolean belongToSameOreDictEntry(ItemStack one, ItemStack two){
@@ -379,10 +328,6 @@ public class Lib extends OwnedObject {
 		return false;
 	}
 	
-	public ItemStack getFirstOreDictMatch(String oredictentry){
-		return getFirstOreDictMatchImpl(oredictentry);
-	}
-	
 	public FluidStack stringToFluidStack(String input){
 		if(input == null){
 			owner.getLogger().warn("[FluidString parser] Received a null string");
@@ -400,7 +345,7 @@ public class Lib extends OwnedObject {
 		return fs;
 	}
 	
-	public static ItemStack getFirstOreDictMatchImpl(String oredictentry){
+	public static ItemStack getFirstOreDictMatch(String oredictentry){
 		ItemStack is = null;
 		if(OreDictionary.doesOreNameExist(oredictentry) && OreDictionary.getOres(oredictentry).size() > 0){
 			is = OreDictionary.getOres(oredictentry).get(0);
@@ -456,7 +401,7 @@ public class Lib extends OwnedObject {
 			if(olist.get(x) != null){
 				rlist.add(slist[x]);
 				if(olist.get(x) instanceof String)
-					rlist.add(Lib.stringToItemStackImpl((String)olist.get(x),owner));
+					rlist.add(stringToItemStack((String)olist.get(x)));
 				else 
 					rlist.add(olist.get(x));
 			} 
@@ -626,6 +571,60 @@ public class Lib extends OwnedObject {
 		}
 	}
 	
+	public static NBTTagCompound bindingsToNBTTagCompound(Bindings b){
+		System.out.println("###btnbt " + b.getClass());
+		NBTTagCompound nbt = new NBTTagCompound();
+		b.forEach((key,v) -> {
+			
+			System.out.println(key + " " + v);
+			if(v instanceof String)		nbt.setString	(key,	(String)v); 	else
+			if(v instanceof Integer) 	nbt.setInteger	(key, 	(Integer)v); 	else
+			if(v instanceof Long) 		nbt.setLong		(key, 	(Long)v); 		else
+			if(v instanceof Float)		nbt.setFloat	(key,	(Float)v);		else
+			if(v instanceof Short)		nbt.setShort	(key,	(Short)v);		else
+			if(v instanceof Byte)		nbt.setByte 	(key,	(Byte)v);		else
+			if(v instanceof Bindings){
+				System.out.println(v.toString());
+				if(v.toString().equals("[object Array]")){
+					System.out.println("isarray");
+					nbt.setTag		(key,	bindingsToNBTTagList((Bindings)v));
+				} else {
+					System.out.println("isnotarray");
+					nbt.setTag		(key,	bindingsToNBTTagCompound((Bindings)v));
+				}
+			}
+		});
+		return nbt;
+	}
+	
+	private static NBTTagList bindingsToNBTTagList(Bindings b){
+		try{
+			NBTTagList nbt = new NBTTagList();
+			
+			b.forEach((key,v) -> {
+				System.out.println(key + " " + v);
+				System.out.println(v.toString());
+				if(v.toString().equals("[object Array]")){
+					System.out.println("isarray");
+					nbt.appendTag(bindingsToNBTTagList((Bindings)v));
+				} else {
+					System.out.println("isnotarray");
+					nbt.appendTag(bindingsToNBTTagCompound((Bindings)v));
+				}
+			});
+			return nbt;
+		} catch (Exception e){
+			e.printStackTrace();
+			throw new RuntimeException("Nope");
+		}
+		
+	}
+	
+	
+	
+	
+	
+	
 	public static ForgeDirection getForgeDirectionFromMOPSide(int side){
 		if(side == 0) return ForgeDirection.DOWN;
 		if(side == 1) return ForgeDirection.UP;
@@ -641,22 +640,7 @@ public class Lib extends OwnedObject {
 	// TODO: There must be a more elegant solution to this.
 	// Side constants
 	
-	public static class SIDES{
-		public static final int NONE   = 0;			// 000000
-		public static final int BOTTOM = 1 << 0; 	// 000001 
-		public static final int TOP    = 1 << 1;	// 000010
-		public static final int NORTH  = 1 << 2;	// 000100
-		public static final int SOUTH  = 1 << 3;	// 001000
-		public static final int WEST   = 1 << 4;	// 010000
-		public static final int EAST   = 1 << 5;	// 100000
-		public static final int SIDES  = 60; 		// 111100		
-		public static final int ALL    = 63; 		// 111111
-	}
 	
-	public static class LISTMODE{
-		public static final boolean ALL_EXCEPT 	= true;
-		public static final boolean NONE_EXCEPT = false;
-	}
 	
 	
 	

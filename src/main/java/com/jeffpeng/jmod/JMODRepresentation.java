@@ -27,9 +27,8 @@ import com.jeffpeng.jmod.crafting.DropHandler;
 import com.jeffpeng.jmod.crafting.FuelHandler;
 import com.jeffpeng.jmod.crafting.ToolRepairRecipe;
 import com.jeffpeng.jmod.descriptors.ColorDescriptor;
-import com.jeffpeng.jmod.descriptors.ItemStackSubstituteDescriptor;
 import com.jeffpeng.jmod.descriptors.TooltipDescriptor;
-import com.jeffpeng.jmod.forgeevents.JMODInitConfigEvent;
+import com.jeffpeng.jmod.API.forgeevents.JMODInitConfigEvent;
 import com.jeffpeng.jmod.interfaces.IEventObject;
 import com.jeffpeng.jmod.interfaces.IItem;
 import com.jeffpeng.jmod.interfaces.IBlock;
@@ -77,7 +76,6 @@ public class JMODRepresentation implements IEventObject {
 		config.put("armormaterials", 			new HashMap<String,AddArmorMaterial>());
 		config.put("metalblocks", 				new ArrayList<String>());
 		config.put("metalingots", 				new ArrayList<String>());
-		config.put("itemstacksubstitutes", 		new ArrayList<ItemStackSubstituteDescriptor>());
 		config.put("colors", 					new HashMap<String,ColorDescriptor>());
 		config.put("tooltips",					new ArrayList<TooltipDescriptor>());
 		config.put("blockDrops",				new ArrayList<AddBlockDrop>());
@@ -196,7 +194,7 @@ public class JMODRepresentation implements IEventObject {
 	}
 
 	public boolean testForMod(String modId) {
-		if (!Validator.isValidator && !JMODLoader.isModLoaded(modId)) {
+		if (!Validator.isValidator && !JMOD.LOADER.isModLoaded(modId)) {
 			log.warn(this.getModName() + " tries to do something that requires " + modId
 					+ " to be loaded - but it isn't. This is either an error or lazy scripting.)");
 			return false;

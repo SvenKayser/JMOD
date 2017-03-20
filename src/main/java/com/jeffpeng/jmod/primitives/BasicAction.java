@@ -7,6 +7,7 @@ import javax.script.Bindings;
 
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.actions.SharedRoutines;
+import com.jeffpeng.jmod.descriptors.ItemStackDescriptor;
 import com.jeffpeng.jmod.interfaces.IExecutableObject;
 import com.jeffpeng.jmod.interfaces.IStagedObject;
 import com.jeffpeng.jmod.validator.Validator;
@@ -107,6 +108,17 @@ public class BasicAction extends OwnedObject implements IExecutableObject {
 		}
 		return null;
 		
+	}
+	
+	public ItemStackDescriptor getItemStackDescriptor(String name){
+		Object o = settingObjects.get(name.toLowerCase());
+		if(o instanceof ItemStackDescriptor){
+			return (ItemStackDescriptor) o;
+		}
+		if(o instanceof String){
+			return new ItemStackDescriptor(owner,(String) o);
+		}
+		return null;
 	}
 	
 	public boolean hasSetting(String name){

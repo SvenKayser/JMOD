@@ -1,5 +1,13 @@
 Changelog
 
+alpha1.5.0
+- Some improvements to the still wonky StringListRecipe code
+- added .setNBT to AddShapedRecipe (and, by proxy, AddShapedStandardRecipe) and AddShapelessRecipe to allow creation of items with NBTTagCompounds attached
+- moved the JMODForgeEvents to the API so other mods (and not only plugins) can hook into them.
+- now offering the JMOD Event Bus and some baseline loader functions (isModLoaded, isPluginLoaded) on the API
+- started working on the JMOD ASM Helper (JAH) to actually make ASMing a bit less string salad and much less typo-ish. Needs tons of work, tho.
+- Legacy ItemStack substitution was removed due to being no longer needed. JavaScript does that better. (Was a relic from old json times)
+
 alpha1.3.1
 - Implemented Basic and "Dynamic" blocks
 - Implemented support for RotaryCraft SurrogateBedrock on Dynamic Blocks

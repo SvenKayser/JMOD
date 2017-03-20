@@ -14,7 +14,6 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.Lib;
-import com.jeffpeng.jmod.descriptors.ItemStackSubstituteDescriptor;
 import com.jeffpeng.jmod.types.blocks.placers.MetalBlockPlacer;
 
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -27,13 +26,6 @@ public class MetalBlock extends CoreBlock {
 		super(owner, mat);
 		this.setStepSound(soundTypeMetal);
 		this.icons = new IIcon[((ArrayList<String>)config.get("metalblocks")).size()];
-
-		for (Integer c = 0; c < ((ArrayList<String>)config.get("metalblocks")).size(); c++) {
-			((List<ItemStackSubstituteDescriptor>)config.get("itemstacksubstitutes")).add(
-					new ItemStackSubstituteDescriptor(getPrefix() + ":" + Lib.blockyfy(((ArrayList<String>)config.get("metalblocks")).get(c)),
-					getPrefix() + ":blockMetalGeneric:" + c.toString()));
-		}
-
 	}
 
 	@Override

@@ -37,6 +37,11 @@ public class CoreItem extends Item implements IItem {
 		return owner;
 	}
 	
+	@Override 
+	public boolean hasOwner(){
+		return owner != null;
+	}
+	
 	@Override
 	public void setRecipes(){
 		
