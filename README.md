@@ -25,6 +25,9 @@ If you interested in maintaining a plugin or adding a plugin to support your mod
 
 ## FAQ
 
+#### I found a bug
+Please describe the bug as verbose as possible and don't forget to mention the version you are using. There are multiple supported versions of JMOD as mentioned in LTS.md. Bugs will be fixed for versions still supported if possible.
+
 #### I want to contribute. How can I do that?
 Fork the repo and submit pull requests if you deem them worth it. If the code is good and useful, I'll accept it. I'd also gladly give away maintainership for some of the plugins.
 
