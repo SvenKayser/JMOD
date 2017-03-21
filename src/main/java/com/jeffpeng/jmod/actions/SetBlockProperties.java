@@ -23,20 +23,10 @@ public class SetBlockProperties extends BasicAction {
 	private Float hardness;
 	private Float blastresistance;
 	private Map<Integer,Integer> harvestlevel = new HashMap<>();
-	private String tool;
 	private Integer opacity;
-	private String sound;
-	private Float slipperiness;
-	private int lightlevel;
-	
 	
 	public SetBlockProperties hardness(Float hardness){
 		this.hardness = hardness;
-		return this;
-	}
-	
-	public SetBlockProperties slipperiness(Float slipperiness){
-		this.slipperiness = slipperiness;
 		return this;
 	}
 	
@@ -58,21 +48,9 @@ public class SetBlockProperties extends BasicAction {
 		return harvestlevel(hl);
 	}
 	
-	public SetBlockProperties tool(String tool){
-		this.tool = tool;
-		return this;
-	}
-	
-	public SetBlockProperties sound(String sound){
-		this.sound = sound;
-		return this;
-		
-	}
-	
 	public SetBlockProperties opacity(int opacity){
 		this.opacity = opacity;
 		return this;
-		
 	}
 	
 	public SetBlockProperties blastresistance(float blastresistance){

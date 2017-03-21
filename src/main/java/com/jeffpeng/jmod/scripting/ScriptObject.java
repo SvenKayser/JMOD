@@ -189,10 +189,6 @@ public class ScriptObject extends OwnedObject {
 		return new AddOreGeneration(owner);
 	}
 	
-	public AddStartingPlatform addStartingPlatform(int baseY, int playerY){
-		return new AddStartingPlatform(owner,baseY,playerY);
-	}
-	
 	public AddFluid addFluid(String fluidname){
 		return new AddFluid(owner,fluidname);
 	}

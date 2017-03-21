@@ -15,8 +15,6 @@ import com.jeffpeng.jmod.asm.annotionhandlers.StripMissingInterfacesHandler;
 import com.jeffpeng.jmod.crafting.BlacklistCraftingResults;
 import com.jeffpeng.jmod.crafting.ToolUnbreaker;
 
-import com.jeffpeng.jmod.interfaces.IExecutableObject;
-import com.jeffpeng.jmod.interfaces.IStagedObject;
 import com.jeffpeng.jmod.modintegration.applecore.AppleCoreModifyFoodValues;
 
 import com.jeffpeng.jmod.interfaces.IAnnotationHandler;
@@ -63,9 +61,6 @@ public class JMOD implements IFMLLoadingPlugin {
 	protected JMODModContainer modcontainer;
 
 	public static ForgeDeepInterface DEEPFORGE;
-	
-	
-	private static JMODRepresentation runningMod;
 	private static JMOD instance;
 	
 	
@@ -105,7 +100,6 @@ public class JMOD implements IFMLLoadingPlugin {
 	
 	public void on(FMLPreInitializationEvent event) {
 		Lib.blockMaterialRegistry = new BlockMaterialRegistry();
-		runningMod = null;
 	}
 
 	

@@ -5,7 +5,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import Reika.RotaryCraft.Auxiliary.RecipeManagers.RecipeHandler.RecipeLevel;
@@ -34,7 +33,6 @@ public class AddCentrifugeRecipe extends BasicAction {
 
 	private ItemStack[] in;
 	private FluidStack outFluid;
-	private List<Item> outStacks = new ArrayList<>();
 
 	@SuppressWarnings("rawtypes")
 	private static void initReflection() {

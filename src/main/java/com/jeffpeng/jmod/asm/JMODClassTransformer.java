@@ -42,7 +42,6 @@ public class JMODClassTransformer implements IClassTransformer{
 	private byte[] patchBlockSapling(byte[] basicClass){
 		JMOD.LOG.info("PatchBlockSapling");
 		AbstractInsnNode iNode;
-		String method = "updateTick";
 		ClassNode cN = new ClassNode();
 		ClassReader cR = new ClassReader(basicClass);
 		cR.accept(cN, 0);

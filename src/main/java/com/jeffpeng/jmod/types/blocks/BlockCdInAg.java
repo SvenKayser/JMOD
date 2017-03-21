@@ -1,8 +1,6 @@
 package com.jeffpeng.jmod.types.blocks;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.annotations.StripMissingInterfaces;
 

@@ -4,7 +4,6 @@ import net.minecraft.item.ItemStack;
 import Reika.RotaryCraft.API.RecipeInterface;
 
 import com.jeffpeng.jmod.JMODRepresentation;
-import com.jeffpeng.jmod.Lib;
 import com.jeffpeng.jmod.primitives.BasicAction;
 
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;

@@ -38,6 +38,7 @@ public class CoreFluidBlock extends BlockFluidClassic implements IBlock {
 	private String internalName;
 	private JMODRepresentation owner;
 	private int setFireChance = 0;
+	@SuppressWarnings("unused")
 	private int freezeChance = 0;
 	
 	private boolean searing;
@@ -47,6 +48,7 @@ public class CoreFluidBlock extends BlockFluidClassic implements IBlock {
 	private boolean hypothermic;
 	private boolean supercold;
 	private boolean poisonous;
+	@SuppressWarnings("unused")
 	private int temperature;
 	
 	private int corrosiveness;
@@ -134,6 +136,7 @@ public class CoreFluidBlock extends BlockFluidClassic implements IBlock {
 		super.updateTick(world, x, y, z, rand);
 		if (!world.isRemote) {
 			if (setFireChance > 0) {
+				@SuppressWarnings("unused")
 				int face = 0;
 				ForgeDirection direction = ForgeDirection.getOrientation(face = rand.nextInt(6));
 				Block targetBlock = world.getBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ);

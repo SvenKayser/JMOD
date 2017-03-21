@@ -1,5 +1,9 @@
 Changelog
 
+beta1.2.3 (LTS release)
+- removed some unused code from the codebase
+- cleaned up java warnings
+
 beta1.2.2 (LTS release)
 - fixed comparision of ItemStacks by oreDict membership. Fixes (among others) [Issue #41](https://github.com/SvenKayser/JMOD/issues/41)
 - Switched json parsing (back) to GSON, now with regex based  comment stripping [Issue #38](https://github.com/SvenKayser/JMOD/issues/38)

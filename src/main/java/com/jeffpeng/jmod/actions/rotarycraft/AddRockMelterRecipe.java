@@ -1,7 +1,6 @@
 package com.jeffpeng.jmod.actions.rotarycraft;
 
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import Reika.RotaryCraft.API.RecipeInterface;
 

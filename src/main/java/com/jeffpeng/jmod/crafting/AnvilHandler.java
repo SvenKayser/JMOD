@@ -12,11 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.ItemTool;
 import net.minecraftforge.event.AnvilUpdateEvent;
-import net.minecraftforge.oredict.OreDictionary;
-
-import com.jeffpeng.jmod.JMOD;
 import com.jeffpeng.jmod.JMODRepresentation;
-import com.jeffpeng.jmod.Lib;
 import com.jeffpeng.jmod.actions.AddArmorMaterial;
 import com.jeffpeng.jmod.primitives.OwnedObject;
 

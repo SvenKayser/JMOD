@@ -15,9 +15,7 @@ import com.jeffpeng.jmod.API.Blacklist;
 import com.jeffpeng.jmod.API.Blacklist.ICraftingBlacklist;
 
 import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.registry.GameData;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 public class BlacklistCraftingResults implements ICraftingBlacklist {
 	
