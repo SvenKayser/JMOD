@@ -4,5 +4,5 @@ To ensure stability for developers in a fast changing and developing project lik
 ### 1.4.x
     Sep 30st 2017
 
-### beta 1.2.2
+### beta 1.2.3
     extended to May 31st 2017
