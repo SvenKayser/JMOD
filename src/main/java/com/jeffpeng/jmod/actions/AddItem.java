@@ -33,6 +33,14 @@ public class AddItem extends BasicAction{
 	
 	private String refClass;
 	private IItem instance; 
+	
+	public AddItem(JMODRepresentation owner, String name, String refClass, int stackSize, String tab){
+		super(owner);
+		this.refClass = refClass;
+		set("name",this.refClass+AddItem.itemcounter++);
+		set("stacksize",1);
+		set("tab",null);
+	}
 
 	public AddItem(JMODRepresentation owner, String refClass){
 		super(owner);
@@ -40,6 +48,36 @@ public class AddItem extends BasicAction{
 		set("name",this.refClass+AddItem.itemcounter++);
 		set("stacksize",1);
 		set("tab",null);
+	}
+	
+	@Deprecated
+	public AddItem tooldata(ToolDataDescriptor tooldata){
+		set("tooldata",tooldata);
+		return this;
+	}
+	
+	@Deprecated
+	public AddItem armordata(ArmorDataDescriptor armordata){
+		set("armordata",armordata);
+		return this;
+	}
+	
+	@Deprecated
+	public AddItem fooddata(FoodDataDescriptor fooddata){
+		set("fooddata",fooddata);
+		return this;
+	}
+	
+	@Deprecated
+	public AddItem color(ColorDescriptor color){
+		set("colordata",color);
+		return this;
+	}
+	
+	@Deprecated
+	public AddItem colorindex(int colorindex){
+		set("colorindex",colorindex);
+		return this;
 	}
 	
 	@SuppressWarnings("rawtypes")

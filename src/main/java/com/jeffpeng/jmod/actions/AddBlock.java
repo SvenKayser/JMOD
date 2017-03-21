@@ -24,8 +24,21 @@ public class AddBlock extends BasicAction{
 	
 	private CoreBlock instance;
 	
-//	public AddBlock(JMODRepresentation owner, String name, String refClass, Float hardness, Float blastresistance,
-//			String tool, int harvestlevel, String material, String tab){
+	public AddBlock(JMODRepresentation owner, String name, String refClass, Float hardness, Float blastresistance,
+			String tool, int harvestlevel, String material, String tab){
+		super(owner);
+		this.refClass = refClass;
+		this.set("name",name);
+		this.set("hardness",hardness);
+		this.set("blastresistance",blastresistance);
+		this.set("tool",tool);
+		this.set("harvestlevel",harvestlevel);
+		this.set("material",material);
+		this.set("tab",tab);
+		this.set("lightlevel",0);
+		this.set("opacity",null);
+	}
+	
 	public AddBlock(JMODRepresentation owner, String refClass){
 
 		super(owner);

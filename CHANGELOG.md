@@ -1,5 +1,11 @@
 Changelog
 
+1.4.0RC2
+- re-introduced old legacy syntax for AddItem and AddBlock for compatibility reasons
+
+1.4.0RC1
+- bumped version
+
 alpha1.3.1
 - Implemented Basic and "Dynamic" blocks
 - Implemented support for RotaryCraft SurrogateBedrock on Dynamic Blocks

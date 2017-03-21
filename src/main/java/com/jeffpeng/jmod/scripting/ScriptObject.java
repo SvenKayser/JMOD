@@ -87,8 +87,19 @@ public class ScriptObject extends OwnedObject {
 		new AddSmeltingRecipe(owner,result,ingredient);
 	}
 	
+	@Deprecated
+	public  AddItem addItem(String name, String refClass,int stackSize,String creativeTab){
+		return new AddItem(owner, name,refClass,stackSize,creativeTab);
+	}
+	
 	public  AddItem addItem(String refClass){
 		return new AddItem(owner, refClass);
+	}
+	
+	@Deprecated
+	public  AddBlock addBlock(String name, String refClass, Float hardness, Float blastresistance,
+			String tool, int harvestlevel, String material, String tab){
+		return new AddBlock(owner,name,refClass,hardness,blastresistance,tool,harvestlevel,material,tab);
 	}
 	
 	public  AddBlock addBlock(String refClass){

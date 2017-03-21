@@ -23,3 +23,4 @@ cd ..
 
 cp build/libs/jmod*.jar latestbuild/
 cp plugins/JMOD-*/build/libs/*.jmodplugin latestbuild/
+zip latestbuild/plugins.zip latestbuild/*.jmodplugin
