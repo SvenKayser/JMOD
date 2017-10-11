@@ -4,10 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.potion.Potion;
-import net.minecraftforge.common.MinecraftForge;
-
 import com.jeffpeng.jmod.JMOD;
-import com.jeffpeng.jmod.JMODPlugin;
 import com.jeffpeng.jmod.forgeevents.JMODAddBuffsEvent;
 
 public class BuffRegistry {

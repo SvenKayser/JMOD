@@ -1,16 +1,10 @@
 package com.jeffpeng.jmod.actions;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import com.jeffpeng.jmod.JMODRepresentation;
 import com.jeffpeng.jmod.primitives.BasicAction;
-
-import cpw.mods.fml.common.registry.GameRegistry;
 
 public class SetItemProperties extends BasicAction {
 	

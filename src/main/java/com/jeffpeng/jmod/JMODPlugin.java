@@ -2,15 +2,7 @@ package com.jeffpeng.jmod;
 
 import java.util.Map;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.Item.ToolMaterial;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
-import net.minecraftforge.fluids.Fluid;
-
 import com.jeffpeng.jmod.interfaces.IEventObject;
-import com.jeffpeng.jmod.types.items.CoreBucket;
-
 import cpw.mods.fml.common.event.FMLConstructionEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;

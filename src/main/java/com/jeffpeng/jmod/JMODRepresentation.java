@@ -29,7 +29,6 @@ import com.jeffpeng.jmod.crafting.ToolRepairRecipe;
 import com.jeffpeng.jmod.descriptors.ColorDescriptor;
 import com.jeffpeng.jmod.descriptors.ItemStackSubstituteDescriptor;
 import com.jeffpeng.jmod.descriptors.TooltipDescriptor;
-import com.jeffpeng.jmod.forgeevents.JMODInitConfigEvent;
 import com.jeffpeng.jmod.interfaces.IEventObject;
 import com.jeffpeng.jmod.interfaces.IItem;
 import com.jeffpeng.jmod.interfaces.IBlock;

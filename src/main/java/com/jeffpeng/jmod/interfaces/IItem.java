@@ -6,7 +6,7 @@ import net.minecraft.item.Item;
 
 public interface IItem extends IOwned, ISettingsProcessor, IFurnaceFuel{
 	
-	
+
 	
 	default public String getPrefix(){
 		return getOwner().getModId();

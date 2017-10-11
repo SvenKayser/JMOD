@@ -2,7 +2,7 @@
 rm build/libs/*
 rm latestbuild/*
 echo "Building JMOD";
-./gradlew build > /dev/null
+./gradlew build $* > /dev/null
 rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi
 cp build/libs/jmod*.jar libs
 cd plugins
@@ -15,7 +15,7 @@ for ((i = 0; i != length; i++)); do
 	if [ "$(ls -A build/libs)" ]; then
 		 rm build/libs/*
 	fi
-	./gradlew buildPlugin > /dev/null
+	./gradlew buildPlugin $* > /dev/null
 	rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi
 	cd ..
 done

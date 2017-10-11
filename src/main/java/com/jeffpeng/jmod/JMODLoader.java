@@ -13,12 +13,9 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.launchwrapper.LaunchClassLoader;
-import net.minecraftforge.common.MinecraftForge;
-
 import com.jeffpeng.jmod.primitives.JMODInfo;
 import com.jeffpeng.jmod.primitives.ModCreationException;
 import com.jeffpeng.jmod.scripting.JScript;
-import com.jeffpeng.jmod.types.items.CoreBucket.FluidHandler;
 import com.jeffpeng.jmod.util.LoaderUtil;
 import com.jeffpeng.jmod.util.Reflector;
 
@@ -178,7 +175,7 @@ public class JMODLoader {
 			}
 			
 			//newmod.getMod().runScripts();
-			
+			System.out.println("###mlp "+newmod.getModId());
 			modList.put(newmod.getModId(),newmod);
 			
 		}

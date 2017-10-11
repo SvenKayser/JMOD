@@ -17,6 +17,10 @@ public class JMODGetRepairItemStackEvent extends JMODCancelableForgeEvent {
 		return ris;
 	}
 	
+	public Item getItem(){
+		return item;
+	}
+	
 	public JMODGetRepairItemStackEvent(Item item){
 		this.item = item;
 	}
