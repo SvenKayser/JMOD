@@ -43,7 +43,7 @@ public class ToolUnbreaker {
 		if(player != null){
 			ItemStack equipped = player.getCurrentEquippedItem();
 			if(equipped == null) return;
-			if(equipped.isItemStackDamageable() && equipped.getMaxDamage() <= equipped.getItemDamage()){
+			if(equipped.isItemStackDamageable() && equipped.getMaxDamage() <= (equipped.getItemDamage() + 10)){
 				event.setCanceled(true);
 			}
 		}

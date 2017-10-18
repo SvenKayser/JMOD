@@ -37,9 +37,9 @@ public class AddItem extends BasicAction{
 	public AddItem(JMODRepresentation owner, String name, String refClass, int stackSize, String tab){
 		super(owner);
 		this.refClass = refClass;
-		set("name",this.refClass+AddItem.itemcounter++);
-		set("stacksize",1);
-		set("tab",null);
+		set("name",name);
+		set("stacksize",stackSize);
+		set("tab",tab);
 	}
 
 	public AddItem(JMODRepresentation owner, String refClass){
