@@ -1,4 +1,4 @@
-# The Javascript MOD Loader (JMOD) for Minecraft 1.7.10 / MinecraftForge 10.13.4.1558
+# The JavaScript MOD Loader (JMOD) for Minecraft 1.7.10 / MinecraftForge 10.13.4.1558
 
 JMOD let's you define simple mods without the hassle of writing setting up a Java development environment and compiling your mods each time you want to try a change. While you don't need to learn Java do write mods with JMOD, you need some basic understanding of JavaScript, however the emphasis definitely is on "basic".
 
@@ -44,7 +44,7 @@ JMOD still relies on a good portion of forge and especially The Forge Mod Loader
 #### Does JMOD rely on a certain architecture? What are the requirements?
 TL;DR: Something that beeps with Java 8
 
-JMOD runs on every system, and as far as I know at least the server on every architecture (having it tested with x86-64, ARMv7l, and SPARC UA2007) that runs Java 8. JMOD is pretty lightweight, so requirements shouldn't be higher than what you'd usually expect from modded Minecraft. Making extensive use of repeatedly executed Javascript code, however, can be hard on the CPU, so it depends on the JMODs you use.
+JMOD runs on every system, and as far as I know at least the server on every architecture (having it tested with x86-64, ARMv7l, and SPARC UA2007) that runs Java 8. JMOD is pretty lightweight, so requirements shouldn't be higher than what you'd usually expect from modded Minecraft. Making extensive use of repeatedly executed JavaScript code, however, can be hard on the CPU, so it depends on the JMODs you use.
 
 #### Why there is no JMOD for Minecraft 1.8/1.9/1.10/1.11 ?
 TL;DR: Because [RotaryCraff](https://github.com/ReikaKalseki/RotaryCraft) is still 1.7.10 - so is [Survival Industry](https://github.com/reteo/Survival-Industry)
